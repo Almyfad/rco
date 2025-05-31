@@ -1,0 +1,16 @@
+name: Traefik
+
+on:
+  push:
+    paths:
+      - 'traefik/**'
+      - 'traefik.docker-compose.api.yml'
+      - '.github/workflows/traefik-ci.yml'
+
+jobs:
+  build-api:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - name: Deploy Traefik
+        run: docker compose up -f traefik.docker-compose.api.yml
