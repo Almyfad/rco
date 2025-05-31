@@ -11,7 +11,7 @@ jobs:
     runs-on: self-hosted
     steps:
       - uses: actions/checkout@v3
-      - name: copy traefik.docker-compose.yml
+      - name: copy traefik folder
         run: cp -r traefik/ /home/debian/
       - name: Deploy Traefik
         run: cd /home/debian/traefik && docker compose up -d

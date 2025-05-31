@@ -5,12 +5,20 @@ on:
     paths:
       - 'n8n/**'
       - '.github/workflows/n8n-ci.yml'
-
+  workflow_dispatch:
 jobs:
   n8n:
     runs-on: self-hosted
-    environment: stage
     steps:
-      - name: show env
-        run: printenv
       - uses: actions/checkout@v3
+      - name: copy n8n folder
+        run: cp -r n8n/ /home/debian/
+      - name: Deploy n8n
+        run: cd /home/debian/n8n && docker compose up -d
+        env:
+          POSTGRES_USER: ${{ vars.POSTGRES_USER }}
+          POSTGRES_PASSWORD: ${{ secrets.POSTGRES_PASSWORD }}
+          POSTGRES_DB: ${{ vars.POSTGRES_DB }}
+          POSTGRES_NON_ROOT_USER: ${{ vars.POSTGRES_NON_ROOT_USER }}
+          POSTGRES_NON_ROOT_PASSWORD: ${{ secrets.POSTGRES_NON_ROOT_PASSWORD }}
+          DB_POSTGRESDB_DATABASE: ${{ vars.POSTGRES_DB }}
