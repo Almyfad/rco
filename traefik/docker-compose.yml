@@ -23,6 +23,7 @@ services:
       - rconetwork
 networks:
   rconetwork:
+    name: rconetwork
     driver: bridge
     ipam:
       config:

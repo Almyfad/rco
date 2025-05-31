@@ -4,13 +4,14 @@ on:
   push:
     paths:
       - 'traefik/**'
-      - 'traefik.docker-compose.api.yml'
       - '.github/workflows/traefik-ci.yml'
 
 jobs:
   build-api:
-    runs-on: ubuntu-latest
+    runs-on: self-hosted
     steps:
       - uses: actions/checkout@v3
+      - name: copy traefik.docker-compose.yml
+        run: cp -r traefik/ /home/debian/
       - name: Deploy Traefik
-        run: docker compose up -f traefik.docker-compose.api.yml
+        run: cd /home/debian/traefik && docker compose up -d
