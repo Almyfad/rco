@@ -1,0 +1,23 @@
+name: n8n
+
+on:
+  push:
+    paths:
+      - 'n8n/**'
+      - '.github/workflows/n8n-ci.yml'
+
+jobs:
+  build-api:
+    runs-on: self-hosted
+    env:
+      POSTGRES_USER: ${{ vars.POSTGRES_USER }}
+      POSTGRES_PASSWORD: ${{ secrets.POSTGRES_PASSWORD }}
+      POSTGRES_DB: ${{ vars.POSTGRES_DB }}
+      POSTGRES_NON_ROOT_USER: ${{ vars.POSTGRES_NON_ROOT_USER }}
+      POSTGRES_NON_ROOT_PASSWORD: ${{ secrets.POSTGRES_NON_ROOT_PASSWORD }}
+      N8N_EXECUTIONS_MODE: queue
+      QUEUE_MODE: redis
+    steps:
+      - name: show env
+        run: printenv
+      - uses: actions/checkout@v3

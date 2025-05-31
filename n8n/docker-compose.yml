@@ -52,13 +52,13 @@ services:
       - ./custom-nodes/dist:/home/node/.n8n/custom-nodes
       - .my.cnf:/home/node/.my.cnf
     networks:
-      rconet:
+      rconetwork:
         ipv4_address: 172.25.0.20
     depends_on:
       postgres:
         condition: service_healthy
 networks:
-  rconet:
+  rconetwork:
     driver: bridge
     ipam:
       config:
