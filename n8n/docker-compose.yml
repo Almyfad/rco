@@ -1,0 +1,65 @@
+volumes:
+  pg_db_storage:
+  n8n_storage:
+services:
+  postgres:
+    image: postgres:16
+    restart: always
+    environment:
+      - POSTGRES_USER
+      - POSTGRES_PASSWORD
+      - POSTGRES_DB
+      - POSTGRES_NON_ROOT_USER
+      - POSTGRES_NON_ROOT_PASSWORD
+      - N8N_EXECUTIONS_MODE=queue
+      - QUEUE_MODE=redis
+    volumes:
+      - pg_db_storage:/var/lib/postgresql/data
+      - ./pg/init-data.sh:/docker-entrypoint-initdb.d/init-data.sh
+    networks:
+      - rconet
+    healthcheck:
+      test: [ 'CMD-SHELL', 'pg_isready -h localhost -U ${POSTGRES_USER} -d ${POSTGRES_DB}' ]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+  n8n:
+    build:
+      context: .
+      dockerfile: Dockerfile.n8n
+    restart: always
+    environment:
+      - DB_TYPE=postgresdb
+      - DB_POSTGRESDB_HOST=postgres
+      - DB_POSTGRESDB_PORT=5432
+      - DB_POSTGRESDB_DATABASE=${POSTGRES_DB}
+      - DB_POSTGRESDB_USER=${POSTGRES_NON_ROOT_USER}
+      - DB_POSTGRESDB_PASSWORD=${POSTGRES_NON_ROOT_PASSWORD}
+      - N8N_ALLOW_LOADING_CUSTOM_NODES=true
+      - N8N_CUSTOM_EXTENSIONS=/home/node/.n8n/custom-nodes
+      - N8N_DEFAULT_BINARY_DATA_MODE=filesystem
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.n8n.rule=Host(`n8n.rose-croix-d-or.org`)" # Sous-domaine pour n8n
+      - "traefik.http.routers.n8n.entrypoints=websecure"
+      - "traefik.http.routers.n8n.tls.certresolver=myresolver"
+    ports:
+      - 5678:5678
+    links:
+      - postgres
+    volumes:
+      - n8n_storage:/home/node
+      - ./custom-nodes/dist:/home/node/.n8n/custom-nodes
+      - .my.cnf:/home/node/.my.cnf
+    networks:
+      rconet:
+        ipv4_address: 172.25.0.20
+    depends_on:
+      postgres:
+        condition: service_healthy
+networks:
+  rconet:
+    driver: bridge
+    ipam:
+      config:
+        - subnet: 172.25.0.0/24
