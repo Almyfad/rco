@@ -7,7 +7,7 @@ on:
       - '.github/workflows/traefik-ci.yml'
 
 jobs:
-  build-api:
+  traefik:
     runs-on: self-hosted
     steps:
       - uses: actions/checkout@v3
