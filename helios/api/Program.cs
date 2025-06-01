@@ -16,6 +16,10 @@ if (true || app.Environment.IsDevelopment())
     app.MapOpenApi();
     app.MapScalarApiReference(o =>
     {
+        o.Servers = new[] { 
+            new ScalarServer("https://helios-dev.rose-croix-d-or.org/") ,
+            new ScalarServer("https://helios.rose-croix-d-or.org/")
+        };
         o.WithTitle("Helios")
         .WithFavicon("/favicon.png");
     });
