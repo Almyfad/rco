@@ -6,3 +6,7 @@ helios/api/obj/
 helios/.vs/
 
 helios/api/Helios.csproj.user
+
+helios/bin/
+
+helios/obj/

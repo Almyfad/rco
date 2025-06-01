@@ -1,0 +1,44 @@
+name: Deploy Helios API
+on:
+  push:
+    paths:
+      - 'helios/api/**'
+      - '.github/workflows/helios-api-ci.yml'
+    branches: main
+  pull_request:
+    branches: main
+  workflow_dispatch:
+jobs:
+  build:
+    runs-on: self-hosted
+    steps:
+      - uses: actions/checkout@v2
+      - name: Buil docker image
+        run: cd helios && docker build -f api/Dockerfile --force-rm -t helios:latest .
+      - name: Generate compose to home
+        run: |
+          echo "Ref: $GITHUB_REF"
+          echo "Ref name: $GITHUB_REF_NAME"
+          echo "Sha: $GITHUB_SHA"
+          mkdir -p $HOME/helios
+          cp helios/api/Dockerfile $HOME/helios/Dockerfile
+          if [[ "${GITHUB_REF_NAME}" == "main" ]]; then
+            echo "Generating compose for production"
+            docker compose -f helios/docker-compose.yml -f helios/docker-compose.prod.yml config > $HOME/helios/docker-compose.yml
+           elif [[ "${GITHUB_REF_NAME}" =~ ^release-.*$ ]]; then
+            echo "Generating compose for staging"
+            docker compose -f helios/docker-compose.yml -f helios/docker-compose.staging.yml config > $HOME/helios/docker-compose.yml
+          else
+            echo "Generating compose for development"
+            docker compose -f helios/docker-compose.yml -f helios/docker-compose.dev.yml config > $HOME/helios/docker-compose.yml
+          fi
+      - name: Deploy
+        run: cd $HOME/helios && docker compose up -d   
+        env:
+          ASPNETCORE_ENVIRONMENT: Production
+          MYSQL_ROOT_PASSWORD: ${{ secrets.MYSQL_ROOT_PASSWORD }}
+          MYSQL_DATABASE: ${{ vars.MYSQL_DATABASE }}
+          MYSQL_USER: osuserapp
+          MYSQL_HOST: host.docker.internal
+          MYSQL_PASSWORD: ${{ secrets.MYSQL_PASSWORD }}
+          Configurations__jwt__secret: ${{ secrets.Configurations__jwt__secret }}

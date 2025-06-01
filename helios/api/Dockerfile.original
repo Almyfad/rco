@@ -1,6 +1,6 @@
 # Consultez https://aka.ms/customizecontainer pour savoir comment personnaliser votre conteneur de débogage et comment Visual Studio utilise ce Dockerfile pour générer vos images afin d’accélérer le débogage.
 
-# Cet index est utilisé lors de l’exécution à partir de VS en mode rapide (par défaut pour la configuration de débogage)
+# Cet index est utilisé lors de l’exécution à partir de VS en mode rHeliosde (par défaut pour la configuration de débogage)
 FROM mcr.microsoft.com/dotnet/aspnet:9.0 AS base
 USER $APP_UID
 WORKDIR /app
@@ -12,10 +12,10 @@ EXPOSE 8081
 FROM mcr.microsoft.com/dotnet/sdk:9.0 AS build
 ARG BUILD_CONFIGURATION=Release
 WORKDIR /src
-COPY ["api/Helios.csproj", "api/"]
-RUN dotnet restore "./api/Helios.csproj"
+COPY ["Helios/Helios.csproj", "Helios/"]
+RUN dotnet restore "./Helios/Helios.csproj"
 COPY . .
-WORKDIR "/src/api"
+WORKDIR "/src/Helios"
 RUN dotnet build "./Helios.csproj" -c $BUILD_CONFIGURATION -o /app/build
 
 # Cette étape permet de publier le projet de service à copier dans la phase finale

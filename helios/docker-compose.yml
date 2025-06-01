@@ -1,0 +1,12 @@
+services:
+  helios:
+    image: helios:latest
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+    labels:
+      - "traefik.enable=true"
+      - "traefik.docker.network=rconetwork"    
+      - "traefik.http.routers.helios.entrypoints=websecure"
+      - "traefik.http.routers.helios.tls.certresolver=myresolver"
+      - "traefik.http.services.helios.loadbalancer.server.port=8080"
+

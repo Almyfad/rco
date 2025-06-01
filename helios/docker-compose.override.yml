@@ -1,0 +1,7 @@
+services:
+  helios:
+    build:
+      context: .
+      dockerfile: api/Dockerfile
+    environment:
+      - ASPNETCORE_ENVIRONMENT55=Development

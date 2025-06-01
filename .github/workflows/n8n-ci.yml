@@ -1,4 +1,4 @@
-name: n8n
+name: Deploy n8n
 
 on:
   push:
@@ -12,9 +12,9 @@ jobs:
     steps:
       - uses: actions/checkout@v3
       - name: copy n8n folder
-        run: cp -r n8n/ /home/debian/
+        run: cp -r n8n/ $HOME
       - name: Deploy n8n
-        run: cd /home/debian/n8n && docker compose up -d
+        run: cd $HOME/n8n && docker compose up -d
         env:
           POSTGRES_USER: ${{ vars.POSTGRES_USER }}
           POSTGRES_PASSWORD: ${{ secrets.POSTGRES_PASSWORD }}

@@ -1,17 +1,17 @@
-name: Traefik
+name: Deploy Traefik
 
 on:
   push:
     paths:
       - 'traefik/**'
       - '.github/workflows/traefik-ci.yml'
-
+  workflow_dispatch:
 jobs:
   traefik:
     runs-on: self-hosted
     steps:
       - uses: actions/checkout@v3
       - name: copy traefik folder
-        run: cp -r traefik/ /home/debian/
+        run: cp -r traefik/ $HOME
       - name: Deploy Traefik
-        run: cd /home/debian/traefik && docker compose up -d
+        run: cd $HOME/traefik && docker compose up -d

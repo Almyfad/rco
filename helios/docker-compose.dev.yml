@@ -1,0 +1,11 @@
+services:
+  helios:
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+    labels:
+      traefik.http.routers.helios.rule: Host(`helios-dev.rose-croix-d-or.org`)
+    networks:
+      rconetwork:
+networks:
+  rconetwork:
+    external: true
