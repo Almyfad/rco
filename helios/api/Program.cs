@@ -1,3 +1,4 @@
+using Helios.Context;
 using Scalar.AspNetCore;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -5,8 +6,10 @@ var builder = WebApplication.CreateBuilder(args);
 // Add services to the container.
 
 builder.Services.AddControllers();
-// Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi
 builder.Services.AddOpenApi();
+builder.Services.AddHealthChecks();
+builder.Services.AddHeliosContext();
+
 
 var app = builder.Build();
 
@@ -36,3 +39,11 @@ app.UseAuthorization();
 app.MapControllers();
 
 app.Run();
+
+
+
+public static class HeliosContextExtensions
+{
+
+
+}

@@ -10,3 +10,7 @@ helios/api/Helios.csproj.user
 helios/bin/
 
 helios/obj/
+
+helios/HeliosDataBaseContext/bin/
+
+helios/HeliosDataBaseContext/obj/

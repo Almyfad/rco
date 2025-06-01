@@ -1,3 +1,4 @@
+
 name: Deploy Helios API
 on:
   push:
@@ -8,13 +9,41 @@ on:
   pull_request:
     branches: main
   workflow_dispatch:
+env:
+  ASPNETCORE_ENVIRONMENT: Production
+  MYSQL_DATABASE: ${{ vars.MYSQL_DATABASE }}
+  MYSQL_USER: ${{ vars.MYSQL_USER }}
+  MYSQL_HOST: ${{ vars.MYSQL_HOST }}
+  MYSQL_PORT: ${{ vars.MYSQL_PORT }}
+  MYSQL_PASSWORD: ${{ secrets.MYSQL_PASSWORD }}
+  Configurations__jwt__secret: ${{ secrets.Configurations__jwt__secret }}
 jobs:
   build:
+    environment: staging
     runs-on: self-hosted
     steps:
       - uses: actions/checkout@v2
       - name: Buil docker image
         run: cd helios && docker build -f api/Dockerfile --force-rm -t helios:latest .
+      - name: Setup .NET
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: 9.x
+      - name: Install EF Core Tools
+        run: dotnet tool install --global dotnet-ef --version 9.*
+      - name: Add EF Core Tools to PATH
+        run: echo "$HOME/.dotnet/tools" >> $GITHUB_PATH
+      - name: Restore dependencies
+        run: dotnet restore
+        working-directory: ./helios/api
+      - name: Apply EF Core Migrations
+        run: |
+          echo "Applying EF Core migrations with ${{ vars.MYSQL_DATABASE }}"
+          echo "Using MySQL host: ${{ vars.MYSQL_HOST }}"
+          echo "Using MySQL port: ${{ vars.MYSQL_PORT }}"
+          echo "Using MySQL user: ${{ vars.MYSQL_USER }}"
+          dotnet ef database update --configuration Release
+        working-directory: ./helios/HeliosDataBaseContext       
       - name: Generate compose to home
         run: |
           echo "Ref: $GITHUB_REF"
@@ -34,11 +63,4 @@ jobs:
           fi
       - name: Deploy
         run: cd $HOME/helios && docker compose up -d   
-        env:
-          ASPNETCORE_ENVIRONMENT: Production
-          MYSQL_ROOT_PASSWORD: ${{ secrets.MYSQL_ROOT_PASSWORD }}
-          MYSQL_DATABASE: ${{ vars.MYSQL_DATABASE }}
-          MYSQL_USER: osuserapp
-          MYSQL_HOST: host.docker.internal
-          MYSQL_PASSWORD: ${{ secrets.MYSQL_PASSWORD }}
-          Configurations__jwt__secret: ${{ secrets.Configurations__jwt__secret }}
+
