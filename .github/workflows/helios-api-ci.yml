@@ -77,7 +77,12 @@ jobs:
         working-directory: ./helios/api
 
       - name: Apply EF Core Migrations
-        run: dotnet ef database update --configuration Release
+        run: |
+         echo "Applying migrations for HeliosDataBaseContext..."
+         echo "Using connection string: $MYSQL_HOST:$MYSQL_PORT"
+         echo "Using database: $MYSQL_DATABASE"
+         echo "Using user: $MYSQL_USER"
+         dotnet ef database update --configuration Release
         working-directory: ./helios/HeliosDataBaseContext
 
       - name: Deploy to ${{ needs.build.outputs.env }}
