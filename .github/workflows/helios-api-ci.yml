@@ -42,9 +42,7 @@ jobs:
             docker compose -f helios/docker-compose.yml -f helios/docker-compose.dev.yml config > $HOME/helios/docker-compose.yml
           fi 
   deploy-dev:
-    if: |
-      github.ref != 'refs/heads/main' &&
-      !startsWith(github.ref, 'refs/heads/release/')
+    if: github.ref == 'refs/heads/develop'
     needs: build
     environment: development
     runs-on: self-hosted
