@@ -1,14 +1,20 @@
 using Helios.Context;
 using Scalar.AspNetCore;
+using System.Text.Json.Serialization;
 
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 
-builder.Services.AddControllers();
+builder.Services.AddCookieConfiguration();
 builder.Services.AddOpenApi();
-builder.Services.AddHealthChecks();
+builder.Services.AddControllers().AddJsonOptions(o =>
+{
+    o.JsonSerializerOptions.ReferenceHandler = ReferenceHandler.IgnoreCycles;
+    o.JsonSerializerOptions.Converters.Add(new JsonStringEnumConverter());
+});
 builder.Services.AddHeliosContext();
+builder.Services.AddHttpContextAccessor();
 
 
 var app = builder.Build();
@@ -19,8 +25,9 @@ if (true || app.Environment.IsDevelopment())
     app.MapOpenApi();
     app.MapScalarApiReference(o =>
     {
-        o.Servers = new[] { 
-            new ScalarServer("https://helios-dev.rose-croix-d-or.org/") ,
+        o.Servers = new[] {
+            new ScalarServer("https://helios-dev.rose-croix-d-or.org/"),
+            new ScalarServer("https://helios-staging.rose-croix-d-or.org/"),
             new ScalarServer("https://helios.rose-croix-d-or.org/")
         };
         o.WithTitle("Helios")
@@ -39,11 +46,3 @@ app.UseAuthorization();
 app.MapControllers();
 
 app.Run();
-
-
-
-public static class HeliosContextExtensions
-{
-
-
-}

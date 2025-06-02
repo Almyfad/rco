@@ -1,10 +1,29 @@
-@api_HostAddress = http://localhost:5080
-
-GET {{api_HostAddress}}/weatherforecast/
-Accept: application/json
+@api_HostAddress = http://localhost:32780
 
 ###
 GET {{api_HostAddress}}/openapi/v1.json
-
+Accept: application/json
 ###
 GET {{api_HostAddress}}/scalar/v1
+
+
+### Login (enregistre le cookie dans la session "auth")
+# @name login
+# @session auth
+POST {{api_HostAddress}}/api/User/login
+Content-Type: application/json
+Accept: application/json
+
+{
+  "email": "admin@rco.com",
+  "password": "SuPer.P4sswd!"
+}
+
+
+### Requête protégée (réutilise les cookies de la session "auth")
+# @session auth
+GET {{api_HostAddress}}/api/User/infos
+Accept: application/json
+###
+
+

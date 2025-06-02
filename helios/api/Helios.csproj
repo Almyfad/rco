@@ -17,10 +17,12 @@
     </PackageReference>
     <PackageReference Include="Microsoft.VisualStudio.Azure.Containers.Tools.Targets" Version="1.21.2" />
     <PackageReference Include="Scalar.AspNetCore" Version="2.4.7" />
+    <PackageReference Include="System.IdentityModel.Tokens.Jwt" Version="8.11.0" />
   </ItemGroup>
 
   <ItemGroup>
     <Folder Include="icons\" />
+    <Folder Include="Dto\" />
   </ItemGroup>
 
   <ItemGroup>
