@@ -19,31 +19,11 @@ env:
   Configurations__jwt__secret: ${{ secrets.Configurations__jwt__secret }}
 jobs:
   build:
-    environment: staging
     runs-on: self-hosted
     steps:
       - uses: actions/checkout@v2
       - name: Buil docker image
-        run: cd helios && docker build -f api/Dockerfile --force-rm -t helios:latest .
-      - name: Setup .NET
-        uses: actions/setup-dotnet@v4
-        with:
-          dotnet-version: 9.x
-      - name: Install EF Core Tools
-        run: dotnet tool install --global dotnet-ef --version 9.*
-      - name: Add EF Core Tools to PATH
-        run: echo "$HOME/.dotnet/tools" >> $GITHUB_PATH
-      - name: Restore dependencies
-        run: dotnet restore
-        working-directory: ./helios/api
-      - name: Apply EF Core Migrations
-        run: |
-          echo "Applying EF Core migrations with ${{ vars.MYSQL_DATABASE }}"
-          echo "Using MySQL host: ${{ vars.MYSQL_HOST }}"
-          echo "Using MySQL port: ${{ vars.MYSQL_PORT }}"
-          echo "Using MySQL user: ${{ vars.MYSQL_USER }}"
-          dotnet ef database update --configuration Release
-        working-directory: ./helios/HeliosDataBaseContext       
+        run: cd helios && docker build -f api/Dockerfile --force-rm -t helios:latest .   
       - name: Generate compose to home
         run: |
           echo "Ref: $GITHUB_REF"
@@ -60,7 +40,90 @@ jobs:
           else
             echo "Generating compose for development"
             docker compose -f helios/docker-compose.yml -f helios/docker-compose.dev.yml config > $HOME/helios/docker-compose.yml
-          fi
-      - name: Deploy
-        run: cd $HOME/helios && docker compose up -d   
-
+          fi 
+  deploy-dev:
+    if: |
+      github.ref != 'refs/heads/main' &&
+      !startsWith(github.ref, 'refs/heads/release/')
+    needs: build
+    environment: development
+    runs-on: self-hosted
+    steps:
+      - name: Setup .NET
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: 9.x
+      - name: Install EF Core Tools
+        run: dotnet tool install --global dotnet-ef --version 9.*
+      - name: Add EF Core Tools to PATH
+        run: echo "$HOME/.dotnet/tools" >> $GITHUB_PATH
+      - name: Restore dependencies
+        run: dotnet restore
+        working-directory: ./helios/api      
+      - name: Apply EF Core Migrations
+        run: |
+         echo "Applying EF Core migrations with :"
+         echo "Using Mysql database: ${{ vars.MYSQL_DATABASE }}"
+         echo "Using MySQL host: ${{ vars.MYSQL_HOST }}"
+         echo "Using MySQL port: ${{ vars.MYSQL_PORT }}"
+         echo "Using MySQL user: ${{ vars.MYSQL_USER }}"
+         dotnet ef database update --configuration Release
+        working-directory: ./helios/HeliosDataBaseContext  
+      - name: Deploy to development
+        run: cd $HOME/helios && docker compose up -d
+  deploy-staging:
+    if: startsWith(github.ref, 'refs/heads/release/')
+    needs: build
+    runs-on: self-hosted
+    environment: staging
+    steps:
+      - name: Setup .NET
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: 9.x
+      - name: Install EF Core Tools
+        run: dotnet tool install --global dotnet-ef --version 9.*
+      - name: Add EF Core Tools to PATH
+        run: echo "$HOME/.dotnet/tools" >> $GITHUB_PATH
+      - name: Restore dependencies
+        run: dotnet restore
+        working-directory: ./helios/api      
+      - name: Apply EF Core Migrations
+        run: |
+         echo "Applying EF Core migrations with :"
+         echo "Using Mysql database: ${{ vars.MYSQL_DATABASE }}"
+         echo "Using MySQL host: ${{ vars.MYSQL_HOST }}"
+         echo "Using MySQL port: ${{ vars.MYSQL_PORT }}"
+         echo "Using MySQL user: ${{ vars.MYSQL_USER }}"
+         dotnet ef database update --configuration Release
+        working-directory: ./helios/HeliosDataBaseContext  
+      - name: Deploy to staging
+        run: cd $HOME/helios && docker compose up -d
+  deploy-prod:
+    if: github.ref == 'refs/heads/main'
+    needs: build
+    runs-on: self-hosted
+    environment: production
+    steps:
+      - name: Setup .NET
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: 9.x
+      - name: Install EF Core Tools
+        run: dotnet tool install --global dotnet-ef --version 9.*
+      - name: Add EF Core Tools to PATH
+        run: echo "$HOME/.dotnet/tools" >> $GITHUB_PATH
+      - name: Restore dependencies
+        run: dotnet restore
+        working-directory: ./helios/api      
+      - name: Apply EF Core Migrations
+        run: |
+         echo "Applying EF Core migrations with :"
+         echo "Using Mysql database: ${{ vars.MYSQL_DATABASE }}"
+         echo "Using MySQL host: ${{ vars.MYSQL_HOST }}"
+         echo "Using MySQL port: ${{ vars.MYSQL_PORT }}"
+         echo "Using MySQL user: ${{ vars.MYSQL_USER }}"
+         dotnet ef database update --configuration Release
+        working-directory: ./helios/HeliosDataBaseContext  
+      - name: Deploy to production
+        run: cd $HOME/helios && docker compose up -d
