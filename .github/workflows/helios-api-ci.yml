@@ -24,7 +24,8 @@ jobs:
   build:
     runs-on: self-hosted
     outputs:
-      env: ${{ steps.set_env.outputs.target_env }}
+      env: ${{ steps.set_env.outputs.env }}
+      short_env: ${{ steps.set_env.outputs.short_env }}
     steps:
       - uses: actions/checkout@v4
 
@@ -33,11 +34,14 @@ jobs:
         run: |
           BRANCH="${GITHUB_REF#refs/heads/}"
           if [[ "$BRANCH" == "main" ]]; then
-            echo "target_env=production" >> $GITHUB_OUTPUT
+            echo "env=production" >> $GITHUB_OUTPUT
+            echo "short_env=prod" >> $GITHUB_OUTPUT
           elif [[ "$BRANCH" =~ ^release.* ]]; then
-            echo "target_env=staging" >> $GITHUB_OUTPUT
+            echo "env=staging" >> $GITHUB_OUTPUT
+            echo  "short_env=staging" >> $GITHUB_OUTPUT
           else
-            echo "target_env=development" >> $GITHUB_OUTPUT
+            echo "env=development" >> $GITHUB_OUTPUT
+            echo 
           fi
 
       - name: Build Docker image
@@ -47,14 +51,7 @@ jobs:
         run: |
           mkdir -p $HOME/helios
           cp helios/api/Dockerfile $HOME/helios/Dockerfile
-
-          if [[ "${{ steps.set_env.outputs.target_env }}" == "production" ]]; then
-            docker compose -f helios/docker-compose.yml -f helios/docker-compose.prod.yml config > $HOME/helios/docker-compose.yml
-          elif [[ "${{ steps.set_env.outputs.target_env }}" == "staging" ]]; then
-            docker compose -f helios/docker-compose.yml -f helios/docker-compose.staging.yml config > $HOME/helios/docker-compose.yml
-          else
-            docker compose -f helios/docker-compose.yml -f helios/docker-compose.dev.yml config > $HOME/helios/docker-compose.yml
-          fi
+            docker compose -f helios/docker-compose.yml -f helios/docker-compose.${{ steps.set_env.outputs.short_env }}.yml config > $HOME/helios/docker-compose.${{ steps.set_env.outputs.short_env }}.yml
 
   deploy:
     needs: build
@@ -77,8 +74,13 @@ jobs:
         working-directory: ./helios/api
 
       - name: Apply EF Core Migrations
-        run: dotnet ef database update --configuration Release
+        run: |
+         echo "Applying migrations for HeliosDataBaseContext..."
+         echo "Using connection string: $MYSQL_HOST:$MYSQL_PORT"
+         echo "Using database: $MYSQL_DATABASE"
+         echo "Using user: $MYSQL_USER"
+         dotnet ef database update --configuration Release
         working-directory: ./helios/HeliosDataBaseContext
 
       - name: Deploy to ${{ needs.build.outputs.env }}
-        run: cd $HOME/helios && docker compose up -d
+        run: cd $HOME/helios && docker compose  -f $HOME/helios/docker-compose.${{ needs.build.outputs.short_env }}.yml up -d --build --force-recreate

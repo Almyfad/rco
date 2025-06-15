@@ -141,7 +141,7 @@ namespace HeliosDataBaseContext.Migrations
                             Adresse = "",
                             Code = "MG",
                             CodePostal = "93120",
-                            Creation = new DateTime(2025, 6, 1, 19, 12, 42, 17, DateTimeKind.Local).AddTicks(5391),
+                            Creation = new DateTime(2025, 6, 15, 16, 37, 23, 909, DateTimeKind.Local).AddTicks(5216),
                             Libelle = "MontGivroux",
                             Pays = "France",
                             TypeCentreId = 100
@@ -152,7 +152,7 @@ namespace HeliosDataBaseContext.Migrations
                             Adresse = "",
                             Code = "PO",
                             CodePostal = "93120",
-                            Creation = new DateTime(2025, 6, 1, 19, 12, 42, 17, DateTimeKind.Local).AddTicks(6074),
+                            Creation = new DateTime(2025, 6, 15, 16, 37, 23, 909, DateTimeKind.Local).AddTicks(5907),
                             Libelle = "Poitier",
                             Pays = "France",
                             TypeCentreId = 100
@@ -163,7 +163,7 @@ namespace HeliosDataBaseContext.Migrations
                             Adresse = "",
                             Code = "LC",
                             CodePostal = "93120",
-                            Creation = new DateTime(2025, 6, 1, 19, 12, 42, 17, DateTimeKind.Local).AddTicks(6076),
+                            Creation = new DateTime(2025, 6, 15, 16, 37, 23, 909, DateTimeKind.Local).AddTicks(5910),
                             Libelle = "La Licorne",
                             Pays = "France",
                             TypeCentreId = 100
@@ -174,7 +174,7 @@ namespace HeliosDataBaseContext.Migrations
                             Adresse = "",
                             Code = "PR",
                             CodePostal = "93120",
-                            Creation = new DateTime(2025, 6, 1, 19, 12, 42, 17, DateTimeKind.Local).AddTicks(6077),
+                            Creation = new DateTime(2025, 6, 15, 16, 37, 23, 909, DateTimeKind.Local).AddTicks(5912),
                             Libelle = "Paris",
                             Pays = "France",
                             TypeCentreId = 200
@@ -185,7 +185,7 @@ namespace HeliosDataBaseContext.Migrations
                             Adresse = "",
                             Code = "LY",
                             CodePostal = "69000",
-                            Creation = new DateTime(2025, 6, 1, 19, 12, 42, 17, DateTimeKind.Local).AddTicks(6078),
+                            Creation = new DateTime(2025, 6, 15, 16, 37, 23, 909, DateTimeKind.Local).AddTicks(5913),
                             Libelle = "Lyon",
                             Pays = "France",
                             TypeCentreId = 200
@@ -196,7 +196,7 @@ namespace HeliosDataBaseContext.Migrations
                             Adresse = "",
                             Code = "MA",
                             CodePostal = "13000",
-                            Creation = new DateTime(2025, 6, 1, 19, 12, 42, 17, DateTimeKind.Local).AddTicks(6079),
+                            Creation = new DateTime(2025, 6, 15, 16, 37, 23, 909, DateTimeKind.Local).AddTicks(5914),
                             Libelle = "Marseille",
                             Pays = "France",
                             TypeCentreId = 200
@@ -207,7 +207,7 @@ namespace HeliosDataBaseContext.Migrations
                             Adresse = "",
                             Code = "TO",
                             CodePostal = "31000",
-                            Creation = new DateTime(2025, 6, 1, 19, 12, 42, 17, DateTimeKind.Local).AddTicks(6080),
+                            Creation = new DateTime(2025, 6, 15, 16, 37, 23, 909, DateTimeKind.Local).AddTicks(5915),
                             Libelle = "Toulouse",
                             Pays = "France",
                             TypeCentreId = 200
@@ -218,7 +218,7 @@ namespace HeliosDataBaseContext.Migrations
                             Adresse = "",
                             Code = "GP",
                             CodePostal = "97100",
-                            Creation = new DateTime(2025, 6, 1, 19, 12, 42, 17, DateTimeKind.Local).AddTicks(6080),
+                            Creation = new DateTime(2025, 6, 15, 16, 37, 23, 909, DateTimeKind.Local).AddTicks(5916),
                             Libelle = "Guadeloupe",
                             Pays = "France",
                             TypeCentreId = 200
@@ -229,7 +229,7 @@ namespace HeliosDataBaseContext.Migrations
                             Adresse = "",
                             Code = "AX",
                             CodePostal = "97100",
-                            Creation = new DateTime(2025, 6, 1, 19, 12, 42, 17, DateTimeKind.Local).AddTicks(6081),
+                            Creation = new DateTime(2025, 6, 15, 16, 37, 23, 909, DateTimeKind.Local).AddTicks(5917),
                             Libelle = "Aix-en-Provence",
                             Pays = "France",
                             TypeCentreId = 200
@@ -240,7 +240,7 @@ namespace HeliosDataBaseContext.Migrations
                             Adresse = "",
                             Code = "LL",
                             CodePostal = "97100",
-                            Creation = new DateTime(2025, 6, 1, 19, 12, 42, 17, DateTimeKind.Local).AddTicks(6082),
+                            Creation = new DateTime(2025, 6, 15, 16, 37, 23, 909, DateTimeKind.Local).AddTicks(5918),
                             Libelle = "Lille",
                             Pays = "France",
                             TypeCentreId = 200
@@ -251,7 +251,7 @@ namespace HeliosDataBaseContext.Migrations
                             Adresse = "",
                             Code = "MT",
                             CodePostal = "97100",
-                            Creation = new DateTime(2025, 6, 1, 19, 12, 42, 17, DateTimeKind.Local).AddTicks(6083),
+                            Creation = new DateTime(2025, 6, 15, 16, 37, 23, 909, DateTimeKind.Local).AddTicks(5919),
                             Libelle = "Metz",
                             Pays = "France",
                             TypeCentreId = 200
@@ -262,7 +262,7 @@ namespace HeliosDataBaseContext.Migrations
                             Adresse = "",
                             Code = "MP",
                             CodePostal = "97100",
-                            Creation = new DateTime(2025, 6, 1, 19, 12, 42, 17, DateTimeKind.Local).AddTicks(6083),
+                            Creation = new DateTime(2025, 6, 15, 16, 37, 23, 909, DateTimeKind.Local).AddTicks(5921),
                             Libelle = "Montptelier",
                             Pays = "France",
                             TypeCentreId = 200
@@ -273,7 +273,7 @@ namespace HeliosDataBaseContext.Migrations
                             Adresse = "",
                             Code = "PP",
                             CodePostal = "97100",
-                            Creation = new DateTime(2025, 6, 1, 19, 12, 42, 17, DateTimeKind.Local).AddTicks(6084),
+                            Creation = new DateTime(2025, 6, 15, 16, 37, 23, 909, DateTimeKind.Local).AddTicks(5922),
                             Libelle = "Perpignan",
                             Pays = "France",
                             TypeCentreId = 200
@@ -284,7 +284,7 @@ namespace HeliosDataBaseContext.Migrations
                             Adresse = "",
                             Code = "CA",
                             CodePostal = "97100",
-                            Creation = new DateTime(2025, 6, 1, 19, 12, 42, 17, DateTimeKind.Local).AddTicks(6085),
+                            Creation = new DateTime(2025, 6, 15, 16, 37, 23, 909, DateTimeKind.Local).AddTicks(5923),
                             Libelle = "Côte d'Azure",
                             Pays = "France",
                             TypeCentreId = 200
@@ -295,7 +295,7 @@ namespace HeliosDataBaseContext.Migrations
                             Adresse = "",
                             Code = "RE",
                             CodePostal = "97100",
-                            Creation = new DateTime(2025, 6, 1, 19, 12, 42, 17, DateTimeKind.Local).AddTicks(6085),
+                            Creation = new DateTime(2025, 6, 15, 16, 37, 23, 909, DateTimeKind.Local).AddTicks(5924),
                             Libelle = "Rennes",
                             Pays = "France",
                             TypeCentreId = 200
@@ -306,7 +306,7 @@ namespace HeliosDataBaseContext.Migrations
                             Adresse = "",
                             Code = "RU",
                             CodePostal = "97100",
-                            Creation = new DateTime(2025, 6, 1, 19, 12, 42, 17, DateTimeKind.Local).AddTicks(6086),
+                            Creation = new DateTime(2025, 6, 15, 16, 37, 23, 909, DateTimeKind.Local).AddTicks(5930),
                             Libelle = "Rouen",
                             Pays = "France",
                             TypeCentreId = 200
@@ -317,7 +317,7 @@ namespace HeliosDataBaseContext.Migrations
                             Adresse = "",
                             Code = "SB",
                             CodePostal = "97100",
-                            Creation = new DateTime(2025, 6, 1, 19, 12, 42, 17, DateTimeKind.Local).AddTicks(6087),
+                            Creation = new DateTime(2025, 6, 15, 16, 37, 23, 909, DateTimeKind.Local).AddTicks(5940),
                             Libelle = "Strasbourg",
                             Pays = "France",
                             TypeCentreId = 200
@@ -357,14 +357,14 @@ namespace HeliosDataBaseContext.Migrations
                         {
                             Id = 100,
                             Code = "Monsieur",
-                            Creation = new DateTime(2025, 6, 1, 23, 12, 41, 955, DateTimeKind.Utc).AddTicks(737),
+                            Creation = new DateTime(2025, 6, 15, 20, 37, 23, 858, DateTimeKind.Utc).AddTicks(2334),
                             Description = "Monsieur"
                         },
                         new
                         {
                             Id = 200,
                             Code = "Madame",
-                            Creation = new DateTime(2025, 6, 1, 23, 12, 41, 960, DateTimeKind.Utc).AddTicks(548),
+                            Creation = new DateTime(2025, 6, 15, 20, 37, 23, 860, DateTimeKind.Utc).AddTicks(8628),
                             Description = "Madame"
                         });
                 });
@@ -413,35 +413,35 @@ namespace HeliosDataBaseContext.Migrations
                         {
                             Id = 1,
                             Code = 1,
-                            Creation = new DateTime(2025, 6, 1, 19, 12, 41, 897, DateTimeKind.Local).AddTicks(352),
+                            Creation = new DateTime(2025, 6, 15, 16, 37, 23, 827, DateTimeKind.Local).AddTicks(4216),
                             ModuleId = 1000
                         },
                         new
                         {
                             Id = 2,
                             Code = 1,
-                            Creation = new DateTime(2025, 6, 1, 19, 12, 41, 897, DateTimeKind.Local).AddTicks(855),
+                            Creation = new DateTime(2025, 6, 15, 16, 37, 23, 827, DateTimeKind.Local).AddTicks(4709),
                             ModuleId = 2000
                         },
                         new
                         {
                             Id = 3,
                             Code = 1,
-                            Creation = new DateTime(2025, 6, 1, 19, 12, 41, 897, DateTimeKind.Local).AddTicks(857),
+                            Creation = new DateTime(2025, 6, 15, 16, 37, 23, 827, DateTimeKind.Local).AddTicks(4713),
                             ModuleId = 2100
                         },
                         new
                         {
                             Id = 4,
                             Code = 1,
-                            Creation = new DateTime(2025, 6, 1, 19, 12, 41, 897, DateTimeKind.Local).AddTicks(858),
+                            Creation = new DateTime(2025, 6, 15, 16, 37, 23, 827, DateTimeKind.Local).AddTicks(4714),
                             ModuleId = 2200
                         },
                         new
                         {
                             Id = 5,
                             Code = 1,
-                            Creation = new DateTime(2025, 6, 1, 19, 12, 41, 897, DateTimeKind.Local).AddTicks(859),
+                            Creation = new DateTime(2025, 6, 15, 16, 37, 23, 827, DateTimeKind.Local).AddTicks(4715),
                             ModuleId = 50000
                         },
                         new
@@ -449,7 +449,7 @@ namespace HeliosDataBaseContext.Migrations
                             Id = 6,
                             CentreId = 1,
                             Code = 200,
-                            Creation = new DateTime(2025, 6, 1, 19, 12, 41, 897, DateTimeKind.Local).AddTicks(859),
+                            Creation = new DateTime(2025, 6, 15, 16, 37, 23, 827, DateTimeKind.Local).AddTicks(4716),
                             ModuleId = 3000,
                             utilisateurId = 4
                         },
@@ -458,7 +458,7 @@ namespace HeliosDataBaseContext.Migrations
                             Id = 7,
                             CentreId = 1,
                             Code = 200,
-                            Creation = new DateTime(2025, 6, 1, 19, 12, 41, 897, DateTimeKind.Local).AddTicks(1142),
+                            Creation = new DateTime(2025, 6, 15, 16, 37, 23, 827, DateTimeKind.Local).AddTicks(4993),
                             ModuleId = 3010,
                             utilisateurId = 4
                         },
@@ -467,7 +467,7 @@ namespace HeliosDataBaseContext.Migrations
                             Id = 8,
                             CentreId = 1,
                             Code = 200,
-                            Creation = new DateTime(2025, 6, 1, 19, 12, 41, 897, DateTimeKind.Local).AddTicks(1143),
+                            Creation = new DateTime(2025, 6, 15, 16, 37, 23, 827, DateTimeKind.Local).AddTicks(4994),
                             ModuleId = 4000,
                             utilisateurId = 4
                         },
@@ -476,7 +476,7 @@ namespace HeliosDataBaseContext.Migrations
                             Id = 9,
                             CentreId = 2,
                             Code = 100,
-                            Creation = new DateTime(2025, 6, 1, 19, 12, 41, 897, DateTimeKind.Local).AddTicks(1143),
+                            Creation = new DateTime(2025, 6, 15, 16, 37, 23, 827, DateTimeKind.Local).AddTicks(4995),
                             ModuleId = 3000,
                             utilisateurId = 4
                         },
@@ -485,7 +485,7 @@ namespace HeliosDataBaseContext.Migrations
                             Id = 10,
                             CentreId = 2,
                             Code = 200,
-                            Creation = new DateTime(2025, 6, 1, 19, 12, 41, 897, DateTimeKind.Local).AddTicks(1145),
+                            Creation = new DateTime(2025, 6, 15, 16, 37, 23, 827, DateTimeKind.Local).AddTicks(4996),
                             ModuleId = 2300,
                             utilisateurId = 4
                         });
@@ -632,56 +632,6 @@ namespace HeliosDataBaseContext.Migrations
                     b.HasIndex("TypeMembreId");
 
                     b.ToTable("Membres", (string)null);
-
-                    b.HasData(
-                        new
-                        {
-                            Id = 1,
-                            CiviliteId = 100,
-                            Creation = new DateTime(2025, 6, 1, 19, 12, 42, 9, DateTimeKind.Local).AddTicks(1460),
-                            DateNaissance = new DateOnly(1, 1, 1),
-                            EmailValide = true,
-                            Nom = "Admin",
-                            Prenom = "SysAdmin",
-                            StatutMembreId = 100,
-                            TypeMembreId = 900
-                        },
-                        new
-                        {
-                            Id = 2,
-                            CiviliteId = 100,
-                            Creation = new DateTime(2025, 6, 1, 19, 12, 42, 9, DateTimeKind.Local).AddTicks(2106),
-                            DateNaissance = new DateOnly(1, 1, 1),
-                            EmailValide = true,
-                            Nom = "Admin",
-                            Prenom = "Admin",
-                            StatutMembreId = 100,
-                            TypeMembreId = 900
-                        },
-                        new
-                        {
-                            Id = 3,
-                            CiviliteId = 100,
-                            Creation = new DateTime(2025, 6, 1, 19, 12, 42, 9, DateTimeKind.Local).AddTicks(2108),
-                            DateNaissance = new DateOnly(1, 1, 1),
-                            EmailValide = true,
-                            Nom = "usermanager",
-                            Prenom = "usermanager",
-                            StatutMembreId = 100,
-                            TypeMembreId = 900
-                        },
-                        new
-                        {
-                            Id = 4,
-                            CiviliteId = 100,
-                            Creation = new DateTime(2025, 6, 1, 19, 12, 42, 9, DateTimeKind.Local).AddTicks(2109),
-                            DateNaissance = new DateOnly(1, 1, 1),
-                            EmailValide = true,
-                            Nom = "usercentre",
-                            Prenom = "usercentre",
-                            StatutMembreId = 100,
-                            TypeMembreId = 900
-                        });
                 });
 
             modelBuilder.Entity("Helios.Context.Models.Module", b =>
@@ -738,7 +688,7 @@ namespace HeliosDataBaseContext.Migrations
                         {
                             Id = 1000,
                             Code = 1000,
-                            Creation = new DateTime(2025, 6, 1, 23, 12, 41, 895, DateTimeKind.Utc).AddTicks(9949),
+                            Creation = new DateTime(2025, 6, 15, 20, 37, 23, 826, DateTimeKind.Utc).AddTicks(3685),
                             Icon = "home",
                             Label = "Accueil",
                             Path = "/",
@@ -750,7 +700,7 @@ namespace HeliosDataBaseContext.Migrations
                         {
                             Id = 6000,
                             Code = 6000,
-                            Creation = new DateTime(2025, 6, 1, 23, 12, 41, 896, DateTimeKind.Utc).AddTicks(716),
+                            Creation = new DateTime(2025, 6, 15, 20, 37, 23, 826, DateTimeKind.Utc).AddTicks(4749),
                             Icon = "email",
                             Label = "Mailing",
                             Path = "/mailing"
@@ -759,7 +709,7 @@ namespace HeliosDataBaseContext.Migrations
                         {
                             Id = 6100,
                             Code = 6100,
-                            Creation = new DateTime(2025, 6, 1, 23, 12, 41, 896, DateTimeKind.Utc).AddTicks(718),
+                            Creation = new DateTime(2025, 6, 15, 20, 37, 23, 826, DateTimeKind.Utc).AddTicks(4752),
                             Icon = "list",
                             Label = "Listes",
                             ParentId = 6000,
@@ -769,7 +719,7 @@ namespace HeliosDataBaseContext.Migrations
                         {
                             Id = 6200,
                             Code = 6200,
-                            Creation = new DateTime(2025, 6, 1, 23, 12, 41, 896, DateTimeKind.Utc).AddTicks(824),
+                            Creation = new DateTime(2025, 6, 15, 20, 37, 23, 826, DateTimeKind.Utc).AddTicks(4877),
                             Icon = "campaign",
                             Label = "Campagnes",
                             ParentId = 6000,
@@ -779,7 +729,7 @@ namespace HeliosDataBaseContext.Migrations
                         {
                             Id = 2000,
                             Code = 2000,
-                            Creation = new DateTime(2025, 6, 1, 23, 12, 41, 896, DateTimeKind.Utc).AddTicks(826),
+                            Creation = new DateTime(2025, 6, 15, 20, 37, 23, 826, DateTimeKind.Utc).AddTicks(4879),
                             Icon = "temple_buddhist",
                             Label = "Conférence",
                             Path = "/conferences"
@@ -788,7 +738,7 @@ namespace HeliosDataBaseContext.Migrations
                         {
                             Id = 2300,
                             Code = 2300,
-                            Creation = new DateTime(2025, 6, 1, 23, 12, 41, 896, DateTimeKind.Utc).AddTicks(835),
+                            Creation = new DateTime(2025, 6, 15, 20, 37, 23, 826, DateTimeKind.Utc).AddTicks(4887),
                             Icon = "post_add",
                             Label = "Créer Conférence",
                             ParentId = 2000,
@@ -798,7 +748,7 @@ namespace HeliosDataBaseContext.Migrations
                         {
                             Id = 2100,
                             Code = 2100,
-                            Creation = new DateTime(2025, 6, 1, 23, 12, 41, 896, DateTimeKind.Utc).AddTicks(836),
+                            Creation = new DateTime(2025, 6, 15, 20, 37, 23, 826, DateTimeKind.Utc).AddTicks(4889),
                             Icon = "person_add",
                             Label = "Inscription",
                             ParentId = 2000,
@@ -808,7 +758,7 @@ namespace HeliosDataBaseContext.Migrations
                         {
                             Id = 2200,
                             Code = 2200,
-                            Creation = new DateTime(2025, 6, 1, 23, 12, 41, 896, DateTimeKind.Utc).AddTicks(837),
+                            Creation = new DateTime(2025, 6, 15, 20, 37, 23, 826, DateTimeKind.Utc).AddTicks(4890),
                             Icon = "edit",
                             Label = "Mes Inscriptions",
                             ParentId = 2000,
@@ -818,7 +768,7 @@ namespace HeliosDataBaseContext.Migrations
                         {
                             Id = 3000,
                             Code = 3000,
-                            Creation = new DateTime(2025, 6, 1, 23, 12, 41, 896, DateTimeKind.Utc).AddTicks(839),
+                            Creation = new DateTime(2025, 6, 15, 20, 37, 23, 826, DateTimeKind.Utc).AddTicks(4892),
                             Icon = "book",
                             Label = "Registre",
                             Path = "/registre"
@@ -827,7 +777,7 @@ namespace HeliosDataBaseContext.Migrations
                         {
                             Id = 3010,
                             Code = 3010,
-                            Creation = new DateTime(2025, 6, 1, 23, 12, 41, 896, DateTimeKind.Utc).AddTicks(841),
+                            Creation = new DateTime(2025, 6, 15, 20, 37, 23, 826, DateTimeKind.Utc).AddTicks(4894),
                             Icon = "people",
                             Label = "Fiches Elèves",
                             ParentId = 3000,
@@ -837,7 +787,7 @@ namespace HeliosDataBaseContext.Migrations
                         {
                             Id = 3020,
                             Code = 3020,
-                            Creation = new DateTime(2025, 6, 1, 23, 12, 41, 896, DateTimeKind.Utc).AddTicks(842),
+                            Creation = new DateTime(2025, 6, 15, 20, 37, 23, 826, DateTimeKind.Utc).AddTicks(4896),
                             Icon = "wb_iridescent",
                             Label = "Fiches Parvis",
                             ParentId = 3000,
@@ -847,7 +797,7 @@ namespace HeliosDataBaseContext.Migrations
                         {
                             Id = 3030,
                             Code = 3030,
-                            Creation = new DateTime(2025, 6, 1, 23, 12, 41, 896, DateTimeKind.Utc).AddTicks(843),
+                            Creation = new DateTime(2025, 6, 15, 20, 37, 23, 826, DateTimeKind.Utc).AddTicks(4897),
                             Icon = "contact_page",
                             Label = "Fiches Contacts",
                             ParentId = 3000,
@@ -857,7 +807,7 @@ namespace HeliosDataBaseContext.Migrations
                         {
                             Id = 3040,
                             Code = 3040,
-                            Creation = new DateTime(2025, 6, 1, 23, 12, 41, 896, DateTimeKind.Utc).AddTicks(845),
+                            Creation = new DateTime(2025, 6, 15, 20, 37, 23, 826, DateTimeKind.Utc).AddTicks(4899),
                             Icon = "child_care",
                             Label = "Fiches Jeunesses",
                             ParentId = 3000,
@@ -867,7 +817,7 @@ namespace HeliosDataBaseContext.Migrations
                         {
                             Id = 3050,
                             Code = 3050,
-                            Creation = new DateTime(2025, 6, 1, 23, 12, 41, 896, DateTimeKind.Utc).AddTicks(846),
+                            Creation = new DateTime(2025, 6, 15, 20, 37, 23, 826, DateTimeKind.Utc).AddTicks(4900),
                             Icon = "settings_accessibility",
                             Label = "Fiches Jeunes Rosicruciens",
                             ParentId = 3000,
@@ -877,7 +827,7 @@ namespace HeliosDataBaseContext.Migrations
                         {
                             Id = 3060,
                             Code = 3060,
-                            Creation = new DateTime(2025, 6, 1, 23, 12, 41, 896, DateTimeKind.Utc).AddTicks(847),
+                            Creation = new DateTime(2025, 6, 15, 20, 37, 23, 826, DateTimeKind.Utc).AddTicks(4902),
                             Icon = "featured_play_list",
                             Label = "Saisie Présences",
                             ParentId = 3000,
@@ -887,7 +837,7 @@ namespace HeliosDataBaseContext.Migrations
                         {
                             Id = 3061,
                             Code = 3061,
-                            Creation = new DateTime(2025, 6, 1, 23, 12, 41, 896, DateTimeKind.Utc).AddTicks(848),
+                            Creation = new DateTime(2025, 6, 15, 20, 37, 23, 826, DateTimeKind.Utc).AddTicks(4903),
                             Icon = "list_alt",
                             Label = "Présence Villes",
                             ParentId = 3060,
@@ -897,7 +847,7 @@ namespace HeliosDataBaseContext.Migrations
                         {
                             Id = 3062,
                             Code = 3062,
-                            Creation = new DateTime(2025, 6, 1, 23, 12, 41, 896, DateTimeKind.Utc).AddTicks(850),
+                            Creation = new DateTime(2025, 6, 15, 20, 37, 23, 826, DateTimeKind.Utc).AddTicks(4905),
                             Icon = "fact_check",
                             Label = "Présence CR",
                             ParentId = 3060,
@@ -907,7 +857,7 @@ namespace HeliosDataBaseContext.Migrations
                         {
                             Id = 3063,
                             Code = 3063,
-                            Creation = new DateTime(2025, 6, 1, 23, 12, 41, 896, DateTimeKind.Utc).AddTicks(856),
+                            Creation = new DateTime(2025, 6, 15, 20, 37, 23, 826, DateTimeKind.Utc).AddTicks(4907),
                             Icon = "receipt_long",
                             Label = "Présence EI",
                             ParentId = 3060,
@@ -917,7 +867,7 @@ namespace HeliosDataBaseContext.Migrations
                         {
                             Id = 3070,
                             Code = 3070,
-                            Creation = new DateTime(2025, 6, 1, 23, 12, 41, 896, DateTimeKind.Utc).AddTicks(858),
+                            Creation = new DateTime(2025, 6, 15, 20, 37, 23, 826, DateTimeKind.Utc).AddTicks(4919),
                             Icon = "insert_chart_outlined",
                             Label = "Statistiques",
                             ParentId = 3000,
@@ -927,7 +877,7 @@ namespace HeliosDataBaseContext.Migrations
                         {
                             Id = 3071,
                             Code = 3071,
-                            Creation = new DateTime(2025, 6, 1, 23, 12, 41, 896, DateTimeKind.Utc).AddTicks(859),
+                            Creation = new DateTime(2025, 6, 15, 20, 37, 23, 826, DateTimeKind.Utc).AddTicks(4920),
                             Icon = "list_alt",
                             Label = "Présences",
                             ParentId = 3070,
@@ -937,7 +887,7 @@ namespace HeliosDataBaseContext.Migrations
                         {
                             Id = 4000,
                             Code = 4000,
-                            Creation = new DateTime(2025, 6, 1, 23, 12, 41, 896, DateTimeKind.Utc).AddTicks(860),
+                            Creation = new DateTime(2025, 6, 15, 20, 37, 23, 826, DateTimeKind.Utc).AddTicks(4922),
                             Icon = "account_balance",
                             Label = "Comptabilité",
                             Path = "/compta"
@@ -946,7 +896,7 @@ namespace HeliosDataBaseContext.Migrations
                         {
                             Id = 4010,
                             Code = 4010,
-                            Creation = new DateTime(2025, 6, 1, 23, 12, 41, 896, DateTimeKind.Utc).AddTicks(861),
+                            Creation = new DateTime(2025, 6, 15, 20, 37, 23, 826, DateTimeKind.Utc).AddTicks(4923),
                             Icon = "account_balance_wallet",
                             Label = "Compta en ligne",
                             ParentId = 4000,
@@ -956,7 +906,7 @@ namespace HeliosDataBaseContext.Migrations
                         {
                             Id = 4020,
                             Code = 4020,
-                            Creation = new DateTime(2025, 6, 1, 23, 12, 41, 896, DateTimeKind.Utc).AddTicks(868),
+                            Creation = new DateTime(2025, 6, 15, 20, 37, 23, 826, DateTimeKind.Utc).AddTicks(4924),
                             Icon = "settings",
                             Label = "Paramètre generaux",
                             ParentId = 4000,
@@ -966,7 +916,7 @@ namespace HeliosDataBaseContext.Migrations
                         {
                             Id = 4030,
                             Code = 4030,
-                            Creation = new DateTime(2025, 6, 1, 23, 12, 41, 896, DateTimeKind.Utc).AddTicks(869),
+                            Creation = new DateTime(2025, 6, 15, 20, 37, 23, 826, DateTimeKind.Utc).AddTicks(4928),
                             Icon = "monetization_on",
                             Label = "Sasie écritures répetitives",
                             ParentId = 4000,
@@ -976,7 +926,7 @@ namespace HeliosDataBaseContext.Migrations
                         {
                             Id = 4040,
                             Code = 4040,
-                            Creation = new DateTime(2025, 6, 1, 23, 12, 41, 896, DateTimeKind.Utc).AddTicks(871),
+                            Creation = new DateTime(2025, 6, 15, 20, 37, 23, 826, DateTimeKind.Utc).AddTicks(4930),
                             Icon = "description",
                             Label = "Comptes/caisse",
                             ParentId = 4000,
@@ -986,7 +936,7 @@ namespace HeliosDataBaseContext.Migrations
                         {
                             Id = 10000,
                             Code = 10000,
-                            Creation = new DateTime(2025, 6, 1, 23, 12, 41, 896, DateTimeKind.Utc).AddTicks(872),
+                            Creation = new DateTime(2025, 6, 15, 20, 37, 23, 826, DateTimeKind.Utc).AddTicks(4931),
                             Icon = "code",
                             Label = "Développement",
                             Path = "/developpment",
@@ -997,7 +947,7 @@ namespace HeliosDataBaseContext.Migrations
                         {
                             Id = 5000,
                             Code = 5000,
-                            Creation = new DateTime(2025, 6, 1, 23, 12, 41, 896, DateTimeKind.Utc).AddTicks(873),
+                            Creation = new DateTime(2025, 6, 15, 20, 37, 23, 826, DateTimeKind.Utc).AddTicks(4933),
                             Icon = "admin_panel_settings",
                             Label = "Administation",
                             Path = "/administation"
@@ -1006,7 +956,7 @@ namespace HeliosDataBaseContext.Migrations
                         {
                             Id = 50000,
                             Code = 50000,
-                            Creation = new DateTime(2025, 6, 1, 23, 12, 41, 896, DateTimeKind.Utc).AddTicks(874),
+                            Creation = new DateTime(2025, 6, 15, 20, 37, 23, 826, DateTimeKind.Utc).AddTicks(4934),
                             Icon = "exit_to_app",
                             Label = "Deconnexion",
                             Path = "/logout"
@@ -1046,21 +996,21 @@ namespace HeliosDataBaseContext.Migrations
                         {
                             Id = 100,
                             Code = "SYSADMIN",
-                            Creation = new DateTime(2025, 6, 1, 23, 12, 42, 5, DateTimeKind.Utc).AddTicks(9566),
+                            Creation = new DateTime(2025, 6, 15, 20, 37, 23, 899, DateTimeKind.Utc).AddTicks(1260),
                             Description = "Administrateur Systeme Full access"
                         },
                         new
                         {
                             Id = 200,
                             Code = "ADMIN_FULL_ACCESS",
-                            Creation = new DateTime(2025, 6, 1, 23, 12, 42, 6, DateTimeKind.Utc).AddTicks(4325),
+                            Creation = new DateTime(2025, 6, 15, 20, 37, 23, 899, DateTimeKind.Utc).AddTicks(7483),
                             Description = "Administrateur Full access"
                         },
                         new
                         {
                             Id = 300,
                             Code = "USER_MANAGER",
-                            Creation = new DateTime(2025, 6, 1, 23, 12, 42, 6, DateTimeKind.Utc).AddTicks(4544),
+                            Creation = new DateTime(2025, 6, 15, 20, 37, 23, 899, DateTimeKind.Utc).AddTicks(7700),
                             Description = "Manager des droits utilisateurs"
                         });
                 });
@@ -1098,35 +1048,35 @@ namespace HeliosDataBaseContext.Migrations
                         {
                             Id = 100,
                             Code = "Present",
-                            Creation = new DateTime(2025, 6, 1, 23, 12, 42, 3, DateTimeKind.Utc).AddTicks(1609),
+                            Creation = new DateTime(2025, 6, 15, 20, 37, 23, 896, DateTimeKind.Utc).AddTicks(3493),
                             Description = "Présent"
                         },
                         new
                         {
                             Id = 200,
                             Code = "Suivi",
-                            Creation = new DateTime(2025, 6, 1, 23, 12, 42, 3, DateTimeKind.Utc).AddTicks(7336),
+                            Creation = new DateTime(2025, 6, 15, 20, 37, 23, 896, DateTimeKind.Utc).AddTicks(9021),
                             Description = "Suivi"
                         },
                         new
                         {
                             Id = 300,
                             Code = "Absent",
-                            Creation = new DateTime(2025, 6, 1, 23, 12, 42, 3, DateTimeKind.Utc).AddTicks(7589),
+                            Creation = new DateTime(2025, 6, 15, 20, 37, 23, 896, DateTimeKind.Utc).AddTicks(9225),
                             Description = "Absent"
                         },
                         new
                         {
                             Id = 400,
                             Code = "Demissionnaire",
-                            Creation = new DateTime(2025, 6, 1, 23, 12, 42, 3, DateTimeKind.Utc).AddTicks(7716),
+                            Creation = new DateTime(2025, 6, 15, 20, 37, 23, 896, DateTimeKind.Utc).AddTicks(9353),
                             Description = "Démissionnaire"
                         },
                         new
                         {
                             Id = 500,
                             Code = "Decede",
-                            Creation = new DateTime(2025, 6, 1, 23, 12, 42, 3, DateTimeKind.Utc).AddTicks(7825),
+                            Creation = new DateTime(2025, 6, 15, 20, 37, 23, 896, DateTimeKind.Utc).AddTicks(9462),
                             Description = "Décédé"
                         });
                 });
@@ -1164,56 +1114,56 @@ namespace HeliosDataBaseContext.Migrations
                         {
                             Id = 100,
                             Code = "ServiceTempleInteresse",
-                            Creation = new DateTime(2025, 6, 1, 23, 12, 42, 12, DateTimeKind.Utc).AddTicks(3583),
+                            Creation = new DateTime(2025, 6, 15, 20, 37, 23, 904, DateTimeKind.Utc).AddTicks(8346),
                             Description = "Service du Temple pour membres interessés"
                         },
                         new
                         {
                             Id = 200,
                             Code = "ServiceApprofondissement",
-                            Creation = new DateTime(2025, 6, 1, 23, 12, 42, 13, DateTimeKind.Utc).AddTicks(7428),
+                            Creation = new DateTime(2025, 6, 15, 20, 37, 23, 905, DateTimeKind.Utc).AddTicks(8718),
                             Description = "Service du Temple d'approfondissement"
                         },
                         new
                         {
                             Id = 300,
                             Code = "WeekEndVille",
-                            Creation = new DateTime(2025, 6, 1, 23, 12, 42, 13, DateTimeKind.Utc).AddTicks(7899),
+                            Creation = new DateTime(2025, 6, 15, 20, 37, 23, 905, DateTimeKind.Utc).AddTicks(9121),
                             Description = "Week-end Ville"
                         },
                         new
                         {
                             Id = 400,
                             Code = "ConferenceRenouvellement",
-                            Creation = new DateTime(2025, 6, 1, 23, 12, 42, 13, DateTimeKind.Utc).AddTicks(8080),
+                            Creation = new DateTime(2025, 6, 15, 20, 37, 23, 905, DateTimeKind.Utc).AddTicks(9439),
                             Description = "Conférence Renouvellement"
                         },
                         new
                         {
                             Id = 500,
                             Code = "ConferenceECS",
-                            Creation = new DateTime(2025, 6, 1, 23, 12, 42, 13, DateTimeKind.Utc).AddTicks(8196),
+                            Creation = new DateTime(2025, 6, 15, 20, 37, 23, 905, DateTimeKind.Utc).AddTicks(9563),
                             Description = "Conférence ECS"
                         },
                         new
                         {
                             Id = 600,
                             Code = "ConferenceECC",
-                            Creation = new DateTime(2025, 6, 1, 23, 12, 42, 13, DateTimeKind.Utc).AddTicks(8315),
+                            Creation = new DateTime(2025, 6, 15, 20, 37, 23, 905, DateTimeKind.Utc).AddTicks(9683),
                             Description = "Conférence ECC"
                         },
                         new
                         {
                             Id = 700,
                             Code = "ConferenceECS_ECC",
-                            Creation = new DateTime(2025, 6, 1, 23, 12, 42, 13, DateTimeKind.Utc).AddTicks(8439),
+                            Creation = new DateTime(2025, 6, 15, 20, 37, 23, 905, DateTimeKind.Utc).AddTicks(9775),
                             Description = "Conférence ECS/ECC"
                         },
                         new
                         {
                             Id = 800,
                             Code = "ConventGraalCTO",
-                            Creation = new DateTime(2025, 6, 1, 23, 12, 42, 13, DateTimeKind.Utc).AddTicks(8554),
+                            Creation = new DateTime(2025, 6, 15, 20, 37, 23, 905, DateTimeKind.Utc).AddTicks(9886),
                             Description = "Conférence Convent Graal CTO"
                         });
                 });
@@ -1251,14 +1201,14 @@ namespace HeliosDataBaseContext.Migrations
                         {
                             Id = 100,
                             Code = "Renouvellement",
-                            Creation = new DateTime(2025, 6, 1, 23, 12, 42, 16, DateTimeKind.Utc).AddTicks(1263),
+                            Creation = new DateTime(2025, 6, 15, 20, 37, 23, 908, DateTimeKind.Utc).AddTicks(816),
                             Description = "Centre de Renouvellement"
                         },
                         new
                         {
                             Id = 200,
                             Code = "Ville",
-                            Creation = new DateTime(2025, 6, 1, 23, 12, 42, 16, DateTimeKind.Utc).AddTicks(6371),
+                            Creation = new DateTime(2025, 6, 15, 20, 37, 23, 908, DateTimeKind.Utc).AddTicks(6242),
                             Description = "Centre de ville"
                         });
                 });
@@ -1296,70 +1246,70 @@ namespace HeliosDataBaseContext.Migrations
                         {
                             Id = 100,
                             Code = "PremierAspect",
-                            Creation = new DateTime(2025, 6, 1, 23, 12, 41, 998, DateTimeKind.Utc).AddTicks(8229),
+                            Creation = new DateTime(2025, 6, 15, 20, 37, 23, 893, DateTimeKind.Utc).AddTicks(3863),
                             Description = "Premier Aspect"
                         },
                         new
                         {
                             Id = 200,
                             Code = "DeuxiemeAspect",
-                            Creation = new DateTime(2025, 6, 1, 23, 12, 41, 999, DateTimeKind.Utc).AddTicks(4081),
+                            Creation = new DateTime(2025, 6, 15, 20, 37, 23, 893, DateTimeKind.Utc).AddTicks(9348),
                             Description = "Deuxieme Aspect"
                         },
                         new
                         {
                             Id = 300,
                             Code = "ECS",
-                            Creation = new DateTime(2025, 6, 1, 23, 12, 41, 999, DateTimeKind.Utc).AddTicks(8151),
+                            Creation = new DateTime(2025, 6, 15, 20, 37, 23, 894, DateTimeKind.Utc).AddTicks(331),
                             Description = "Ecole de Conscience Supérieure"
                         },
                         new
                         {
                             Id = 400,
                             Code = "ECCLESIA",
-                            Creation = new DateTime(2025, 6, 1, 23, 12, 42, 0, DateTimeKind.Utc).AddTicks(7301),
+                            Creation = new DateTime(2025, 6, 15, 20, 37, 23, 894, DateTimeKind.Utc).AddTicks(719),
                             Description = "Ecclesia"
                         },
                         new
                         {
                             Id = 500,
                             Code = "GRAAL",
-                            Creation = new DateTime(2025, 6, 1, 23, 12, 42, 0, DateTimeKind.Utc).AddTicks(7476),
+                            Creation = new DateTime(2025, 6, 15, 20, 37, 23, 894, DateTimeKind.Utc).AddTicks(821),
                             Description = "Graal"
                         },
                         new
                         {
                             Id = 600,
                             Code = "CinquiemeAspect",
-                            Creation = new DateTime(2025, 6, 1, 23, 12, 42, 0, DateTimeKind.Utc).AddTicks(7581),
+                            Creation = new DateTime(2025, 6, 15, 20, 37, 23, 894, DateTimeKind.Utc).AddTicks(961),
                             Description = "Cinquieme Aspect"
                         },
                         new
                         {
                             Id = 700,
                             Code = "SixiemeAspect",
-                            Creation = new DateTime(2025, 6, 1, 23, 12, 42, 0, DateTimeKind.Utc).AddTicks(7700),
+                            Creation = new DateTime(2025, 6, 15, 20, 37, 23, 894, DateTimeKind.Utc).AddTicks(1049),
                             Description = "Sixieme Aspect"
                         },
                         new
                         {
                             Id = 800,
                             Code = "SeptiemeAspect",
-                            Creation = new DateTime(2025, 6, 1, 23, 12, 42, 0, DateTimeKind.Utc).AddTicks(7783),
+                            Creation = new DateTime(2025, 6, 15, 20, 37, 23, 894, DateTimeKind.Utc).AddTicks(1124),
                             Description = "Septieme Aspect"
                         },
                         new
                         {
                             Id = 900,
                             Code = "Interesse",
-                            Creation = new DateTime(2025, 6, 1, 23, 12, 42, 0, DateTimeKind.Utc).AddTicks(7915),
+                            Creation = new DateTime(2025, 6, 15, 20, 37, 23, 894, DateTimeKind.Utc).AddTicks(1238),
                             Description = "Interessé"
                         },
                         new
                         {
                             Id = 1000,
                             Code = "Jeunesse",
-                            Creation = new DateTime(2025, 6, 1, 23, 12, 42, 0, DateTimeKind.Utc).AddTicks(8020),
+                            Creation = new DateTime(2025, 6, 15, 20, 37, 23, 894, DateTimeKind.Utc).AddTicks(1341),
                             Description = "Jeunesse"
                         });
                 });
@@ -1399,33 +1349,29 @@ namespace HeliosDataBaseContext.Migrations
                         new
                         {
                             Id = 1,
-                            Creation = new DateTime(2025, 6, 1, 19, 12, 42, 9, DateTimeKind.Local).AddTicks(8926),
+                            Creation = new DateTime(2025, 6, 15, 16, 37, 23, 902, DateTimeKind.Local).AddTicks(5145),
                             Email = "admin@rco.com",
-                            MembreId = 1,
                             MotDePasse = "AQAAAAIAAYagAAAAEEiNVE7GnBd6NNlBeIh1KHdEWcrYV3GpgaIw5NPr3hQ8LCK30Df1/LgmaUfSBliSLg=="
                         },
                         new
                         {
                             Id = 2,
-                            Creation = new DateTime(2025, 6, 1, 19, 12, 42, 9, DateTimeKind.Local).AddTicks(9722),
+                            Creation = new DateTime(2025, 6, 15, 16, 37, 23, 902, DateTimeKind.Local).AddTicks(5819),
                             Email = "admin2@rco.com",
-                            MembreId = 2,
                             MotDePasse = "AQAAAAIAAYagAAAAEEiNVE7GnBd6NNlBeIh1KHdEWcrYV3GpgaIw5NPr3hQ8LCK30Df1/LgmaUfSBliSLg=="
                         },
                         new
                         {
                             Id = 3,
-                            Creation = new DateTime(2025, 6, 1, 19, 12, 42, 9, DateTimeKind.Local).AddTicks(9744),
+                            Creation = new DateTime(2025, 6, 15, 16, 37, 23, 902, DateTimeKind.Local).AddTicks(5828),
                             Email = "usermanager@rco.com",
-                            MembreId = 3,
                             MotDePasse = "AQAAAAIAAYagAAAAEEiNVE7GnBd6NNlBeIh1KHdEWcrYV3GpgaIw5NPr3hQ8LCK30Df1/LgmaUfSBliSLg=="
                         },
                         new
                         {
                             Id = 4,
-                            Creation = new DateTime(2025, 6, 1, 19, 12, 42, 9, DateTimeKind.Local).AddTicks(9749),
+                            Creation = new DateTime(2025, 6, 15, 16, 37, 23, 902, DateTimeKind.Local).AddTicks(5833),
                             Email = "usercentre@rco.com",
-                            MembreId = 4,
                             MotDePasse = "AQAAAAIAAYagAAAAEEiNVE7GnBd6NNlBeIh1KHdEWcrYV3GpgaIw5NPr3hQ8LCK30Df1/LgmaUfSBliSLg=="
                         });
                 });
