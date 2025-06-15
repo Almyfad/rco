@@ -4,4 +4,4 @@ services:
       context: .
       dockerfile: api/Dockerfile
     environment:
-      - ASPNETCORE_ENVIRONMENT55=Development
+      - ASPNETCORE_ENVIRONMENT=Development

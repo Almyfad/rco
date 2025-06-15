@@ -105,56 +105,6 @@ namespace Helios.Context
                 e.ToTable("Membres");
                 e.HasKey(u => u.Id);
                 e.HasMany(e => e.Parents).WithMany(e => e.Enfants).UsingEntity(et => et.ToTable("ParentsEnfants"));
-                e.HasData(new
-                {
-                    Id = 1,
-                    Nom = "Admin",
-                    Prenom = "SysAdmin",
-                    StatutMembreId = (int)StatutsMembres.Present,
-                    DateNaissance = DateOnly.MinValue,
-                    CiviliteId = (int)Models.Civilites.Monsieur,
-                    TypeMembreId = (int)TypesMembres.Interesse,
-                    Creation = DateTime.Now,
-                    EmailValide = true,
-                },
-                new
-                {
-                    Id = 2,
-                    Nom = "Admin",
-                    Prenom = "Admin",
-                    StatutMembreId = (int)StatutsMembres.Present,
-                    DateNaissance = DateOnly.MinValue,
-                    CiviliteId = (int)Models.Civilites.Monsieur,
-                    TypeMembreId = (int)TypesMembres.Interesse,
-                    Creation = DateTime.Now,
-                    EmailValide = true,
-                },
-                new
-                {
-                    Id = 3,
-                    Nom = "usermanager",
-                    Prenom = "usermanager",
-                    StatutMembreId = (int)StatutsMembres.Present,
-                    DateNaissance = DateOnly.MinValue,
-                    CiviliteId = (int)Models.Civilites.Monsieur,
-                    TypeMembreId = (int)TypesMembres.Interesse,
-                    Creation = DateTime.Now,
-                    EmailValide = true,
-                },
-                new
-                {
-                    Id = 4,
-                    Nom = "usercentre",
-                    Prenom = "usercentre",
-                    StatutMembreId = (int)StatutsMembres.Present,
-                    DateNaissance = DateOnly.MinValue,
-                    CiviliteId = (int)Models.Civilites.Monsieur,
-                    TypeMembreId = (int)TypesMembres.Interesse,
-                    Creation = DateTime.Now,
-                    EmailValide = true,
-                }
-
-                );
             });
             modelBuilder.Entity<Utilisateur>(e =>
             {
@@ -167,7 +117,6 @@ namespace Helios.Context
                     Id = 1,
                     Creation = DateTime.Now,
                     MotDePasse = "AQAAAAIAAYagAAAAEEiNVE7GnBd6NNlBeIh1KHdEWcrYV3GpgaIw5NPr3hQ8LCK30Df1/LgmaUfSBliSLg==",
-                    MembreId = 1
                 });
                 e.HasData(new Utilisateur()
                 {
@@ -175,7 +124,6 @@ namespace Helios.Context
                     Id = 2,
                     Creation = DateTime.Now,
                     MotDePasse = "AQAAAAIAAYagAAAAEEiNVE7GnBd6NNlBeIh1KHdEWcrYV3GpgaIw5NPr3hQ8LCK30Df1/LgmaUfSBliSLg==",
-                    MembreId = 2
                 });
                 e.HasData(new Utilisateur()
                 {
@@ -183,7 +131,6 @@ namespace Helios.Context
                     Id = 3,
                     Creation = DateTime.Now,
                     MotDePasse = "AQAAAAIAAYagAAAAEEiNVE7GnBd6NNlBeIh1KHdEWcrYV3GpgaIw5NPr3hQ8LCK30Df1/LgmaUfSBliSLg==",
-                    MembreId = 3
                 });
                 e.HasData(new Utilisateur()
                 {
@@ -191,7 +138,6 @@ namespace Helios.Context
                     Id = 4,
                     Creation = DateTime.Now,
                     MotDePasse = "AQAAAAIAAYagAAAAEEiNVE7GnBd6NNlBeIh1KHdEWcrYV3GpgaIw5NPr3hQ8LCK30Df1/LgmaUfSBliSLg==",
-                    MembreId = 4
                 });
                 e.HasMany(e => e.Roles).WithMany(e => e.Utilisateurs)
                 .UsingEntity(e => e.HasData(new[]
@@ -320,7 +266,7 @@ namespace Helios.Context
             public String? Port => Environment.GetEnvironmentVariable("MYSQL_PORT") ?? "35117";
             public String? User => Environment.GetEnvironmentVariable("MYSQL_USER") ?? "heliosdev";
 
-            public String? Password => Environment.GetEnvironmentVariable("MYSQL_PASSWORD") ?? "Heliosdev00";
+            public String? Password => Environment.GetEnvironmentVariable("MYSQL_PASSWORD") ?? "Lm9evzdoNAXNmR0f";
             public String? Database => Environment.GetEnvironmentVariable("MYSQL_DATABASE") ?? "helios-dev";
 #endif
             public String CnxString => (Host == null || User == null || Password == null || Database == null || Port ==null) ?
