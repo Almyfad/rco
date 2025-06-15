@@ -18,7 +18,7 @@ namespace Helios.Controllers.User
 
         }
 
-
+        public record LoginRequest(String Email, String Password);
         [HttpPost("login")]
         public async Task Login(LoginRequest request)
         {

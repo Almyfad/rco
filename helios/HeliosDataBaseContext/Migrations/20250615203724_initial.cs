@@ -9,7 +9,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace HeliosDataBaseContext.Migrations
 {
     /// <inheritdoc />
-    public partial class InitialCreate : Migration
+    public partial class initial : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -527,8 +527,8 @@ namespace HeliosDataBaseContext.Migrations
                 columns: new[] { "Id", "Code", "Creation", "Description", "Modification" },
                 values: new object[,]
                 {
-                    { 100, "Monsieur", new DateTime(2025, 6, 1, 23, 12, 41, 955, DateTimeKind.Utc).AddTicks(737), "Monsieur", null },
-                    { 200, "Madame", new DateTime(2025, 6, 1, 23, 12, 41, 960, DateTimeKind.Utc).AddTicks(548), "Madame", null }
+                    { 100, "Monsieur", new DateTime(2025, 6, 15, 20, 37, 23, 858, DateTimeKind.Utc).AddTicks(2334), "Monsieur", null },
+                    { 200, "Madame", new DateTime(2025, 6, 15, 20, 37, 23, 860, DateTimeKind.Utc).AddTicks(8628), "Madame", null }
                 });
 
             migrationBuilder.InsertData(
@@ -536,14 +536,14 @@ namespace HeliosDataBaseContext.Migrations
                 columns: new[] { "Id", "Code", "Creation", "Description", "Icon", "Label", "Modification", "ParentId", "Path", "PrefixIcon", "SuffixIcon", "Title" },
                 values: new object[,]
                 {
-                    { 1000, 1000, new DateTime(2025, 6, 1, 23, 12, 41, 895, DateTimeKind.Utc).AddTicks(9949), null, "home", "Accueil", null, null, "/", "grass", "grass", "Bienvenue dans votre Espace Intranet" },
-                    { 2000, 2000, new DateTime(2025, 6, 1, 23, 12, 41, 896, DateTimeKind.Utc).AddTicks(826), null, "temple_buddhist", "Conférence", null, null, "/conferences", null, null, null },
-                    { 3000, 3000, new DateTime(2025, 6, 1, 23, 12, 41, 896, DateTimeKind.Utc).AddTicks(839), null, "book", "Registre", null, null, "/registre", null, null, null },
-                    { 4000, 4000, new DateTime(2025, 6, 1, 23, 12, 41, 896, DateTimeKind.Utc).AddTicks(860), null, "account_balance", "Comptabilité", null, null, "/compta", null, null, null },
-                    { 5000, 5000, new DateTime(2025, 6, 1, 23, 12, 41, 896, DateTimeKind.Utc).AddTicks(873), null, "admin_panel_settings", "Administation", null, null, "/administation", null, null, null },
-                    { 6000, 6000, new DateTime(2025, 6, 1, 23, 12, 41, 896, DateTimeKind.Utc).AddTicks(716), null, "email", "Mailing", null, null, "/mailing", null, null, null },
-                    { 10000, 10000, new DateTime(2025, 6, 1, 23, 12, 41, 896, DateTimeKind.Utc).AddTicks(872), null, "code", "Développement", null, null, "/developpment", "code", "code", null },
-                    { 50000, 50000, new DateTime(2025, 6, 1, 23, 12, 41, 896, DateTimeKind.Utc).AddTicks(874), null, "exit_to_app", "Deconnexion", null, null, "/logout", null, null, null }
+                    { 1000, 1000, new DateTime(2025, 6, 15, 20, 37, 23, 826, DateTimeKind.Utc).AddTicks(3685), null, "home", "Accueil", null, null, "/", "grass", "grass", "Bienvenue dans votre Espace Intranet" },
+                    { 2000, 2000, new DateTime(2025, 6, 15, 20, 37, 23, 826, DateTimeKind.Utc).AddTicks(4879), null, "temple_buddhist", "Conférence", null, null, "/conferences", null, null, null },
+                    { 3000, 3000, new DateTime(2025, 6, 15, 20, 37, 23, 826, DateTimeKind.Utc).AddTicks(4892), null, "book", "Registre", null, null, "/registre", null, null, null },
+                    { 4000, 4000, new DateTime(2025, 6, 15, 20, 37, 23, 826, DateTimeKind.Utc).AddTicks(4922), null, "account_balance", "Comptabilité", null, null, "/compta", null, null, null },
+                    { 5000, 5000, new DateTime(2025, 6, 15, 20, 37, 23, 826, DateTimeKind.Utc).AddTicks(4933), null, "admin_panel_settings", "Administation", null, null, "/administation", null, null, null },
+                    { 6000, 6000, new DateTime(2025, 6, 15, 20, 37, 23, 826, DateTimeKind.Utc).AddTicks(4749), null, "email", "Mailing", null, null, "/mailing", null, null, null },
+                    { 10000, 10000, new DateTime(2025, 6, 15, 20, 37, 23, 826, DateTimeKind.Utc).AddTicks(4931), null, "code", "Développement", null, null, "/developpment", "code", "code", null },
+                    { 50000, 50000, new DateTime(2025, 6, 15, 20, 37, 23, 826, DateTimeKind.Utc).AddTicks(4934), null, "exit_to_app", "Deconnexion", null, null, "/logout", null, null, null }
                 });
 
             migrationBuilder.InsertData(
@@ -551,9 +551,9 @@ namespace HeliosDataBaseContext.Migrations
                 columns: new[] { "Id", "Code", "Creation", "Description", "Modification" },
                 values: new object[,]
                 {
-                    { 100, "SYSADMIN", new DateTime(2025, 6, 1, 23, 12, 42, 5, DateTimeKind.Utc).AddTicks(9566), "Administrateur Systeme Full access", null },
-                    { 200, "ADMIN_FULL_ACCESS", new DateTime(2025, 6, 1, 23, 12, 42, 6, DateTimeKind.Utc).AddTicks(4325), "Administrateur Full access", null },
-                    { 300, "USER_MANAGER", new DateTime(2025, 6, 1, 23, 12, 42, 6, DateTimeKind.Utc).AddTicks(4544), "Manager des droits utilisateurs", null }
+                    { 100, "SYSADMIN", new DateTime(2025, 6, 15, 20, 37, 23, 899, DateTimeKind.Utc).AddTicks(1260), "Administrateur Systeme Full access", null },
+                    { 200, "ADMIN_FULL_ACCESS", new DateTime(2025, 6, 15, 20, 37, 23, 899, DateTimeKind.Utc).AddTicks(7483), "Administrateur Full access", null },
+                    { 300, "USER_MANAGER", new DateTime(2025, 6, 15, 20, 37, 23, 899, DateTimeKind.Utc).AddTicks(7700), "Manager des droits utilisateurs", null }
                 });
 
             migrationBuilder.InsertData(
@@ -561,11 +561,11 @@ namespace HeliosDataBaseContext.Migrations
                 columns: new[] { "Id", "Code", "Creation", "Description", "Modification" },
                 values: new object[,]
                 {
-                    { 100, "Present", new DateTime(2025, 6, 1, 23, 12, 42, 3, DateTimeKind.Utc).AddTicks(1609), "Présent", null },
-                    { 200, "Suivi", new DateTime(2025, 6, 1, 23, 12, 42, 3, DateTimeKind.Utc).AddTicks(7336), "Suivi", null },
-                    { 300, "Absent", new DateTime(2025, 6, 1, 23, 12, 42, 3, DateTimeKind.Utc).AddTicks(7589), "Absent", null },
-                    { 400, "Demissionnaire", new DateTime(2025, 6, 1, 23, 12, 42, 3, DateTimeKind.Utc).AddTicks(7716), "Démissionnaire", null },
-                    { 500, "Decede", new DateTime(2025, 6, 1, 23, 12, 42, 3, DateTimeKind.Utc).AddTicks(7825), "Décédé", null }
+                    { 100, "Present", new DateTime(2025, 6, 15, 20, 37, 23, 896, DateTimeKind.Utc).AddTicks(3493), "Présent", null },
+                    { 200, "Suivi", new DateTime(2025, 6, 15, 20, 37, 23, 896, DateTimeKind.Utc).AddTicks(9021), "Suivi", null },
+                    { 300, "Absent", new DateTime(2025, 6, 15, 20, 37, 23, 896, DateTimeKind.Utc).AddTicks(9225), "Absent", null },
+                    { 400, "Demissionnaire", new DateTime(2025, 6, 15, 20, 37, 23, 896, DateTimeKind.Utc).AddTicks(9353), "Démissionnaire", null },
+                    { 500, "Decede", new DateTime(2025, 6, 15, 20, 37, 23, 896, DateTimeKind.Utc).AddTicks(9462), "Décédé", null }
                 });
 
             migrationBuilder.InsertData(
@@ -573,14 +573,14 @@ namespace HeliosDataBaseContext.Migrations
                 columns: new[] { "Id", "Code", "Creation", "Description", "Modification" },
                 values: new object[,]
                 {
-                    { 100, "ServiceTempleInteresse", new DateTime(2025, 6, 1, 23, 12, 42, 12, DateTimeKind.Utc).AddTicks(3583), "Service du Temple pour membres interessés", null },
-                    { 200, "ServiceApprofondissement", new DateTime(2025, 6, 1, 23, 12, 42, 13, DateTimeKind.Utc).AddTicks(7428), "Service du Temple d'approfondissement", null },
-                    { 300, "WeekEndVille", new DateTime(2025, 6, 1, 23, 12, 42, 13, DateTimeKind.Utc).AddTicks(7899), "Week-end Ville", null },
-                    { 400, "ConferenceRenouvellement", new DateTime(2025, 6, 1, 23, 12, 42, 13, DateTimeKind.Utc).AddTicks(8080), "Conférence Renouvellement", null },
-                    { 500, "ConferenceECS", new DateTime(2025, 6, 1, 23, 12, 42, 13, DateTimeKind.Utc).AddTicks(8196), "Conférence ECS", null },
-                    { 600, "ConferenceECC", new DateTime(2025, 6, 1, 23, 12, 42, 13, DateTimeKind.Utc).AddTicks(8315), "Conférence ECC", null },
-                    { 700, "ConferenceECS_ECC", new DateTime(2025, 6, 1, 23, 12, 42, 13, DateTimeKind.Utc).AddTicks(8439), "Conférence ECS/ECC", null },
-                    { 800, "ConventGraalCTO", new DateTime(2025, 6, 1, 23, 12, 42, 13, DateTimeKind.Utc).AddTicks(8554), "Conférence Convent Graal CTO", null }
+                    { 100, "ServiceTempleInteresse", new DateTime(2025, 6, 15, 20, 37, 23, 904, DateTimeKind.Utc).AddTicks(8346), "Service du Temple pour membres interessés", null },
+                    { 200, "ServiceApprofondissement", new DateTime(2025, 6, 15, 20, 37, 23, 905, DateTimeKind.Utc).AddTicks(8718), "Service du Temple d'approfondissement", null },
+                    { 300, "WeekEndVille", new DateTime(2025, 6, 15, 20, 37, 23, 905, DateTimeKind.Utc).AddTicks(9121), "Week-end Ville", null },
+                    { 400, "ConferenceRenouvellement", new DateTime(2025, 6, 15, 20, 37, 23, 905, DateTimeKind.Utc).AddTicks(9439), "Conférence Renouvellement", null },
+                    { 500, "ConferenceECS", new DateTime(2025, 6, 15, 20, 37, 23, 905, DateTimeKind.Utc).AddTicks(9563), "Conférence ECS", null },
+                    { 600, "ConferenceECC", new DateTime(2025, 6, 15, 20, 37, 23, 905, DateTimeKind.Utc).AddTicks(9683), "Conférence ECC", null },
+                    { 700, "ConferenceECS_ECC", new DateTime(2025, 6, 15, 20, 37, 23, 905, DateTimeKind.Utc).AddTicks(9775), "Conférence ECS/ECC", null },
+                    { 800, "ConventGraalCTO", new DateTime(2025, 6, 15, 20, 37, 23, 905, DateTimeKind.Utc).AddTicks(9886), "Conférence Convent Graal CTO", null }
                 });
 
             migrationBuilder.InsertData(
@@ -588,8 +588,8 @@ namespace HeliosDataBaseContext.Migrations
                 columns: new[] { "Id", "Code", "Creation", "Description", "Modification" },
                 values: new object[,]
                 {
-                    { 100, "Renouvellement", new DateTime(2025, 6, 1, 23, 12, 42, 16, DateTimeKind.Utc).AddTicks(1263), "Centre de Renouvellement", null },
-                    { 200, "Ville", new DateTime(2025, 6, 1, 23, 12, 42, 16, DateTimeKind.Utc).AddTicks(6371), "Centre de ville", null }
+                    { 100, "Renouvellement", new DateTime(2025, 6, 15, 20, 37, 23, 908, DateTimeKind.Utc).AddTicks(816), "Centre de Renouvellement", null },
+                    { 200, "Ville", new DateTime(2025, 6, 15, 20, 37, 23, 908, DateTimeKind.Utc).AddTicks(6242), "Centre de ville", null }
                 });
 
             migrationBuilder.InsertData(
@@ -597,104 +597,16 @@ namespace HeliosDataBaseContext.Migrations
                 columns: new[] { "Id", "Code", "Creation", "Description", "Modification" },
                 values: new object[,]
                 {
-                    { 100, "PremierAspect", new DateTime(2025, 6, 1, 23, 12, 41, 998, DateTimeKind.Utc).AddTicks(8229), "Premier Aspect", null },
-                    { 200, "DeuxiemeAspect", new DateTime(2025, 6, 1, 23, 12, 41, 999, DateTimeKind.Utc).AddTicks(4081), "Deuxieme Aspect", null },
-                    { 300, "ECS", new DateTime(2025, 6, 1, 23, 12, 41, 999, DateTimeKind.Utc).AddTicks(8151), "Ecole de Conscience Supérieure", null },
-                    { 400, "ECCLESIA", new DateTime(2025, 6, 1, 23, 12, 42, 0, DateTimeKind.Utc).AddTicks(7301), "Ecclesia", null },
-                    { 500, "GRAAL", new DateTime(2025, 6, 1, 23, 12, 42, 0, DateTimeKind.Utc).AddTicks(7476), "Graal", null },
-                    { 600, "CinquiemeAspect", new DateTime(2025, 6, 1, 23, 12, 42, 0, DateTimeKind.Utc).AddTicks(7581), "Cinquieme Aspect", null },
-                    { 700, "SixiemeAspect", new DateTime(2025, 6, 1, 23, 12, 42, 0, DateTimeKind.Utc).AddTicks(7700), "Sixieme Aspect", null },
-                    { 800, "SeptiemeAspect", new DateTime(2025, 6, 1, 23, 12, 42, 0, DateTimeKind.Utc).AddTicks(7783), "Septieme Aspect", null },
-                    { 900, "Interesse", new DateTime(2025, 6, 1, 23, 12, 42, 0, DateTimeKind.Utc).AddTicks(7915), "Interessé", null },
-                    { 1000, "Jeunesse", new DateTime(2025, 6, 1, 23, 12, 42, 0, DateTimeKind.Utc).AddTicks(8020), "Jeunesse", null }
-                });
-
-            migrationBuilder.InsertData(
-                table: "Centres",
-                columns: new[] { "Id", "Adresse", "Capacite", "Code", "CodePostal", "Creation", "Description", "Libelle", "Modification", "Pays", "TypeCentreId", "Ville", "brevoFolderId" },
-                values: new object[,]
-                {
-                    { 1, "", null, "MG", "93120", new DateTime(2025, 6, 1, 19, 12, 42, 17, DateTimeKind.Local).AddTicks(5391), null, "MontGivroux", null, "France", 100, null, null },
-                    { 2, "", null, "PO", "93120", new DateTime(2025, 6, 1, 19, 12, 42, 17, DateTimeKind.Local).AddTicks(6074), null, "Poitier", null, "France", 100, null, null },
-                    { 3, "", null, "LC", "93120", new DateTime(2025, 6, 1, 19, 12, 42, 17, DateTimeKind.Local).AddTicks(6076), null, "La Licorne", null, "France", 100, null, null },
-                    { 4, "", null, "PR", "93120", new DateTime(2025, 6, 1, 19, 12, 42, 17, DateTimeKind.Local).AddTicks(6077), null, "Paris", null, "France", 200, null, null },
-                    { 5, "", null, "LY", "69000", new DateTime(2025, 6, 1, 19, 12, 42, 17, DateTimeKind.Local).AddTicks(6078), null, "Lyon", null, "France", 200, null, null },
-                    { 6, "", null, "MA", "13000", new DateTime(2025, 6, 1, 19, 12, 42, 17, DateTimeKind.Local).AddTicks(6079), null, "Marseille", null, "France", 200, null, null },
-                    { 7, "", null, "TO", "31000", new DateTime(2025, 6, 1, 19, 12, 42, 17, DateTimeKind.Local).AddTicks(6080), null, "Toulouse", null, "France", 200, null, null },
-                    { 8, "", null, "GP", "97100", new DateTime(2025, 6, 1, 19, 12, 42, 17, DateTimeKind.Local).AddTicks(6080), null, "Guadeloupe", null, "France", 200, null, null },
-                    { 9, "", null, "AX", "97100", new DateTime(2025, 6, 1, 19, 12, 42, 17, DateTimeKind.Local).AddTicks(6081), null, "Aix-en-Provence", null, "France", 200, null, null },
-                    { 10, "", null, "LL", "97100", new DateTime(2025, 6, 1, 19, 12, 42, 17, DateTimeKind.Local).AddTicks(6082), null, "Lille", null, "France", 200, null, null },
-                    { 11, "", null, "MT", "97100", new DateTime(2025, 6, 1, 19, 12, 42, 17, DateTimeKind.Local).AddTicks(6083), null, "Metz", null, "France", 200, null, null },
-                    { 12, "", null, "MP", "97100", new DateTime(2025, 6, 1, 19, 12, 42, 17, DateTimeKind.Local).AddTicks(6083), null, "Montptelier", null, "France", 200, null, null },
-                    { 13, "", null, "PP", "97100", new DateTime(2025, 6, 1, 19, 12, 42, 17, DateTimeKind.Local).AddTicks(6084), null, "Perpignan", null, "France", 200, null, null },
-                    { 14, "", null, "CA", "97100", new DateTime(2025, 6, 1, 19, 12, 42, 17, DateTimeKind.Local).AddTicks(6085), null, "Côte d'Azure", null, "France", 200, null, null },
-                    { 15, "", null, "RE", "97100", new DateTime(2025, 6, 1, 19, 12, 42, 17, DateTimeKind.Local).AddTicks(6085), null, "Rennes", null, "France", 200, null, null },
-                    { 16, "", null, "RU", "97100", new DateTime(2025, 6, 1, 19, 12, 42, 17, DateTimeKind.Local).AddTicks(6086), null, "Rouen", null, "France", 200, null, null },
-                    { 17, "", null, "SB", "97100", new DateTime(2025, 6, 1, 19, 12, 42, 17, DateTimeKind.Local).AddTicks(6087), null, "Strasbourg", null, "France", 200, null, null }
-                });
-
-            migrationBuilder.InsertData(
-                table: "Droits",
-                columns: new[] { "Id", "CentreId", "Code", "Creation", "Description", "Modification", "ModuleId", "utilisateurId" },
-                values: new object[,]
-                {
-                    { 1, null, 1, new DateTime(2025, 6, 1, 19, 12, 41, 897, DateTimeKind.Local).AddTicks(352), null, null, 1000, null },
-                    { 2, null, 1, new DateTime(2025, 6, 1, 19, 12, 41, 897, DateTimeKind.Local).AddTicks(855), null, null, 2000, null },
-                    { 5, null, 1, new DateTime(2025, 6, 1, 19, 12, 41, 897, DateTimeKind.Local).AddTicks(859), null, null, 50000, null }
-                });
-
-            migrationBuilder.InsertData(
-                table: "Membres",
-                columns: new[] { "Id", "Adresse", "CentreId", "CiviliteId", "CodePostal", "Commentaires", "Connaissances", "Creation", "DateNaissance", "Email", "EmailValide", "Modification", "Nom", "Pays", "Prenom", "Profession", "StatutMembreId", "Telephone", "TypeMembreId", "Ville" },
-                values: new object[,]
-                {
-                    { 1, null, null, 100, null, null, null, new DateTime(2025, 6, 1, 19, 12, 42, 9, DateTimeKind.Local).AddTicks(1460), new DateOnly(1, 1, 1), null, true, null, "Admin", null, "SysAdmin", null, 100, null, 900, null },
-                    { 2, null, null, 100, null, null, null, new DateTime(2025, 6, 1, 19, 12, 42, 9, DateTimeKind.Local).AddTicks(2106), new DateOnly(1, 1, 1), null, true, null, "Admin", null, "Admin", null, 100, null, 900, null },
-                    { 3, null, null, 100, null, null, null, new DateTime(2025, 6, 1, 19, 12, 42, 9, DateTimeKind.Local).AddTicks(2108), new DateOnly(1, 1, 1), null, true, null, "usermanager", null, "usermanager", null, 100, null, 900, null },
-                    { 4, null, null, 100, null, null, null, new DateTime(2025, 6, 1, 19, 12, 42, 9, DateTimeKind.Local).AddTicks(2109), new DateOnly(1, 1, 1), null, true, null, "usercentre", null, "usercentre", null, 100, null, 900, null }
-                });
-
-            migrationBuilder.InsertData(
-                table: "Modules",
-                columns: new[] { "Id", "Code", "Creation", "Description", "Icon", "Label", "Modification", "ParentId", "Path", "PrefixIcon", "SuffixIcon", "Title" },
-                values: new object[,]
-                {
-                    { 2100, 2100, new DateTime(2025, 6, 1, 23, 12, 41, 896, DateTimeKind.Utc).AddTicks(836), null, "person_add", "Inscription", null, 2000, "/conferences/inscription", null, null, null },
-                    { 2200, 2200, new DateTime(2025, 6, 1, 23, 12, 41, 896, DateTimeKind.Utc).AddTicks(837), null, "edit", "Mes Inscriptions", null, 2000, "/mesinscriptions", null, null, null },
-                    { 2300, 2300, new DateTime(2025, 6, 1, 23, 12, 41, 896, DateTimeKind.Utc).AddTicks(835), null, "post_add", "Créer Conférence", null, 2000, "/creer/conference", null, null, null },
-                    { 3010, 3010, new DateTime(2025, 6, 1, 23, 12, 41, 896, DateTimeKind.Utc).AddTicks(841), null, "people", "Fiches Elèves", null, 3000, "/registre/fiches/eleves", null, null, null },
-                    { 3020, 3020, new DateTime(2025, 6, 1, 23, 12, 41, 896, DateTimeKind.Utc).AddTicks(842), null, "wb_iridescent", "Fiches Parvis", null, 3000, "/registre/fiches-parvis", null, null, null },
-                    { 3030, 3030, new DateTime(2025, 6, 1, 23, 12, 41, 896, DateTimeKind.Utc).AddTicks(843), null, "contact_page", "Fiches Contacts", null, 3000, "/registre/fiches-contacts", null, null, null },
-                    { 3040, 3040, new DateTime(2025, 6, 1, 23, 12, 41, 896, DateTimeKind.Utc).AddTicks(845), null, "child_care", "Fiches Jeunesses", null, 3000, "/registre/fiches-jeunesses", null, null, null },
-                    { 3050, 3050, new DateTime(2025, 6, 1, 23, 12, 41, 896, DateTimeKind.Utc).AddTicks(846), null, "settings_accessibility", "Fiches Jeunes Rosicruciens", null, 3000, "/registre/fiches-jeunes-rosicruciens", null, null, null },
-                    { 3060, 3060, new DateTime(2025, 6, 1, 23, 12, 41, 896, DateTimeKind.Utc).AddTicks(847), null, "featured_play_list", "Saisie Présences", null, 3000, "/registre/traitements", null, null, null },
-                    { 3070, 3070, new DateTime(2025, 6, 1, 23, 12, 41, 896, DateTimeKind.Utc).AddTicks(858), null, "insert_chart_outlined", "Statistiques", null, 3000, "/registre/statistiques", null, null, null },
-                    { 4010, 4010, new DateTime(2025, 6, 1, 23, 12, 41, 896, DateTimeKind.Utc).AddTicks(861), null, "account_balance_wallet", "Compta en ligne", null, 4000, "/compta/comptes", null, null, null },
-                    { 4020, 4020, new DateTime(2025, 6, 1, 23, 12, 41, 896, DateTimeKind.Utc).AddTicks(868), null, "settings", "Paramètre generaux", null, 4000, "/compta/parametres", null, null, null },
-                    { 4030, 4030, new DateTime(2025, 6, 1, 23, 12, 41, 896, DateTimeKind.Utc).AddTicks(869), null, "monetization_on", "Sasie écritures répetitives", null, 4000, "/compta/ecritures", null, null, null },
-                    { 4040, 4040, new DateTime(2025, 6, 1, 23, 12, 41, 896, DateTimeKind.Utc).AddTicks(871), null, "description", "Comptes/caisse", null, 4000, "/compta/comptescaisse", null, null, null },
-                    { 6100, 6100, new DateTime(2025, 6, 1, 23, 12, 41, 896, DateTimeKind.Utc).AddTicks(718), null, "list", "Listes", null, 6000, "/mailing/listes", null, null, null },
-                    { 6200, 6200, new DateTime(2025, 6, 1, 23, 12, 41, 896, DateTimeKind.Utc).AddTicks(824), null, "campaign", "Campagnes", null, 6000, "/mailing/campagnes", null, null, null }
-                });
-
-            migrationBuilder.InsertData(
-                table: "Droits",
-                columns: new[] { "Id", "CentreId", "Code", "Creation", "Description", "Modification", "ModuleId", "utilisateurId" },
-                values: new object[,]
-                {
-                    { 3, null, 1, new DateTime(2025, 6, 1, 19, 12, 41, 897, DateTimeKind.Local).AddTicks(857), null, null, 2100, null },
-                    { 4, null, 1, new DateTime(2025, 6, 1, 19, 12, 41, 897, DateTimeKind.Local).AddTicks(858), null, null, 2200, null }
-                });
-
-            migrationBuilder.InsertData(
-                table: "Modules",
-                columns: new[] { "Id", "Code", "Creation", "Description", "Icon", "Label", "Modification", "ParentId", "Path", "PrefixIcon", "SuffixIcon", "Title" },
-                values: new object[,]
-                {
-                    { 3061, 3061, new DateTime(2025, 6, 1, 23, 12, 41, 896, DateTimeKind.Utc).AddTicks(848), null, "list_alt", "Présence Villes", null, 3060, "/registre/traitements/encours", null, null, null },
-                    { 3062, 3062, new DateTime(2025, 6, 1, 23, 12, 41, 896, DateTimeKind.Utc).AddTicks(850), null, "fact_check", "Présence CR", null, 3060, "/registre/traitements/termines", null, null, null },
-                    { 3063, 3063, new DateTime(2025, 6, 1, 23, 12, 41, 896, DateTimeKind.Utc).AddTicks(856), null, "receipt_long", "Présence EI", null, 3060, "/registre/traitements/termines", null, null, null },
-                    { 3071, 3071, new DateTime(2025, 6, 1, 23, 12, 41, 896, DateTimeKind.Utc).AddTicks(859), null, "list_alt", "Présences", null, 3070, "/registre/statistiques/villes", null, null, null }
+                    { 100, "PremierAspect", new DateTime(2025, 6, 15, 20, 37, 23, 893, DateTimeKind.Utc).AddTicks(3863), "Premier Aspect", null },
+                    { 200, "DeuxiemeAspect", new DateTime(2025, 6, 15, 20, 37, 23, 893, DateTimeKind.Utc).AddTicks(9348), "Deuxieme Aspect", null },
+                    { 300, "ECS", new DateTime(2025, 6, 15, 20, 37, 23, 894, DateTimeKind.Utc).AddTicks(331), "Ecole de Conscience Supérieure", null },
+                    { 400, "ECCLESIA", new DateTime(2025, 6, 15, 20, 37, 23, 894, DateTimeKind.Utc).AddTicks(719), "Ecclesia", null },
+                    { 500, "GRAAL", new DateTime(2025, 6, 15, 20, 37, 23, 894, DateTimeKind.Utc).AddTicks(821), "Graal", null },
+                    { 600, "CinquiemeAspect", new DateTime(2025, 6, 15, 20, 37, 23, 894, DateTimeKind.Utc).AddTicks(961), "Cinquieme Aspect", null },
+                    { 700, "SixiemeAspect", new DateTime(2025, 6, 15, 20, 37, 23, 894, DateTimeKind.Utc).AddTicks(1049), "Sixieme Aspect", null },
+                    { 800, "SeptiemeAspect", new DateTime(2025, 6, 15, 20, 37, 23, 894, DateTimeKind.Utc).AddTicks(1124), "Septieme Aspect", null },
+                    { 900, "Interesse", new DateTime(2025, 6, 15, 20, 37, 23, 894, DateTimeKind.Utc).AddTicks(1238), "Interessé", null },
+                    { 1000, "Jeunesse", new DateTime(2025, 6, 15, 20, 37, 23, 894, DateTimeKind.Utc).AddTicks(1341), "Jeunesse", null }
                 });
 
             migrationBuilder.InsertData(
@@ -702,10 +614,34 @@ namespace HeliosDataBaseContext.Migrations
                 columns: new[] { "Id", "Creation", "Email", "MembreId", "Modification", "MotDePasse" },
                 values: new object[,]
                 {
-                    { 1, new DateTime(2025, 6, 1, 19, 12, 42, 9, DateTimeKind.Local).AddTicks(8926), "admin@rco.com", 1, null, "AQAAAAIAAYagAAAAEEiNVE7GnBd6NNlBeIh1KHdEWcrYV3GpgaIw5NPr3hQ8LCK30Df1/LgmaUfSBliSLg==" },
-                    { 2, new DateTime(2025, 6, 1, 19, 12, 42, 9, DateTimeKind.Local).AddTicks(9722), "admin2@rco.com", 2, null, "AQAAAAIAAYagAAAAEEiNVE7GnBd6NNlBeIh1KHdEWcrYV3GpgaIw5NPr3hQ8LCK30Df1/LgmaUfSBliSLg==" },
-                    { 3, new DateTime(2025, 6, 1, 19, 12, 42, 9, DateTimeKind.Local).AddTicks(9744), "usermanager@rco.com", 3, null, "AQAAAAIAAYagAAAAEEiNVE7GnBd6NNlBeIh1KHdEWcrYV3GpgaIw5NPr3hQ8LCK30Df1/LgmaUfSBliSLg==" },
-                    { 4, new DateTime(2025, 6, 1, 19, 12, 42, 9, DateTimeKind.Local).AddTicks(9749), "usercentre@rco.com", 4, null, "AQAAAAIAAYagAAAAEEiNVE7GnBd6NNlBeIh1KHdEWcrYV3GpgaIw5NPr3hQ8LCK30Df1/LgmaUfSBliSLg==" }
+                    { 1, new DateTime(2025, 6, 15, 16, 37, 23, 902, DateTimeKind.Local).AddTicks(5145), "admin@rco.com", null, null, "AQAAAAIAAYagAAAAEEiNVE7GnBd6NNlBeIh1KHdEWcrYV3GpgaIw5NPr3hQ8LCK30Df1/LgmaUfSBliSLg==" },
+                    { 2, new DateTime(2025, 6, 15, 16, 37, 23, 902, DateTimeKind.Local).AddTicks(5819), "admin2@rco.com", null, null, "AQAAAAIAAYagAAAAEEiNVE7GnBd6NNlBeIh1KHdEWcrYV3GpgaIw5NPr3hQ8LCK30Df1/LgmaUfSBliSLg==" },
+                    { 3, new DateTime(2025, 6, 15, 16, 37, 23, 902, DateTimeKind.Local).AddTicks(5828), "usermanager@rco.com", null, null, "AQAAAAIAAYagAAAAEEiNVE7GnBd6NNlBeIh1KHdEWcrYV3GpgaIw5NPr3hQ8LCK30Df1/LgmaUfSBliSLg==" },
+                    { 4, new DateTime(2025, 6, 15, 16, 37, 23, 902, DateTimeKind.Local).AddTicks(5833), "usercentre@rco.com", null, null, "AQAAAAIAAYagAAAAEEiNVE7GnBd6NNlBeIh1KHdEWcrYV3GpgaIw5NPr3hQ8LCK30Df1/LgmaUfSBliSLg==" }
+                });
+
+            migrationBuilder.InsertData(
+                table: "Centres",
+                columns: new[] { "Id", "Adresse", "Capacite", "Code", "CodePostal", "Creation", "Description", "Libelle", "Modification", "Pays", "TypeCentreId", "Ville", "brevoFolderId" },
+                values: new object[,]
+                {
+                    { 1, "", null, "MG", "93120", new DateTime(2025, 6, 15, 16, 37, 23, 909, DateTimeKind.Local).AddTicks(5216), null, "MontGivroux", null, "France", 100, null, null },
+                    { 2, "", null, "PO", "93120", new DateTime(2025, 6, 15, 16, 37, 23, 909, DateTimeKind.Local).AddTicks(5907), null, "Poitier", null, "France", 100, null, null },
+                    { 3, "", null, "LC", "93120", new DateTime(2025, 6, 15, 16, 37, 23, 909, DateTimeKind.Local).AddTicks(5910), null, "La Licorne", null, "France", 100, null, null },
+                    { 4, "", null, "PR", "93120", new DateTime(2025, 6, 15, 16, 37, 23, 909, DateTimeKind.Local).AddTicks(5912), null, "Paris", null, "France", 200, null, null },
+                    { 5, "", null, "LY", "69000", new DateTime(2025, 6, 15, 16, 37, 23, 909, DateTimeKind.Local).AddTicks(5913), null, "Lyon", null, "France", 200, null, null },
+                    { 6, "", null, "MA", "13000", new DateTime(2025, 6, 15, 16, 37, 23, 909, DateTimeKind.Local).AddTicks(5914), null, "Marseille", null, "France", 200, null, null },
+                    { 7, "", null, "TO", "31000", new DateTime(2025, 6, 15, 16, 37, 23, 909, DateTimeKind.Local).AddTicks(5915), null, "Toulouse", null, "France", 200, null, null },
+                    { 8, "", null, "GP", "97100", new DateTime(2025, 6, 15, 16, 37, 23, 909, DateTimeKind.Local).AddTicks(5916), null, "Guadeloupe", null, "France", 200, null, null },
+                    { 9, "", null, "AX", "97100", new DateTime(2025, 6, 15, 16, 37, 23, 909, DateTimeKind.Local).AddTicks(5917), null, "Aix-en-Provence", null, "France", 200, null, null },
+                    { 10, "", null, "LL", "97100", new DateTime(2025, 6, 15, 16, 37, 23, 909, DateTimeKind.Local).AddTicks(5918), null, "Lille", null, "France", 200, null, null },
+                    { 11, "", null, "MT", "97100", new DateTime(2025, 6, 15, 16, 37, 23, 909, DateTimeKind.Local).AddTicks(5919), null, "Metz", null, "France", 200, null, null },
+                    { 12, "", null, "MP", "97100", new DateTime(2025, 6, 15, 16, 37, 23, 909, DateTimeKind.Local).AddTicks(5921), null, "Montptelier", null, "France", 200, null, null },
+                    { 13, "", null, "PP", "97100", new DateTime(2025, 6, 15, 16, 37, 23, 909, DateTimeKind.Local).AddTicks(5922), null, "Perpignan", null, "France", 200, null, null },
+                    { 14, "", null, "CA", "97100", new DateTime(2025, 6, 15, 16, 37, 23, 909, DateTimeKind.Local).AddTicks(5923), null, "Côte d'Azure", null, "France", 200, null, null },
+                    { 15, "", null, "RE", "97100", new DateTime(2025, 6, 15, 16, 37, 23, 909, DateTimeKind.Local).AddTicks(5924), null, "Rennes", null, "France", 200, null, null },
+                    { 16, "", null, "RU", "97100", new DateTime(2025, 6, 15, 16, 37, 23, 909, DateTimeKind.Local).AddTicks(5930), null, "Rouen", null, "France", 200, null, null },
+                    { 17, "", null, "SB", "97100", new DateTime(2025, 6, 15, 16, 37, 23, 909, DateTimeKind.Local).AddTicks(5940), null, "Strasbourg", null, "France", 200, null, null }
                 });
 
             migrationBuilder.InsertData(
@@ -713,11 +649,32 @@ namespace HeliosDataBaseContext.Migrations
                 columns: new[] { "Id", "CentreId", "Code", "Creation", "Description", "Modification", "ModuleId", "utilisateurId" },
                 values: new object[,]
                 {
-                    { 6, 1, 200, new DateTime(2025, 6, 1, 19, 12, 41, 897, DateTimeKind.Local).AddTicks(859), null, null, 3000, 4 },
-                    { 7, 1, 200, new DateTime(2025, 6, 1, 19, 12, 41, 897, DateTimeKind.Local).AddTicks(1142), null, null, 3010, 4 },
-                    { 8, 1, 200, new DateTime(2025, 6, 1, 19, 12, 41, 897, DateTimeKind.Local).AddTicks(1143), null, null, 4000, 4 },
-                    { 9, 2, 100, new DateTime(2025, 6, 1, 19, 12, 41, 897, DateTimeKind.Local).AddTicks(1143), null, null, 3000, 4 },
-                    { 10, 2, 200, new DateTime(2025, 6, 1, 19, 12, 41, 897, DateTimeKind.Local).AddTicks(1145), null, null, 2300, 4 }
+                    { 1, null, 1, new DateTime(2025, 6, 15, 16, 37, 23, 827, DateTimeKind.Local).AddTicks(4216), null, null, 1000, null },
+                    { 2, null, 1, new DateTime(2025, 6, 15, 16, 37, 23, 827, DateTimeKind.Local).AddTicks(4709), null, null, 2000, null },
+                    { 5, null, 1, new DateTime(2025, 6, 15, 16, 37, 23, 827, DateTimeKind.Local).AddTicks(4715), null, null, 50000, null }
+                });
+
+            migrationBuilder.InsertData(
+                table: "Modules",
+                columns: new[] { "Id", "Code", "Creation", "Description", "Icon", "Label", "Modification", "ParentId", "Path", "PrefixIcon", "SuffixIcon", "Title" },
+                values: new object[,]
+                {
+                    { 2100, 2100, new DateTime(2025, 6, 15, 20, 37, 23, 826, DateTimeKind.Utc).AddTicks(4889), null, "person_add", "Inscription", null, 2000, "/conferences/inscription", null, null, null },
+                    { 2200, 2200, new DateTime(2025, 6, 15, 20, 37, 23, 826, DateTimeKind.Utc).AddTicks(4890), null, "edit", "Mes Inscriptions", null, 2000, "/mesinscriptions", null, null, null },
+                    { 2300, 2300, new DateTime(2025, 6, 15, 20, 37, 23, 826, DateTimeKind.Utc).AddTicks(4887), null, "post_add", "Créer Conférence", null, 2000, "/creer/conference", null, null, null },
+                    { 3010, 3010, new DateTime(2025, 6, 15, 20, 37, 23, 826, DateTimeKind.Utc).AddTicks(4894), null, "people", "Fiches Elèves", null, 3000, "/registre/fiches/eleves", null, null, null },
+                    { 3020, 3020, new DateTime(2025, 6, 15, 20, 37, 23, 826, DateTimeKind.Utc).AddTicks(4896), null, "wb_iridescent", "Fiches Parvis", null, 3000, "/registre/fiches-parvis", null, null, null },
+                    { 3030, 3030, new DateTime(2025, 6, 15, 20, 37, 23, 826, DateTimeKind.Utc).AddTicks(4897), null, "contact_page", "Fiches Contacts", null, 3000, "/registre/fiches-contacts", null, null, null },
+                    { 3040, 3040, new DateTime(2025, 6, 15, 20, 37, 23, 826, DateTimeKind.Utc).AddTicks(4899), null, "child_care", "Fiches Jeunesses", null, 3000, "/registre/fiches-jeunesses", null, null, null },
+                    { 3050, 3050, new DateTime(2025, 6, 15, 20, 37, 23, 826, DateTimeKind.Utc).AddTicks(4900), null, "settings_accessibility", "Fiches Jeunes Rosicruciens", null, 3000, "/registre/fiches-jeunes-rosicruciens", null, null, null },
+                    { 3060, 3060, new DateTime(2025, 6, 15, 20, 37, 23, 826, DateTimeKind.Utc).AddTicks(4902), null, "featured_play_list", "Saisie Présences", null, 3000, "/registre/traitements", null, null, null },
+                    { 3070, 3070, new DateTime(2025, 6, 15, 20, 37, 23, 826, DateTimeKind.Utc).AddTicks(4919), null, "insert_chart_outlined", "Statistiques", null, 3000, "/registre/statistiques", null, null, null },
+                    { 4010, 4010, new DateTime(2025, 6, 15, 20, 37, 23, 826, DateTimeKind.Utc).AddTicks(4923), null, "account_balance_wallet", "Compta en ligne", null, 4000, "/compta/comptes", null, null, null },
+                    { 4020, 4020, new DateTime(2025, 6, 15, 20, 37, 23, 826, DateTimeKind.Utc).AddTicks(4924), null, "settings", "Paramètre generaux", null, 4000, "/compta/parametres", null, null, null },
+                    { 4030, 4030, new DateTime(2025, 6, 15, 20, 37, 23, 826, DateTimeKind.Utc).AddTicks(4928), null, "monetization_on", "Sasie écritures répetitives", null, 4000, "/compta/ecritures", null, null, null },
+                    { 4040, 4040, new DateTime(2025, 6, 15, 20, 37, 23, 826, DateTimeKind.Utc).AddTicks(4930), null, "description", "Comptes/caisse", null, 4000, "/compta/comptescaisse", null, null, null },
+                    { 6100, 6100, new DateTime(2025, 6, 15, 20, 37, 23, 826, DateTimeKind.Utc).AddTicks(4752), null, "list", "Listes", null, 6000, "/mailing/listes", null, null, null },
+                    { 6200, 6200, new DateTime(2025, 6, 15, 20, 37, 23, 826, DateTimeKind.Utc).AddTicks(4877), null, "campaign", "Campagnes", null, 6000, "/mailing/campagnes", null, null, null }
                 });
 
             migrationBuilder.InsertData(
@@ -728,6 +685,31 @@ namespace HeliosDataBaseContext.Migrations
                     { 100, 1 },
                     { 200, 2 },
                     { 300, 2 }
+                });
+
+            migrationBuilder.InsertData(
+                table: "Droits",
+                columns: new[] { "Id", "CentreId", "Code", "Creation", "Description", "Modification", "ModuleId", "utilisateurId" },
+                values: new object[,]
+                {
+                    { 3, null, 1, new DateTime(2025, 6, 15, 16, 37, 23, 827, DateTimeKind.Local).AddTicks(4713), null, null, 2100, null },
+                    { 4, null, 1, new DateTime(2025, 6, 15, 16, 37, 23, 827, DateTimeKind.Local).AddTicks(4714), null, null, 2200, null },
+                    { 6, 1, 200, new DateTime(2025, 6, 15, 16, 37, 23, 827, DateTimeKind.Local).AddTicks(4716), null, null, 3000, 4 },
+                    { 7, 1, 200, new DateTime(2025, 6, 15, 16, 37, 23, 827, DateTimeKind.Local).AddTicks(4993), null, null, 3010, 4 },
+                    { 8, 1, 200, new DateTime(2025, 6, 15, 16, 37, 23, 827, DateTimeKind.Local).AddTicks(4994), null, null, 4000, 4 },
+                    { 9, 2, 100, new DateTime(2025, 6, 15, 16, 37, 23, 827, DateTimeKind.Local).AddTicks(4995), null, null, 3000, 4 },
+                    { 10, 2, 200, new DateTime(2025, 6, 15, 16, 37, 23, 827, DateTimeKind.Local).AddTicks(4996), null, null, 2300, 4 }
+                });
+
+            migrationBuilder.InsertData(
+                table: "Modules",
+                columns: new[] { "Id", "Code", "Creation", "Description", "Icon", "Label", "Modification", "ParentId", "Path", "PrefixIcon", "SuffixIcon", "Title" },
+                values: new object[,]
+                {
+                    { 3061, 3061, new DateTime(2025, 6, 15, 20, 37, 23, 826, DateTimeKind.Utc).AddTicks(4903), null, "list_alt", "Présence Villes", null, 3060, "/registre/traitements/encours", null, null, null },
+                    { 3062, 3062, new DateTime(2025, 6, 15, 20, 37, 23, 826, DateTimeKind.Utc).AddTicks(4905), null, "fact_check", "Présence CR", null, 3060, "/registre/traitements/termines", null, null, null },
+                    { 3063, 3063, new DateTime(2025, 6, 15, 20, 37, 23, 826, DateTimeKind.Utc).AddTicks(4907), null, "receipt_long", "Présence EI", null, 3060, "/registre/traitements/termines", null, null, null },
+                    { 3071, 3071, new DateTime(2025, 6, 15, 20, 37, 23, 826, DateTimeKind.Utc).AddTicks(4920), null, "list_alt", "Présences", null, 3070, "/registre/statistiques/villes", null, null, null }
                 });
 
             migrationBuilder.CreateIndex(

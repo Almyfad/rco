@@ -11,9 +11,12 @@ public static class CoookieServicesExtensions
            .AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
    .AddCookie(options =>
    {
+#if RELEASE
        options.Cookie.HttpOnly = true;
        options.Cookie.SecurePolicy = CookieSecurePolicy.Always; // Toujours en HTTPS en production
        options.Cookie.SameSite = SameSiteMode.Strict;
+#endif
+       
        options.Cookie.Name = "helios";
        options.ExpireTimeSpan = TimeSpan.FromMinutes(30);
        options.SlidingExpiration = true;

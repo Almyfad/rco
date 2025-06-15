@@ -1,4 +1,4 @@
-@api_HostAddress = http://localhost:32780
+@api_HostAddress = http://localhost:32769
 
 ###
 GET {{api_HostAddress}}/openapi/v1.json

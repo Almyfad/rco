@@ -63,7 +63,7 @@ namespace Helios
                 .AsNoTracking()
                 .Include(x => x.Membre)
                 .Include(x => x.Roles)
-                .Include(x=> x.Membre).ThenInclude(x=> x.TypeMembre)
+                .Include(x => x.Membre).ThenInclude(x => x.TypeMembre)
                 .Include(x => x.Droits).ThenInclude(x => x.Centre).ThenInclude(x => x.TypeCentre)
                 .Include(x => x.Droits).ThenInclude(x => x.Module).ThenInclude(s => s.SousMenus)
                 .FirstOrDefaultAsync(x => x.Email == LoggedUserEmail);
@@ -96,31 +96,30 @@ namespace Helios
             var _isAdmin = await isAdmin;
 
             if (_isSYSAdmin)
-                retour.SysAdminModules =_helios.Modules
+                retour.SysAdminModules = _helios.Modules
                     .Include(x => x.SousMenus)
-                    .Where(x => x.Code== Modules.SysAdmin);
+                    .Where(x => x.Code == Modules.SysAdmin);
 
-
-             
             if (_isAdmin || _isSYSAdmin)
             {
-                    retour.AdminModules = _helios.Modules
-                    .Include(x => x.SousMenus)
-                    .Where(x => x.Code == Modules.Administation);
+                retour.AdminModules = _helios.Modules
+                .Include(x => x.SousMenus)
+                .Where(x => x.Code == Modules.Administation);
 
-                    var allModcules = await _helios.Modules
-                    .Where(m => m.Parent == null && m.Code != Modules.SysAdmin && m.Code != Modules.Administation)
-                    .Include(x => x.SousMenus)
-                    .ToListAsync();
+                var allModcules = await _helios.Modules
+                .Where(m => m.Parent == null && m.Code != Modules.SysAdmin && m.Code != Modules.Administation)
+                .Include(x => x.SousMenus)
+                .ToListAsync();
 
                 retour.CentreModules = (await _helios.Centre
-                    .Include(x=>x.TypeCentre)
+                    .Include(x => x.TypeCentre)
                     .AsNoTracking().
-                ToListAsync()).Select(x => new CentreModule
-                {
-                    Centre = (CentreInfos)x,
-                    Modules = allModcules.OrderBy(x => x.Id)
-                });
+                ToListAsync())
+                .Select(x => new CentreModule
+                (
+                    x,
+                    allModcules.OrderBy(x => x.Id)
+                ));
             }
             else
             {
@@ -132,10 +131,10 @@ namespace Helios
 
                 retour.CentreModules = user.Droits?.GroupBy(x => x.Centre, x => x.Module, new CentreEqualityComparer())
                     .Select(x => new CentreModule
-                    {
-                        Centre = (CentreInfos)x.Key!,
-                        Modules = x.Union(publicModules).DistinctBy(x => x!.Id).OrderBy(x => x!.Id)
-                    });
+                    (
+                         (CentreInfos)x.Key!,
+                        x.Union(publicModules).DistinctBy(x => x!.Id).OrderBy(x => x!.Id)
+                    ));
             }
 
             retour.Id = user.Id;
@@ -201,7 +200,7 @@ namespace Helios
             .Any(x => module == x.Module!.Code && centre.Id == x.Centre!.Id && droit == x.Code) ?? false;
 
 
-        }   
+        }
         public async Task<Boolean> ActionsIsAllowed(int centreId, Modules module, Droits droit)
         {
 
