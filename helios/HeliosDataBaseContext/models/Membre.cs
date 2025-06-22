@@ -18,12 +18,11 @@
         public bool EmailValide { get; set; }
         public string? Connaissances { get; set; }
         public string? Commentaires { get; set; }
-        public DateOnly DateNaissance { get; set; }
+        public DateOnly? DateNaissance { get; set; }
        // public virtual ICollection<Membre>? Enfants { get; set; }
         public virtual Utilisateur? Utilisateur { get; set; }
         public virtual ICollection<Membre>? Parents { get; set; }
         public virtual ICollection<Membre>? Enfants { get; set; }
-        public virtual ICollection<MailingList>? MailingLists { get; set; }
 
 
     }

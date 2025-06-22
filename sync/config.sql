@@ -1,13 +1,16 @@
 CREATE TABLE IF NOT EXISTS `reformatintra`.`historique_modifications` (
-    `id` INT AUTO_INCREMENT PRIMARY KEY,
-    `nom_table` VARCHAR(255) NOT NULL,
-    `id_enregistrement_modifie` VARCHAR(255) NOT NULL COMMENT 'ID de la ligne modifiée dans la table source',
-    `type_operation` ENUM('INSERT', 'UPDATE', 'DELETE') NOT NULL,
-    `date_modification` TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    `utilisateur_modificateur` VARCHAR(255) DEFAULT NULL,
-    `anciennes_valeurs` JSON DEFAULT NULL,
-    `nouvelles_valeurs` JSON DEFAULT NULL,
-    `modifs_valeurs` JSON DEFAULT NULL
+    `id` int(11) NOT NULL AUTO_INCREMENT,
+    `nom_table` varchar(255) NOT NULL,
+    `id_enregistrement_modifie` varchar(255) NOT NULL COMMENT 'ID de la ligne modifiée dans la table source',
+    `type_operation` enum('INSERT', 'UPDATE', 'DELETE') NOT NULL,
+    `date_modification` timestamp NULL DEFAULT current_timestamp(),
+    `utilisateur_modificateur` varchar(255) DEFAULT NULL,
+    `anciennes_valeurs` longtext CHARACTER SET utf8mb4 COLLATE utf8mb4_bin DEFAULT NULL CHECK (json_valid(`anciennes_valeurs`)),
+    `nouvelles_valeurs` longtext CHARACTER SET utf8mb4 COLLATE utf8mb4_bin DEFAULT NULL CHECK (json_valid(`nouvelles_valeurs`)),
+    `modification` longtext CHARACTER SET utf8mb4 COLLATE utf8mb4_bin DEFAULT NULL CHECK (json_valid(`modification`)),
+    `statut` enum('En attente', 'En cours', 'Erreur', 'OK') DEFAULT 'En attente',
+    `message` varchar(255) DEFAULT NULL,
+    PRIMARY KEY (`id`)
 ) -- #############################################################################
 ;
 
@@ -18,7 +21,7 @@ CREATE
 OR REPLACE TRIGGER `trg_listing_modifications`
 AFTER
 UPDATE
-    ON `reformatintra`.`listing` FOR EACH ROW 
+    ON `reformatintra`.`listing` FOR EACH ROW
 INSERT INTO
     `reformatintra`.`historique_modifications` (
         `statut`,
@@ -31,7 +34,11 @@ INSERT INTO
     )
 VALUES
     (
-        CASE SUBSTRING_INDEX(USER(), '@', 1) WHEN 'sync' THEN 'OK' else 'En attente' END,
+        CASE
+            SUBSTRING_INDEX(USER(), '@', 1)
+            WHEN 'sync' THEN 'OK'
+            else 'En attente'
+        END,
         'listing',
         NEW.listing_id,
         'UPDATE',

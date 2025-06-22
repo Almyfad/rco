@@ -25,7 +25,6 @@ namespace Helios.Context
         public DbSet<Civilite> Civilites { get; set; }
         public DbSet<Membre> Membres { get; set; }
         public DbSet<Droit> Droits { get; set; }
-        public DbSet<MailingList> MailingLists { get; set; }
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
@@ -52,16 +51,16 @@ namespace Helios.Context
                 e.ToTable("Droits");
                 e.HasKey(r => r.Id);
                 e.HasData(
-                    new { Id = 1, ModuleId = (int)Models.Modules.Accueil, Code = Models.Droits.PUBLIC, Creation = DateTime.Now },
-                    new { Id = 2, ModuleId = (int)Models.Modules.Conferences, Code = Models.Droits.PUBLIC, Creation = DateTime.Now },
-                    new { Id = 3, ModuleId = (int)Models.Modules.ConferencesInscriptions, Code = Models.Droits.PUBLIC, Creation = DateTime.Now },
-                    new { Id = 4, ModuleId = (int)Models.Modules.ConferencesUserInscriptions, Code = Models.Droits.PUBLIC, Creation = DateTime.Now },
-                    new { Id = 5, ModuleId = (int)Models.Modules.Logout, Code = Models.Droits.PUBLIC, Creation = DateTime.Now },
-                    new { Id = 6, CentreId = 1, utilisateurId = 4, ModuleId = (int)Models.Modules.Registre, Code = Models.Droits.AJOUT, Creation = DateTime.Now },
-                    new { Id = 7, CentreId = 1, utilisateurId = 4, ModuleId = (int)Models.Modules.RegistreFicheEleves, Code = Models.Droits.AJOUT, Creation = DateTime.Now },
-                    new { Id = 8, CentreId = 1, utilisateurId = 4, ModuleId = (int)Models.Modules.Comptabilite, Code = Models.Droits.AJOUT, Creation = DateTime.Now },
-                    new { Id = 9, CentreId = 2, utilisateurId = 4, ModuleId = (int)Models.Modules.Registre, Code = Models.Droits.LECTURE, Creation = DateTime.Now },
-                    new { Id = 10, CentreId = 2, utilisateurId = 4, ModuleId = (int)Models.Modules.CreateConference, Code = Models.Droits.AJOUT, Creation = DateTime.Now }
+                    new { Id = 1, ModuleId = (int)Models.Modules.Accueil, Code = Models.Droits.PUBLIC },
+                    new { Id = 2, ModuleId = (int)Models.Modules.Conferences, Code = Models.Droits.PUBLIC },
+                    new { Id = 3, ModuleId = (int)Models.Modules.ConferencesInscriptions, Code = Models.Droits.PUBLIC },
+                    new { Id = 4, ModuleId = (int)Models.Modules.ConferencesUserInscriptions, Code = Models.Droits.PUBLIC },
+                    new { Id = 5, ModuleId = (int)Models.Modules.Logout, Code = Models.Droits.PUBLIC },
+                    new { Id = 6, CentreId = 1, utilisateurId = 4, ModuleId = (int)Models.Modules.Registre, Code = Models.Droits.AJOUT },
+                    new { Id = 7, CentreId = 1, utilisateurId = 4, ModuleId = (int)Models.Modules.RegistreFicheEleves, Code = Models.Droits.AJOUT },
+                    new { Id = 8, CentreId = 1, utilisateurId = 4, ModuleId = (int)Models.Modules.Comptabilite, Code = Models.Droits.AJOUT },
+                    new { Id = 9, CentreId = 2, utilisateurId = 4, ModuleId = (int)Models.Modules.Registre, Code = Models.Droits.LECTURE },
+                    new { Id = 10, CentreId = 2, utilisateurId = 4, ModuleId = (int)Models.Modules.CreateConference, Code = Models.Droits.AJOUT }
                     );
             });
             modelBuilder.Entity<Civilite>(e =>
@@ -114,29 +113,25 @@ namespace Helios.Context
                 e.HasData(new Utilisateur()
                 {
                     Email = "admin@rco.com",
-                    Id = 1,
-                    Creation = DateTime.Now,
+                    Id = 1,                  
                     MotDePasse = "AQAAAAIAAYagAAAAEEiNVE7GnBd6NNlBeIh1KHdEWcrYV3GpgaIw5NPr3hQ8LCK30Df1/LgmaUfSBliSLg==",
                 });
                 e.HasData(new Utilisateur()
                 {
                     Email = "admin2@rco.com",
                     Id = 2,
-                    Creation = DateTime.Now,
                     MotDePasse = "AQAAAAIAAYagAAAAEEiNVE7GnBd6NNlBeIh1KHdEWcrYV3GpgaIw5NPr3hQ8LCK30Df1/LgmaUfSBliSLg==",
                 });
                 e.HasData(new Utilisateur()
                 {
                     Email = "usermanager@rco.com",
                     Id = 3,
-                    Creation = DateTime.Now,
                     MotDePasse = "AQAAAAIAAYagAAAAEEiNVE7GnBd6NNlBeIh1KHdEWcrYV3GpgaIw5NPr3hQ8LCK30Df1/LgmaUfSBliSLg==",
                 });
                 e.HasData(new Utilisateur()
                 {
                     Email = "usercentre@rco.com",
                     Id = 4,
-                    Creation = DateTime.Now,
                     MotDePasse = "AQAAAAIAAYagAAAAEEiNVE7GnBd6NNlBeIh1KHdEWcrYV3GpgaIw5NPr3hQ8LCK30Df1/LgmaUfSBliSLg==",
                 });
                 e.HasMany(e => e.Roles).WithMany(e => e.Utilisateurs)
@@ -172,23 +167,23 @@ namespace Helios.Context
 
                 e.HasIndex(e => e.Code).IsUnique();
                 e.HasData(
-                    new { Id = 1, Code = "MG", Libelle = "MontGivroux", Pays = "France", Creation = DateTime.Now, CodePostal = "93120", Adresse = "", TypeCentreId = 100 },
-                    new { Id = 2, Code = "PO", Libelle = "Poitier", Pays = "France", Creation = DateTime.Now, CodePostal = "93120", Adresse = "", TypeCentreId = 100 },
-                    new { Id = 3, Code = "LC", Libelle = "La Licorne", Pays = "France", Creation = DateTime.Now, CodePostal = "93120", Adresse = "", TypeCentreId = 100 },
-                    new { Id = 4, Code = "PR", Libelle = "Paris", Pays = "France", Creation = DateTime.Now, CodePostal = "93120", Adresse = "", TypeCentreId = 200 },
-                    new { Id = 5, Code = "LY", Libelle = "Lyon", Pays = "France", Creation = DateTime.Now, CodePostal = "69000", Adresse = "", TypeCentreId = 200 },
-                    new { Id = 6, Code = "MA", Libelle = "Marseille", Pays = "France", Creation = DateTime.Now, CodePostal = "13000", Adresse = "", TypeCentreId = 200 },
-                    new { Id = 7, Code = "TO", Libelle = "Toulouse", Pays = "France", Creation = DateTime.Now, CodePostal = "31000", Adresse = "", TypeCentreId = 200 },
-                    new { Id = 8, Code = "GP", Libelle = "Guadeloupe", Pays = "France", Creation = DateTime.Now, CodePostal = "97100", Adresse = "", TypeCentreId = 200 },
-                    new { Id = 9, Code = "AX", Libelle = "Aix-en-Provence", Pays = "France", Creation = DateTime.Now, CodePostal = "97100", Adresse = "", TypeCentreId = 200 },
-                    new { Id = 10, Code = "LL", Libelle = "Lille", Pays = "France", Creation = DateTime.Now, CodePostal = "97100", Adresse = "", TypeCentreId = 200 },
-                    new { Id = 11, Code = "MT", Libelle = "Metz", Pays = "France", Creation = DateTime.Now, CodePostal = "97100", Adresse = "", TypeCentreId = 200 },
-                    new { Id = 12, Code = "MP", Libelle = "Montptelier", Pays = "France", Creation = DateTime.Now, CodePostal = "97100", Adresse = "", TypeCentreId = 200 },
-                    new { Id = 13, Code = "PP", Libelle = "Perpignan", Pays = "France", Creation = DateTime.Now, CodePostal = "97100", Adresse = "", TypeCentreId = 200 },
-                    new { Id = 14, Code = "CA", Libelle = "Côte d'Azure", Pays = "France", Creation = DateTime.Now, CodePostal = "97100", Adresse = "", TypeCentreId = 200 },
-                    new { Id = 15, Code = "RE", Libelle = "Rennes", Pays = "France", Creation = DateTime.Now, CodePostal = "97100", Adresse = "", TypeCentreId = 200 },
-                    new { Id = 16, Code = "RU", Libelle = "Rouen", Pays = "France", Creation = DateTime.Now, CodePostal = "97100", Adresse = "", TypeCentreId = 200 },
-                    new { Id = 17, Code = "SB", Libelle = "Strasbourg", Pays = "France", Creation = DateTime.Now, CodePostal = "97100", Adresse = "", TypeCentreId = 200 }
+                    new { Id = 1, Code = "MG", Libelle = "MontGivroux", Pays = "France", CodePostal = "93120", Adresse = "", TypeCentreId = 100 },
+                    new { Id = 2, Code = "PO", Libelle = "Poitier", Pays = "France", CodePostal = "93120", Adresse = "", TypeCentreId = 100 },
+                    new { Id = 3, Code = "LC", Libelle = "La Licorne", Pays = "France", CodePostal = "93120", Adresse = "", TypeCentreId = 100 },
+                    new { Id = 4, Code = "PR", Libelle = "Paris", Pays = "France", CodePostal = "93120", Adresse = "", TypeCentreId = 200 },
+                    new { Id = 5, Code = "LY", Libelle = "Lyon", Pays = "France", CodePostal = "69000", Adresse = "", TypeCentreId = 200 },
+                    new { Id = 6, Code = "MA", Libelle = "Marseille", Pays = "France", CodePostal = "13000", Adresse = "", TypeCentreId = 200 },
+                    new { Id = 7, Code = "TO", Libelle = "Toulouse", Pays = "France", CodePostal = "31000", Adresse = "", TypeCentreId = 200 },
+                    new { Id = 8, Code = "GP", Libelle = "Guadeloupe", Pays = "France", CodePostal = "97100", Adresse = "", TypeCentreId = 200 },
+                    new { Id = 9, Code = "AX", Libelle = "Aix-en-Provence", Pays = "France", CodePostal = "97100", Adresse = "", TypeCentreId = 200 },
+                    new { Id = 10, Code = "LL", Libelle = "Lille", Pays = "France", CodePostal = "97100", Adresse = "", TypeCentreId = 200 },
+                    new { Id = 11, Code = "MT", Libelle = "Metz", Pays = "France", CodePostal = "97100", Adresse = "", TypeCentreId = 200 },
+                    new { Id = 12, Code = "MP", Libelle = "Montptelier", Pays = "France", CodePostal = "97100", Adresse = "", TypeCentreId = 200 },
+                    new { Id = 13, Code = "PP", Libelle = "Perpignan", Pays = "France", CodePostal = "97100", Adresse = "", TypeCentreId = 200 },
+                    new { Id = 14, Code = "CA", Libelle = "Côte d'Azure", Pays = "France", CodePostal = "97100", Adresse = "", TypeCentreId = 200 },
+                    new { Id = 15, Code = "RE", Libelle = "Rennes", Pays = "France", CodePostal = "97100", Adresse = "", TypeCentreId = 200 },
+                    new { Id = 16, Code = "RU", Libelle = "Rouen", Pays = "France", CodePostal = "97100", Adresse = "", TypeCentreId = 200 },
+                    new { Id = 17, Code = "SB", Libelle = "Strasbourg", Pays = "France", CodePostal = "97100", Adresse = "", TypeCentreId = 200 }
                 );
             });
             modelBuilder.Entity<Activitee>(e =>
@@ -201,11 +196,33 @@ namespace Helios.Context
                 e.ToTable("Inscriptions");
                 e.HasKey(r => r.Id);
             });
-            modelBuilder.Entity<MailingList>(e =>
+
+
+            foreach (var entityType in modelBuilder.Model.GetEntityTypes())
             {
-                e.ToTable("MailingLists");
-                e.HasKey(r => r.Id);
-            });
+                // Appliquer à toutes les entités concrètes héritant de ModelBase
+                var clrType = entityType.ClrType;
+                var ismodelBase = (typeof(ModelBase).IsAssignableFrom(clrType) && clrType.IsClass && !clrType.IsAbstract);
+
+
+                // Appliquer à toutes les entités héritant de ModelEnumBase<T>
+                var baseType = clrType.BaseType;
+                ismodelBase = ismodelBase || (baseType != null && baseType.IsGenericType &&
+                baseType.GetGenericTypeDefinition() == typeof(ModelEnumBase<>));
+
+                if (ismodelBase)
+                {
+                    modelBuilder.Entity(clrType)
+                        .Property(nameof(ModelBase.Creation))
+                        .HasDefaultValueSql("CURRENT_TIMESTAMP");
+
+                    modelBuilder.Entity(clrType)
+                    .Property(nameof(ModelBase.Modification))
+                    .HasDefaultValueSql("CURRENT_TIMESTAMP");
+                }
+            }
+
+
         }
 
     }
@@ -269,7 +286,7 @@ namespace Helios.Context
             public String? Password => Environment.GetEnvironmentVariable("MYSQL_PASSWORD") ?? "Lm9evzdoNAXNmR0f";
             public String? Database => Environment.GetEnvironmentVariable("MYSQL_DATABASE") ?? "helios-dev";
 #endif
-            public String CnxString => (Host == null || User == null || Password == null || Database == null || Port ==null) ?
+            public String CnxString => (Host == null || User == null || Password == null || Database == null || Port == null) ?
                 throw new Exception("Illegal Connection String")
                 : $"server={Host};port={Port};user={User};password={Password};database={Database};";
 

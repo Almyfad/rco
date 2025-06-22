@@ -4,6 +4,7 @@ on:
   push:
     paths:
       - 'helios/api/**'
+      - 'helios/HeliosDataBaseContext/**'
       - '.github/workflows/helios-api-ci.yml'
     branches:
       - main

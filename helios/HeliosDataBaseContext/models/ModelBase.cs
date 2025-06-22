@@ -6,7 +6,7 @@ namespace Helios.Context.Models
     {
         [Key]
         public int Id { get; set; }
-        public DateTime Creation { get; set; } = DateTime.UtcNow;
+        public DateTime Creation { get; set; }
         public DateTime? Modification { get; set; }
     }
 
@@ -16,7 +16,7 @@ namespace Helios.Context.Models
         public int Id { get; set; }
         public String? Description { get; set; }
         public T Code { get; set; }
-        public DateTime Creation { get; set; } = DateTime.UtcNow;
+        public DateTime Creation { get; set; }
         public DateTime? Modification { get; set; }
     }
 }

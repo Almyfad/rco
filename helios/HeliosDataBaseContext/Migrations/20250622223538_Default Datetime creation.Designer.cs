@@ -4,6 +4,7 @@ using Helios.Context;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace HeliosDataBaseContext.Migrations
 {
     [DbContext(typeof(HeliosContext))]
-    partial class HeliosContextModelSnapshot : ModelSnapshot
+    [Migration("20250622223538_Default Datetime creation")]
+    partial class DefaultDatetimecreation
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -516,6 +519,41 @@ namespace HeliosDataBaseContext.Migrations
                     b.ToTable("Inscriptions", (string)null);
                 });
 
+            modelBuilder.Entity("Helios.Context.Models.MailingList", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    MySqlPropertyBuilderExtensions.UseMySqlIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<int>("CentreId")
+                        .HasColumnType("int");
+
+                    b.Property<DateTime>("Creation")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("datetime(6)")
+                        .HasDefaultValueSql("CURRENT_TIMESTAMP");
+
+                    b.Property<string>("Libelle")
+                        .IsRequired()
+                        .HasColumnType("longtext");
+
+                    b.Property<DateTime?>("Modification")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("datetime(6)")
+                        .HasDefaultValueSql("CURRENT_TIMESTAMP");
+
+                    b.Property<long?>("brevoListId")
+                        .HasColumnType("bigint");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("CentreId");
+
+                    b.ToTable("MailingList");
+                });
+
             modelBuilder.Entity("Helios.Context.Models.Membre", b =>
                 {
                     b.Property<int>("Id")
@@ -547,7 +585,7 @@ namespace HeliosDataBaseContext.Migrations
                         .HasColumnType("datetime(6)")
                         .HasDefaultValueSql("CURRENT_TIMESTAMP");
 
-                    b.Property<DateOnly?>("DateNaissance")
+                    b.Property<DateOnly>("DateNaissance")
                         .HasColumnType("date");
 
                     b.Property<string>("Email")
@@ -1370,6 +1408,21 @@ namespace HeliosDataBaseContext.Migrations
                         });
                 });
 
+            modelBuilder.Entity("MailingListMembre", b =>
+                {
+                    b.Property<int>("MailingListsId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("MembresId")
+                        .HasColumnType("int");
+
+                    b.HasKey("MailingListsId", "MembresId");
+
+                    b.HasIndex("MembresId");
+
+                    b.ToTable("MailingListMembre");
+                });
+
             modelBuilder.Entity("MembreMembre", b =>
                 {
                     b.Property<int>("EnfantsId")
@@ -1500,6 +1553,17 @@ namespace HeliosDataBaseContext.Migrations
                     b.Navigation("Utilisateur");
                 });
 
+            modelBuilder.Entity("Helios.Context.Models.MailingList", b =>
+                {
+                    b.HasOne("Helios.Context.Models.Centre", "Centre")
+                        .WithMany("MailingLists")
+                        .HasForeignKey("CentreId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Centre");
+                });
+
             modelBuilder.Entity("Helios.Context.Models.Membre", b =>
                 {
                     b.HasOne("Helios.Context.Models.Centre", "Centre")
@@ -1551,6 +1615,21 @@ namespace HeliosDataBaseContext.Migrations
                     b.Navigation("Membre");
                 });
 
+            modelBuilder.Entity("MailingListMembre", b =>
+                {
+                    b.HasOne("Helios.Context.Models.MailingList", null)
+                        .WithMany()
+                        .HasForeignKey("MailingListsId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("Helios.Context.Models.Membre", null)
+                        .WithMany()
+                        .HasForeignKey("MembresId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+                });
+
             modelBuilder.Entity("MembreMembre", b =>
                 {
                     b.HasOne("Helios.Context.Models.Membre", null)
@@ -1589,6 +1668,8 @@ namespace HeliosDataBaseContext.Migrations
             modelBuilder.Entity("Helios.Context.Models.Centre", b =>
                 {
                     b.Navigation("Activites");
+
+                    b.Navigation("MailingLists");
 
                     b.Navigation("Membres");
                 });

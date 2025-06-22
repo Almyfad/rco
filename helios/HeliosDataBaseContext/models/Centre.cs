@@ -14,7 +14,6 @@
         public long? brevoFolderId { get; set; }
         public virtual ICollection<Membre>? Membres { get; set; }      
         public virtual ICollection<Activitee>? Activites { get; set; }
-        public virtual ICollection<MailingList>? MailingLists { get; set; }
 
         public bool Equals(Centre? other)
         {
