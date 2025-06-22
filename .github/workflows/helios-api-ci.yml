@@ -41,13 +41,13 @@ jobs:
             echo  "short_env=staging" >> $GITHUB_OUTPUT
           else
             echo "env=development" >> $GITHUB_OUTPUT
-            echo 
+            echo "short_env=dev" >> $GITHUB_OUTPUT
           fi
 
       - name: Build Docker image
         run: cd helios && docker build -f api/Dockerfile --force-rm -t helios:latest .
 
-      - name: Generate compose to $HOME
+      - name: Generate ${{ steps.set_env.outputs.short_env }} compose to $HOME
         run: |
           mkdir -p $HOME/helios
           cp helios/api/Dockerfile $HOME/helios/Dockerfile
