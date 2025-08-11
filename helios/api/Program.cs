@@ -1,4 +1,5 @@
 using Helios.Context;
+using Microsoft.Extensions.Options;
 using Scalar.AspNetCore;
 using System.Text.Json.Serialization;
 
@@ -12,16 +13,18 @@ builder.Services.AddControllers().AddJsonOptions(o =>
 {
     o.JsonSerializerOptions.ReferenceHandler = ReferenceHandler.IgnoreCycles;
     o.JsonSerializerOptions.Converters.Add(new JsonStringEnumConverter());
+    o.JsonSerializerOptions.MaxDepth = 256;
 });
 builder.Services.AddHeliosContext();
 builder.Services.AddHttpContextAccessor();
-
+builder.Services.AddAppCors();
 
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
 {
+    app.UseAppicationAngularCors();
     app.MapOpenApi();
     app.MapScalarApiReference(o =>
     {

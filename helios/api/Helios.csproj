@@ -22,7 +22,6 @@
 
   <ItemGroup>
     <Folder Include="icons\" />
-    <Folder Include="Dto\" />
   </ItemGroup>
 
   <ItemGroup>
