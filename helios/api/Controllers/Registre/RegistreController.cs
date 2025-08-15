@@ -15,19 +15,21 @@ namespace Helios.Controllers.Registre
         }
         
         [HttpGet("centres")]
-        public async Task<IEnumerable<CentreOutput>> GetCentres()
+        public async Task<IEnumerable<CentreDTO>> GetCentres()
         {
-            return (await OsContext.CentresWithRight(Modules.Registre)).Select(x => (CentreOutput)x);
+            return (await OsContext.CentresWithRight(Modules.Registre)).Select(x => (CentreDTO)x);
         }
+
 
         [HttpGet("aspects")]
-        public async Task<IEnumerable<TypeMembreOutput>> GetAspects()
+        public async Task<IEnumerable<TypeMembreDTO>> GetAspects()
         {
-            return await helios.TypeMembres.Select(x => (TypeMembreOutput)x).ToListAsync();
+            return await helios.TypeMembres.Select(x => (TypeMembreDTO)x).ToListAsync();
         }
 
+
         [HttpPost("membres")]
-    public async Task<DataPager<MembreOutput>> Get(MembreFiltre? filtre, [FromQuery] DataPagerQueryParams pagerQueryParams)
+    public async Task<DataPager<MembreDTO>> Get(MembreFiltre? filtre, [FromQuery] DataPagerQueryParams pagerQueryParams)
         {
             var centres = (await OsContext.CentresWithRight(Modules.Registre))?
                 .Select(x => x.Id)
@@ -49,9 +51,10 @@ namespace Helios.Controllers.Registre
                       .WhereIf(filtre?.L_aspects != null, x => filtre!.L_aspects!.Contains(x.TypeMembre.Code))
                       .Include(x => x.TypeMembre)
                       .Include(x => x.Centre)
+                      .Include(x => x.StatutMembre)
                       .Include(x => x.Parents!).ThenInclude(x => x.TypeMembre!)
                       .Include(x => x.Enfants!).ThenInclude(x => x.TypeMembre!)
-                      .DataPage(x => x, pagerQueryParams, MembreOutput.FromMembre);
+                      .DataPage(x => x, pagerQueryParams, MembreDTO.FromMembre);
 
 
 
