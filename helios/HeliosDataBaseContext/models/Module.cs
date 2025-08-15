@@ -43,7 +43,7 @@ namespace Helios.Context.Models
                     Id=(int) Modules.Mailing,
                     Code = Modules.Mailing,
                     Label = "Mailing",
-                    Icon = "email",
+                    Icon = "brand-gmail",
                     Path = "/mailing",
                 },
                 new Module
@@ -52,17 +52,8 @@ namespace Helios.Context.Models
                     Code = Modules.MailingListes,
                     ParentId = (int)Modules.Mailing,
                     Label = "Listes",
-                    Icon = "list",
+                    Icon = "message-share",
                     Path = "/mailing/listes",
-                },
-                new Module
-                {
-                    Id =(int) Modules.MailingCampagnes,
-                    Code = Modules.MailingCampagnes,
-                    ParentId = (int)Modules.Mailing,
-                    Label = "Campagnes",
-                    Icon = "campaign",
-                    Path = "/mailing/campagnes",
                 },
 
 
@@ -74,7 +65,7 @@ namespace Helios.Context.Models
                         Id =(int) Modules.Conferences,
                         Code = Modules.Conferences,
                         Label = "Conférence",
-                        Icon = "temple_buddhist",
+                        Icon = "building-church",
                         Path = "/conferences",
                     },
                  new Module
@@ -83,7 +74,7 @@ namespace Helios.Context.Models
                      Code = Modules.CreateConference,
                      ParentId = (int)Modules.Conferences,
                      Label = "Créer Conférence",
-                     Icon = "post_add",
+                     Icon = "calendar-plus",
                      Path = "/creer/conference",
                  },
                  new Module
@@ -92,7 +83,7 @@ namespace Helios.Context.Models
                         Code = Modules.ConferencesInscriptions,
                         ParentId = (int)Modules.Conferences,
                         Label = "Inscription",
-                        Icon = "person_add",
+                        Icon = "calendar-up",
                         Path = "/conferences/inscription",
                     },
                  new Module
@@ -101,7 +92,7 @@ namespace Helios.Context.Models
                             Code = Modules.ConferencesUserInscriptions,
                             ParentId = (int)Modules.Conferences,
                             Label = "Mes Inscriptions",
-                            Icon = "edit",
+                            Icon = "checklist",
                             Path = "/mesinscriptions",
                         },
 
@@ -122,7 +113,7 @@ namespace Helios.Context.Models
                      Code = Modules.RegistreFicheEleves,
                      ParentId = (int)Modules.Registre,
                      Label = "Fiches Elèves",
-                     Icon = "people",
+                     Icon = "id",
                      Path = "/registre/fiches/eleves",
                  },
                 new Module
@@ -131,7 +122,7 @@ namespace Helios.Context.Models
                         Code = Modules.RegistreFicheParvis,
                         ParentId = (int)Modules.Registre,
                         Label = "Fiches Parvis",
-                        Icon = "wb_iridescent",
+                        Icon = "parking-circle",
                         Path = "/registre/fiches-parvis",
                     },
                 new Module
@@ -140,7 +131,7 @@ namespace Helios.Context.Models
                         Code = Modules.RegistreFicheContacts,
                         ParentId = (int)Modules.Registre,
                         Label = "Fiches Contacts",
-                        Icon = "contact_page",
+                        Icon = "users-group",
                         Path = "/registre/fiches-contacts",
                     },
                 new Module
@@ -149,7 +140,7 @@ namespace Helios.Context.Models
                         Code = Modules.RegistreFicheJeunesses,
                         ParentId = (int)Modules.Registre,
                         Label = "Fiches Jeunesses",
-                        Icon = "child_care",
+                        Icon = "baby-carriage",
                         Path = "/registre/fiches-jeunesses",
                     },
                 new Module
@@ -158,7 +149,7 @@ namespace Helios.Context.Models
                         Code = Modules.RegistreFicheJeunesRosicruciens,
                         ParentId = (int)Modules.Registre,
                         Label = "Fiches Jeunes Rosicruciens",
-                        Icon = "settings_accessibility",
+                        Icon = "horse-toy",
                         Path = "/registre/fiches-jeunes-rosicruciens",
                         },
                 new Module
@@ -167,7 +158,7 @@ namespace Helios.Context.Models
                     Code = Modules.RegistreSaisiePresences,
                     ParentId = (int)Modules.Registre,
                     Label = "Saisie Présences",
-                    Icon = "featured_play_list",
+                    Icon = "checklist",
                     Path = "/registre/traitements",
                 },
                 new Module
@@ -176,7 +167,7 @@ namespace Helios.Context.Models
                     Code = Modules.RegistreSaisiePresencesVilles,
                     ParentId = (int)Modules.RegistreSaisiePresences,
                     Label = "Présence Villes",
-                    Icon = "list_alt",
+                    Icon = "clipboard-smile",
                     Path = "/registre/traitements/encours",
                 },
                 new Module
@@ -185,7 +176,7 @@ namespace Helios.Context.Models
                     Code = Modules.RegistreSaisiePresencesCR,
                     ParentId = (int)Modules.RegistreSaisiePresences,
                     Label = "Présence CR",
-                    Icon = "fact_check",
+                    Icon = "clipboard-heart",
                     Path = "/registre/traitements/termines",
                 },
                 new Module
@@ -194,7 +185,7 @@ namespace Helios.Context.Models
                     Code = Modules.RegistreSaisiePresencesEI,
                     ParentId = (int)Modules.RegistreSaisiePresences,
                     Label = "Présence EI",
-                    Icon = "receipt_long",
+                    Icon = "clipboard-check",
                     Path = "/registre/traitements/termines",
                     },
                 new Module
@@ -203,7 +194,7 @@ namespace Helios.Context.Models
                     Code = Modules.RegistreStatistiques,
                     ParentId = (int)Modules.Registre,
                     Label = "Statistiques",
-                    Icon = "insert_chart_outlined",
+                    Icon = "chart-infographic",
                     Path = "/registre/statistiques",
                 },
                 new Module
@@ -212,7 +203,7 @@ namespace Helios.Context.Models
                     Code = Modules.RegistreStatistiquesPresences,
                     ParentId = (int)Modules.RegistreStatistiques,
                     Label = "Présences",
-                    Icon = "list_alt",
+                    Icon = "checklist",
                     Path = "/registre/statistiques/villes",
                 },
                 //----------------------
@@ -223,7 +214,7 @@ namespace Helios.Context.Models
                      Id =(int) Modules.Comptabilite,
                      Code = Modules.Comptabilite,
                      Label = "Comptabilité",
-                     Icon = "account_balance",
+                     Icon = "calculator",
                      Path = "/compta",
                  },
                  new Module
@@ -232,7 +223,7 @@ namespace Helios.Context.Models
                         Code = Modules.ComptabiliteEnLigne,
                         ParentId = (int)Modules.Comptabilite,
                         Label = "Compta en ligne",
-                        Icon = "account_balance_wallet",
+                        Icon = "credit-card-pay",
                         Path = "/compta/comptes",
                  },
                  new Module
@@ -241,7 +232,7 @@ namespace Helios.Context.Models
                         Code = Modules.ComptabiliteParametres,
                         ParentId = (int)Modules.Comptabilite,
                         Label = "Paramètre generaux",
-                        Icon = "settings",
+                        Icon = "adjustments-alt",
                         Path = "/compta/parametres",
                  },
                  new Module
@@ -250,7 +241,7 @@ namespace Helios.Context.Models
                         Code = Modules.ComptabiliteSaisieEcrituresRepetitives,
                         ParentId = (int)Modules.Comptabilite,
                         Label = "Sasie écritures répetitives",
-                        Icon = "monetization_on",
+                        Icon = "replace",
                         Path = "/compta/ecritures",
                  },
                  new Module
@@ -259,7 +250,7 @@ namespace Helios.Context.Models
                         Code = Modules.ComptabiliteComptesCaisse,
                         ParentId = (int)Modules.Comptabilite,
                         Label = "Comptes/caisse",
-                        Icon = "description",
+                        Icon = "coins",
                         Path = "/compta/comptescaisse",
                  },
                  //----------------------
@@ -283,7 +274,7 @@ namespace Helios.Context.Models
                             Id =(int) Modules.Administation,
                             Code = Modules.Administation,
                             Label = "Administation",
-                            Icon = "admin_panel_settings",
+                            Icon = "settings",
                             Path = "/administation",
                         },
                  //----------------------
@@ -294,7 +285,7 @@ namespace Helios.Context.Models
                             Id =(int) Modules.Logout,
                             Code = Modules.Logout,
                             Label = "Deconnexion",
-                            Icon = "exit_to_app",
+                            Icon = "logout",
                             Path = "/logout",
                         },
 
