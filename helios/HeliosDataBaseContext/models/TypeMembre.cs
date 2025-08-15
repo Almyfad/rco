@@ -27,9 +27,27 @@ namespace Helios.Context.Models
         SixiemeAspect = 700,
         [Description("Septieme Aspect")]
         SeptiemeAspect = 800,
-        [Description("Interessé")]
+        [Description("Sympathisant")]
         Interesse = 900,
-        [Description("Jeunesse")]
+        [Description("Contact")]
+        Contact = 950,
+        [Description("Enfant bébé")]
         Jeunesse = 1000,
+        [Description("Enfant groupe pré-A")]
+        EnfantGroupePreA = 1050,
+        [Description("Enfant groupe A")]
+        EnfantGroupeA = 1100,
+        [Description("Enfant groupe B")]
+        EnfantGroupeB = 1200,
+        [Description("Enfant groupe C")]
+        EnfantGroupeC = 1300,
+        [Description("Enfant groupe D")]
+        EnfantGroupeD = 1400,
+        [Description("Enfant hors groupe")]
+        EnfantHorsGroupe = 1500,
+        [Description("Groupe D")]
+        GroupeD = 1600,
+        [Description("Groupe D+")]
+        GroupeDPlus = 1700,
     }
 }
