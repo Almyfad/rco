@@ -27,6 +27,11 @@ namespace Helios.Controllers.Registre
             return await helios.TypeMembres.Select(x => (TypeMembreDTO)x).ToListAsync();
         }
 
+        [HttpGet("statuts")]
+        public async Task<IEnumerable<StatutMembreDTO>> GetStatuts()
+        {
+            return await helios.StatutMembres.Select(x => (StatutMembreDTO)x).ToListAsync();
+        }
 
         [HttpPost("membres")]
     public async Task<DataPager<MembreDTO>> Get(MembreFiltre? filtre, [FromQuery] DataPagerQueryParams pagerQueryParams)
@@ -45,10 +50,12 @@ namespace Helios.Controllers.Registre
                       .WhereIf(String.IsNullOrWhiteSpace(filtre?.Pays) == false, x => x.Pays != null && x.Pays.ToUpper().Contains(filtre!.Pays!.ToUpper()))
                       .WhereIf(String.IsNullOrWhiteSpace(filtre?.Centre) == false, x => x.Centre != null && x.Centre.Libelle.ToUpper().Contains(filtre!.Centre!.ToUpper()))
                       .WhereIf(String.IsNullOrWhiteSpace(filtre?.Aspect) == false, x => x.TypeMembre != null && x.TypeMembre.Description!.Contains(filtre!.Aspect!.ToUpper()))
+                      .WhereIf(String.IsNullOrWhiteSpace(filtre?.Statut) == false, x => x.StatutMembre != null && x.StatutMembre.Description!.ToUpper().Contains(filtre!.Statut!.ToUpper()))
                       .WhereIf(filtre?.L_villes != null, x => filtre!.L_villes!.Contains(x.Ville))
                       .WhereIf(filtre?.L_pays != null, x => filtre!.L_pays!.Contains(x.Pays))
                       .WhereIf(filtre?.L_centres != null, x => filtre!.L_centres!.Contains(x.Centre!.Libelle))
                       .WhereIf(filtre?.L_aspects != null, x => filtre!.L_aspects!.Contains(x.TypeMembre.Code))
+                      .WhereIf(filtre?.L_statuts != null, x => filtre!.L_statuts!.Contains(x.StatutMembre.Code))
                       .Include(x => x.TypeMembre)
                       .Include(x => x.Centre)
                       .Include(x => x.StatutMembre)

@@ -8,8 +8,10 @@ public record MembreFiltre(
         string? Pays = null,
         string? Centre = null,
         string? Aspect = null,
+        string? Statut=null,
         string[]? L_villes = null,
         string[]? L_pays = null,
         string[]? L_centres = null,
-        TypesMembres[]? L_aspects = null
+        TypesMembres[]? L_aspects = null,
+        StatutsMembres[]? L_statuts = null
     );
