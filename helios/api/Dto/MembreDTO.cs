@@ -1,12 +1,12 @@
 ﻿
 
 
-using Helios.Context.Models;
 
 public record MembreDTO(
         int Id,
         string Nom,
         string Prenom,
+        CiviliteDTO Civilite,
         TypeMembreDTO TypeMembre,
         CentreDTO Centre,
         StatutMembreDTO Statut,
@@ -16,30 +16,37 @@ public record MembreDTO(
         string? Adresse,
         string? CodePostal,
         string? Ville,
-        string? Pays,
-        IEnumerable<int>? Parents = null,
-        IEnumerable<int>? Enfants = null
+        string? Pays
     )
 {
     public static MembreDTO FromMembre(Helios.Context.Models.Membre m) =>
         (MembreDTO)m;
 
-    public static explicit operator MembreDTO(Helios.Context.Models.Membre m) =>
+    public static implicit operator MembreDTO(Helios.Context.Models.Membre m) =>
         new(
            Id: m.Id,
            Nom: m.Nom,
            Prenom: m.Prenom,
-           TypeMembre: (TypeMembreDTO)m.TypeMembre,
-           Centre: (CentreDTO)m.Centre,
-           Statut: (StatutMembreDTO)m.StatutMembre,
+           Civilite: m.Civilite,
+           TypeMembre: m.TypeMembre,
+           Centre: m.Centre,
+           Statut: m.StatutMembre,
            Email: m.Email,
            Telephone: m.Telephone,
            Portable: m.Portable,
            Adresse: m.Adresse,
            CodePostal: m.CodePostal,
            Ville: m.Ville,
-           Pays: m.Pays,
-           Parents: m.Parents?.Select(x => x.Id),
-           Enfants: m.Enfants?.Select(x => x.Id)
+           Pays: m.Pays
         );
 }
+
+public record FamilyDTO(IEnumerable<MembreDTO> Parents, IEnumerable<MembreDTO> Enfants)
+{
+    public static implicit operator FamilyDTO(Helios.Context.Models.Membre m) =>
+        new(
+            Parents: m.Parents?.Select(x => (MembreDTO)x) ?? [],
+            Enfants: m.Enfants?.Select(x => (MembreDTO)x) ?? []
+        );
+}
+

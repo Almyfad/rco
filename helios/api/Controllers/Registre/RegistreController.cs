@@ -13,7 +13,7 @@ namespace Helios.Controllers.Registre
         {
 
         }
-        
+
         [HttpGet("centres")]
         public async Task<IEnumerable<CentreDTO>> GetCentres()
         {
@@ -34,7 +34,7 @@ namespace Helios.Controllers.Registre
         }
 
         [HttpPost("membres")]
-    public async Task<DataPager<MembreDTO>> Get(MembreFiltre? filtre, [FromQuery] DataPagerQueryParams pagerQueryParams)
+        public async Task<DataPager<MembreDTO>> Get(MembreFiltre? filtre, [FromQuery] DataPagerQueryParams pagerQueryParams)
         {
             var centres = (await OsContext.CentresWithRight(Modules.Registre))?
                 .Select(x => x.Id)
@@ -59,8 +59,6 @@ namespace Helios.Controllers.Registre
                       .Include(x => x.TypeMembre)
                       .Include(x => x.Centre)
                       .Include(x => x.StatutMembre)
-                      .Include(x => x.Parents!).ThenInclude(x => x.TypeMembre!)
-                      .Include(x => x.Enfants!).ThenInclude(x => x.TypeMembre!)
                       .DataPage(x => x, pagerQueryParams, MembreDTO.FromMembre);
 
 
@@ -68,5 +66,45 @@ namespace Helios.Controllers.Registre
 
         }
 
+        [HttpGet("membres/membre/:id")]                                      
+        public async Task<MembreDTO> GetMembreById(int id)
+        {
+            var centres = (await OsContext.CentresWithRight(Modules.Registre))?
+                .Select(x => x.Id)
+                .ToList();
+            if (centres == null) throw new NotEnoughPrivilegeException("No centre found");
+            var membre = await helios.Membres
+                      .Where(x => centres.Contains(x.Centre!.Id))
+                      .Where(x => x.Id == id)
+                      .Include(x => x.TypeMembre)
+                      .Include(x => x.Centre)
+                      .Include(x => x.StatutMembre)
+                      .Include(x => x.Parents!).ThenInclude(x => x.TypeMembre!)
+                      .Include(x => x.Enfants!).ThenInclude(x => x.TypeMembre!)
+                      .FirstOrDefaultAsync();
+            if (membre == null) throw new KeyNotFoundException($"Membre {id} not found or access denied");
+            return membre;
+        }
+
+        [HttpGet("membres/family/:id")]
+        public async Task<FamilyDTO> GetFamilyById(int id)
+        {
+            var centres = (await OsContext.CentresWithRight(Modules.Registre))?
+                .Select(x => x.Id)
+                .ToList();
+            if (centres == null) throw new NotEnoughPrivilegeException("No centre found");
+            var membre = await helios.Membres
+                      .Where(x => centres.Contains(x.Centre!.Id))
+                      .Where(x => x.Id == id)
+                      .Include(x => x.Parents!).ThenInclude(x => x.StatutMembre)
+                      .Include(x => x.Parents!).ThenInclude(x => x.TypeMembre)
+                      .Include(x => x.Parents!).ThenInclude(x => x.Centre)
+                      .Include(x => x.Enfants!).ThenInclude(x => x.StatutMembre)
+                      .Include(x => x.Enfants!).ThenInclude(x => x.TypeMembre)
+                      .Include(x => x.Enfants!).ThenInclude(x => x.Centre)
+                      .FirstOrDefaultAsync();
+            if (membre == null) throw new KeyNotFoundException($"Membre {id} not found or access denied");
+            return membre;
+        }
     }
 }
