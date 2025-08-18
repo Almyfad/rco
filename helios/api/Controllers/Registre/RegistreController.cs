@@ -66,7 +66,7 @@ namespace Helios.Controllers.Registre
 
         }
 
-        [HttpGet("membres/membre/:id")]                                      
+        [HttpGet("membres/membre/:id")]
         public async Task<MembreDTO> GetMembreById(int id)
         {
             var centres = (await OsContext.CentresWithRight(Modules.Registre))?
@@ -106,5 +106,121 @@ namespace Helios.Controllers.Registre
             if (membre == null) throw new KeyNotFoundException($"Membre {id} not found or access denied");
             return membre;
         }
+
+        [HttpPut("membres/membre/:id")]
+        public async Task<MembreDTO> UpdateMembre(int id, MembreDTO membreDto)
+        {
+            var centres = (await OsContext.CentresWithRight(Modules.Registre))?
+                .Select(x => x.Id)
+                .ToList();
+            if (centres == null) throw new NotEnoughPrivilegeException("No centre found");
+            var membre = await helios.Membres
+                      .Where(x => centres.Contains(x.Centre!.Id))
+                      .Where(x => x.Id == id)
+                      .Include(x => x.TypeMembre)
+                      .Include(x => x.Centre)
+                      .Include(x => x.StatutMembre)
+                      .FirstOrDefaultAsync();
+            if (membre == null) throw new KeyNotFoundException($"Membre {id} not found or access denied");
+            membre.Nom = membreDto.Nom;
+            membre.Prenom = membreDto.Prenom;
+            membre.Email = membreDto.Email;
+            membre.Telephone = membreDto.Telephone;
+            membre.Portable = membreDto.Portable;
+            membre.Adresse = membreDto.Adresse;
+            membre.CodePostal = membreDto.CodePostal;
+            membre.Ville = membreDto.Ville;
+            membre.Pays = membreDto.Pays;
+            // Update TypeMembre, Centre and StatutMembre
+            if (membre.TypeMembre != null && membre.TypeMembre.Code != membreDto.TypeMembre.code)
+            {
+                var _typeMembre = await helios.TypeMembres.FirstOrDefaultAsync(x => x.Code == membreDto.TypeMembre.code);
+                if (_typeMembre != null) membre.TypeMembre = _typeMembre;
+            }
+            if (membre.Centre != null && membre.Centre.Id != membreDto.Centre.Id)
+                membre.Centre = await helios.Centre.FirstOrDefaultAsync(x => x.Id == membreDto.Centre.Id);
+
+            if (membre.StatutMembre != null && membre.StatutMembre.Code != membreDto.Statut.code)
+            {
+                var _statutMembre = await helios.StatutMembres.FirstOrDefaultAsync(x => x.Code == membreDto.Statut.code);
+                if (_statutMembre != null) membre.StatutMembre = _statutMembre;
+
+            }
+            await helios.SaveChangesAsync();
+            return (MembreDTO)membre;
+        }
+
+        [HttpPost("membres/membre")]
+        public async Task<MembreDTO> CreateMembre(MembreDTO membreDto)
+        {
+            var centres = (await OsContext.CentresWithRight(Modules.Registre))?
+                .Select(x => x.Id)
+                .ToList();
+            if (centres == null) throw new NotEnoughPrivilegeException("No centre found");
+
+            var membre = new Membre
+            {
+                Nom = membreDto.Nom,
+                Prenom = membreDto.Prenom,
+                DateNaissance = membreDto.DateNaissance,                
+                Civilite = await getCivilite(membreDto),
+                TypeMembre = await getTypeMembre(membreDto),
+                Centre = await getCentre(membreDto),
+                StatutMembre = await getStatut(membreDto),
+                Email = membreDto.Email,
+                Telephone = membreDto.Telephone,
+                Portable = membreDto.Portable,
+                Adresse = membreDto.Adresse,
+                CodePostal = membreDto.CodePostal,
+                Ville = membreDto.Ville,
+                Pays = membreDto.Pays,
+                Commentaires = membreDto.Commentaires,
+                Connaissances = membreDto.Connaissances,
+                Profession = membreDto.Profession,
+                EmailValide = false,
+            };
+           
+            await helios.Membres.AddAsync(membre);
+            await helios.SaveChangesAsync();
+            return (MembreDTO)membre;
+
+            async Task<TypeMembre> getTypeMembre(MembreDTO membreDto)
+            {
+                if (membreDto.TypeMembre == null)
+                    throw new ArgumentNullException("TypeMembre is required");
+                var _typeMembre = await helios.TypeMembres.FirstOrDefaultAsync(x => x.Code == membreDto.TypeMembre.code);
+                if (_typeMembre == null) throw new KeyNotFoundException($"TypeMembre {membreDto.TypeMembre.code} not found");
+                return _typeMembre;
+
+            }
+
+            async Task<Centre> getCentre(MembreDTO membreDto)
+            {
+                if (membreDto.Centre == null)
+                    throw new ArgumentNullException("Centre is required");
+                var _centre = await helios.Centre.FirstOrDefaultAsync(x => x.Id == membreDto.Centre.Id);
+                if (_centre == null) throw new KeyNotFoundException($"Centre {membreDto.Centre.Id} not found");
+                return _centre;
+            }
+
+            async Task<StatutMembre> getStatut(MembreDTO membreDto)
+            {
+                if (membreDto.Statut == null)
+                    throw new ArgumentNullException("Statut is required");
+                var _statutMembre = await helios.StatutMembres.FirstOrDefaultAsync(x => x.Code == membreDto.Statut.code);
+                if (_statutMembre == null) throw new KeyNotFoundException($"Statut {membreDto.Statut.code} not found");
+                return _statutMembre;
+            }
+
+            async Task<Civilite> getCivilite(MembreDTO membreDto)
+            {
+                if (membreDto.Civilite == null)
+                    throw new ArgumentNullException("Civilite is required");
+                var _civilite = await helios.Civilites.FirstOrDefaultAsync(x => x.Code == membreDto.Civilite.code);
+                if (_civilite == null) throw new KeyNotFoundException($"Civilite {membreDto.Civilite.code} not found");
+                return _civilite;
+            }
+        }
     }
+
 }
