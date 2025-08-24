@@ -287,7 +287,7 @@ namespace Helios.Context
             public String? Database => Environment.GetEnvironmentVariable("MYSQL_DATABASE") ?? "helios-dev";
 #endif
             public String CnxString => (Host == null || User == null || Password == null || Database == null || Port == null) ?
-                throw new Exception("Illegal Connection String")
+                throw new Exception($"Illegal Connection String server={Host};port={Port};user={User};password={Password};database={Database};")
                 : $"server={Host};port={Port};user={User};password={Password};database={Database};";
 
         }
