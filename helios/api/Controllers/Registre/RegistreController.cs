@@ -14,6 +14,12 @@ namespace Helios.Controllers.Registre
 
         }
 
+        [HttpGet("civilites")]
+        public async Task<IEnumerable<CiviliteDTO>> GetCivilties()
+        {
+            return await helios.Civilites.Select(x => (CiviliteDTO)x).ToListAsync();
+        }   
+
         [HttpGet("centres")]
         public async Task<IEnumerable<CentreDTO>> GetCentres()
         {
@@ -58,6 +64,7 @@ namespace Helios.Controllers.Registre
                       .WhereIf(filtre?.L_statuts != null, x => filtre!.L_statuts!.Contains(x.StatutMembre.Code))
                       .Include(x => x.TypeMembre)
                       .Include(x => x.Centre)
+                      .Include(x=>x.Civilite)
                       .Include(x => x.StatutMembre)
                       .DataPage(x => x, pagerQueryParams, MembreDTO.FromMembre);
 
@@ -79,6 +86,7 @@ namespace Helios.Controllers.Registre
                       .Include(x => x.TypeMembre)
                       .Include(x => x.Centre)
                       .Include(x => x.StatutMembre)
+                      .Include(x=>x.Civilite)
                       .Include(x => x.Parents!).ThenInclude(x => x.TypeMembre!)
                       .Include(x => x.Enfants!).ThenInclude(x => x.TypeMembre!)
                       .FirstOrDefaultAsync();
