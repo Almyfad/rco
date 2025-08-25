@@ -113,7 +113,7 @@ namespace Helios.Context
                 e.HasData(new Utilisateur()
                 {
                     Email = "admin@rco.com",
-                    Id = 1,                  
+                    Id = 1,
                     MotDePasse = "AQAAAAIAAYagAAAAEEiNVE7GnBd6NNlBeIh1KHdEWcrYV3GpgaIw5NPr3hQ8LCK30Df1/LgmaUfSBliSLg==",
                 });
                 e.HasData(new Utilisateur()
@@ -268,16 +268,19 @@ namespace Helios.Context
     }
     public static class HeliosContextExtensions
     {
-        public static string? GetSecretOrEnv(string secretFile, string envVar, string? fallback = null)
+        private static string? GetSecretOrEnv(string secretFile)
         {
             if (!string.IsNullOrEmpty(secretFile) && System.IO.File.Exists(secretFile))
             {
                 return System.IO.File.ReadAllText(secretFile).Trim();
             }
-            var env = Environment.GetEnvironmentVariable(envVar);
-            if (!string.IsNullOrEmpty(env)) return env;
-            return fallback;
+            return null;
         }
+
+
+        public static string? SecretPassword => GetSecretOrEnv("/run/secrets/mysql_password");
+        public static string? JwtSecret => GetSecretOrEnv("/run/secrets/jwt_secret");
+
 
 
         public class ConnectionString
@@ -289,19 +292,27 @@ namespace Helios.Context
             public String? Host => Environment.GetEnvironmentVariable("MYSQL_HOST");
             public String? Port => Environment.GetEnvironmentVariable("MYSQL_PORT");
             public String? User => Environment.GetEnvironmentVariable("MYSQL_USER");
-            public String? Password => GetSecretOrEnv("/run/secrets/mysql_password", "MYSQL_PASSWORD");
+            public String? Password => SecretPassword ?? Environment.GetEnvironmentVariable("MYSQL_PASSWORD");
             public String? Database => Environment.GetEnvironmentVariable("MYSQL_DATABASE");
-            public String? JwtSecret => GetSecretOrEnv("/run/secrets/jwt_secret", "Configurations__jwt__secret");
 #endif
 #if DEBUG
             public String? Host => Environment.GetEnvironmentVariable("MYSQL_HOST") ?? "mj1848-001.eu.clouddb.ovh.net";
             public String? Port => Environment.GetEnvironmentVariable("MYSQL_PORT") ?? "35117";
             public String? User => Environment.GetEnvironmentVariable("MYSQL_USER") ?? "heliosdev";
-            public String? Password => GetSecretOrEnv("/run/secrets/mysql_password", "MYSQL_PASSWORD", "Lm9evzdoNAXNmR0f");
+            public String? Password =>SecretPassword ?? Environment.GetEnvironmentVariable("MYSQL_PASSWORD") ?? "Lm9evzdoNAXNmR0f";
             public String? Database => Environment.GetEnvironmentVariable("MYSQL_DATABASE") ?? "helios-dev";
 #endif
+
+            private Dictionary<string, string?> cnxPart => new Dictionary<string, string?> {
+                { "Host", Host },
+                { "Port", Port },
+                { "User", User },
+                { "Password", Password },
+                { "Database", Database }
+            };
+            private String?[] nullparts => cnxPart.Where(s => s.Value == null).Select(String => String.Key).ToArray();
             public String CnxString => (Host == null || User == null || Password == null || Database == null || Port == null) ?
-                throw new Exception($"Illegal Connection String")
+                throw new Exception($"Illegal Connection String {nullparts.Length} null parts: {string.Join(", ", nullparts)}")
                 : $"server={Host};port={Port};user={User};password={Password};database={Database};";
 
         }

@@ -9,3 +9,10 @@ services:
 networks:
   rconetwork:
     external: true
+secrets:
+  mysql_password:
+    external: true
+    name: .secret.helios.prod.mysql.password
+  jwt_secret:
+    external: true
+    name: .secret.helios.prod.jwt.secret

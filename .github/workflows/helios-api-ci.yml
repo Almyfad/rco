@@ -19,7 +19,7 @@ env:
   MYSQL_HOST: ${{ vars.MYSQL_HOST }}
   MYSQL_PORT: ${{ vars.MYSQL_PORT }}
   MYSQL_PASSWORD: ${{ secrets.MYSQL_PASSWORD }}
-  Configurations__jwt__secret: ${{ secrets.Configurations__jwt__secret }}
+  Configurations__jwt__secret: ${{ secrets.HELIOS_JWT_SECRET }}
 
 jobs:
   build:
@@ -52,7 +52,7 @@ jobs:
         run: |
           mkdir -p $HOME/helios
           cp helios/api/Dockerfile $HOME/helios/Dockerfile
-            docker compose -f helios/docker-compose.yml -f helios/docker-compose.${{ steps.set_env.outputs.short_env }}.yml config > $HOME/helios/docker-compose.${{ steps.set_env.outputs.short_env }}.yml
+          docker compose -f helios/docker-compose.yml -f helios/docker-compose.${{ steps.set_env.outputs.short_env }}.yml config > $HOME/helios/docker-compose.${{ steps.set_env.outputs.short_env }}.yml
 
   deploy:
     needs: build
@@ -63,6 +63,10 @@ jobs:
         uses: actions/setup-dotnet@v4
         with:
           dotnet-version: 9.x
+      - name: Create Docker secret
+        run: |
+          echo "${{ secrets.MYSQL_PASSWORD }}" > $HOME/helios/.secret.helios.${{ needs.build.outputs.short_env }}.mysql.password
+          echo "${{ secrets.HELIOS_JWT_SECRET }}" > $HOME/helios/.secret.helios.${{ needs.build.outputs.short_env }}.jwt.secret
 
       - name: Install EF Core Tools
         run: dotnet tool install --global dotnet-ef --version 9.*
@@ -74,12 +78,19 @@ jobs:
         run: dotnet restore
         working-directory: ./helios/api
 
+      - name: Validate environment variables
+        run: |
+          if [ -z "$MYSQL_DATABASE" ]; then echo "ERROR: MYSQL_DATABASE is not set"; exit 1; fi
+          if [ -z "$MYSQL_USER" ]; then echo "ERROR: MYSQL_USER is not set"; exit 1; fi
+          if [ -z "$MYSQL_HOST" ]; then echo "ERROR: MYSQL_HOST is not set"; exit 1; fi
+          if [ -z "$MYSQL_PASSWORD" ]; then echo "ERROR: MYSQL_PASSWORD is not set"; exit 1; fi
+          echo "✅ All required environment variables are set"
+
       - name: Apply EF Core Migrations
         run: |
          echo "Applying migrations for HeliosDataBaseContext..."
-         echo "Using connection string: $MYSQL_HOST:$MYSQL_PORT"
-         echo "Using database: $MYSQL_DATABASE"
-         echo "Using user: $MYSQL_USER"
+         echo "Database host: $MYSQL_HOST"
+         echo "Database name: $MYSQL_DATABASE" 
          dotnet ef database update --configuration Release
         working-directory: ./helios/HeliosDataBaseContext
 
