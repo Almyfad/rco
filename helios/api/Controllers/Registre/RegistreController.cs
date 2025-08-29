@@ -18,7 +18,7 @@ namespace Helios.Controllers.Registre
         public async Task<IEnumerable<CiviliteDTO>> GetCivilties()
         {
             return await helios.Civilites.Select(x => (CiviliteDTO)x).ToListAsync();
-        }   
+        }
 
         [HttpGet("centres")]
         public async Task<IEnumerable<CentreDTO>> GetCentres()
@@ -64,7 +64,7 @@ namespace Helios.Controllers.Registre
                       .WhereIf(filtre?.L_statuts != null, x => filtre!.L_statuts!.Contains(x.StatutMembre.Code))
                       .Include(x => x.TypeMembre)
                       .Include(x => x.Centre)
-                      .Include(x=>x.Civilite)
+                      .Include(x => x.Civilite)
                       .Include(x => x.StatutMembre)
                       .DataPage(x => x, pagerQueryParams, MembreDTO.FromMembre);
 
@@ -73,7 +73,19 @@ namespace Helios.Controllers.Registre
 
         }
 
-        [HttpGet("membres/membre/:id")]
+        [HttpGet("membres/search")]
+        public async Task<IEnumerable<SearchMembreDTO>> SearchMembres([FromQuery] string query)
+        {
+            return await helios.Membres
+                      .Where(x => (x.Nom.Trim() + " " + x.Prenom.Trim()).ToUpper().Contains(query.ToUpper()) || (x.Prenom.Trim() + " " + x.Nom.Trim()).ToUpper().Contains(query.ToUpper()))
+                      .OrderBy(x => x.Nom)
+                      .ThenBy(x => x.Prenom)
+                      .Take(10)
+                      .Select(x => (SearchMembreDTO)x)
+                      .ToListAsync();
+        }
+
+        [HttpGet("membres/membre/{id}")]
         public async Task<MembreDTO> GetMembreById(int id)
         {
             var centres = (await OsContext.CentresWithRight(Modules.Registre))?
@@ -86,7 +98,7 @@ namespace Helios.Controllers.Registre
                       .Include(x => x.TypeMembre)
                       .Include(x => x.Centre)
                       .Include(x => x.StatutMembre)
-                      .Include(x=>x.Civilite)
+                      .Include(x => x.Civilite)
                       .Include(x => x.Parents!).ThenInclude(x => x.TypeMembre!)
                       .Include(x => x.Enfants!).ThenInclude(x => x.TypeMembre!)
                       .FirstOrDefaultAsync();
@@ -94,7 +106,7 @@ namespace Helios.Controllers.Registre
             return membre;
         }
 
-        [HttpGet("membres/family/:id")]
+        [HttpGet("membres/family/{id}")]
         public async Task<FamilyDTO> GetFamilyById(int id)
         {
             var centres = (await OsContext.CentresWithRight(Modules.Registre))?
@@ -115,7 +127,7 @@ namespace Helios.Controllers.Registre
             return membre;
         }
 
-        [HttpPut("membres/membre/:id")]
+        [HttpPut("membres/membre/{id}")]
         public async Task<MembreDTO> UpdateMembre(int id, MembreDTO membreDto)
         {
             var centres = (await OsContext.CentresWithRight(Modules.Registre))?
@@ -154,6 +166,7 @@ namespace Helios.Controllers.Registre
                 if (_statutMembre != null) membre.StatutMembre = _statutMembre;
 
             }
+
             await helios.SaveChangesAsync();
             return (MembreDTO)membre;
         }
@@ -170,7 +183,7 @@ namespace Helios.Controllers.Registre
             {
                 Nom = membreDto.Nom,
                 Prenom = membreDto.Prenom,
-                DateNaissance = membreDto.DateNaissance,                
+                DateNaissance = membreDto.DateNaissance,
                 Civilite = await getCivilite(membreDto),
                 TypeMembre = await getTypeMembre(membreDto),
                 Centre = await getCentre(membreDto),
@@ -187,7 +200,7 @@ namespace Helios.Controllers.Registre
                 Profession = membreDto.Profession,
                 EmailValide = false,
             };
-           
+
             await helios.Membres.AddAsync(membre);
             await helios.SaveChangesAsync();
             return (MembreDTO)membre;
@@ -227,6 +240,60 @@ namespace Helios.Controllers.Registre
                 var _civilite = await helios.Civilites.FirstOrDefaultAsync(x => x.Code == membreDto.Civilite.code);
                 if (_civilite == null) throw new KeyNotFoundException($"Civilite {membreDto.Civilite.code} not found");
                 return _civilite;
+            }
+        }
+
+        [HttpPost("membres/family/{id}")]
+        public async Task<MembreDTO> UpdateFamily(int id, FamilyUpdateDTO family)
+        {
+            var centres = (await OsContext.CentresWithRight(Modules.Registre))?
+                .Select(x => x.Id)
+                .ToList();
+            if (centres == null) throw new NotEnoughPrivilegeException("No centre found");
+            var membre = await helios.Membres
+                      .Where(x => centres.Contains(x.Centre!.Id))
+                      .Where(x => x.Id == id)
+                      .Include(x => x.TypeMembre)
+                      .Include(x => x.Centre)
+                      .Include(x => x.StatutMembre)
+                      .Include(x => x.Civilite)
+                      .Include(x => x.Parents!)
+                      .Include(x => x.Enfants!)
+                      .FirstOrDefaultAsync();
+            if (membre == null) throw new KeyNotFoundException($"Membre {id} not found or access denied");
+
+            membre.Parents = await getParents(family);
+            membre.Enfants = await getEnfants(family);
+
+            
+
+            await helios.SaveChangesAsync();
+            return (MembreDTO)membre;
+
+
+
+            async Task<List<Membre>> getParents(FamilyUpdateDTO family)
+            {
+                if (family.ParentsIds == null || family.ParentsIds.Count() == 0)
+                    return new List<Membre>();
+                var parents = await helios.Membres
+                    .Where(x => family.ParentsIds.Contains(x.Id))
+                    .ToListAsync();
+                if (parents.Count != family.ParentsIds.Count())
+                    throw new KeyNotFoundException($"One or more parents not found");
+                return parents;
+            }
+
+            async Task<List<Membre>> getEnfants(FamilyUpdateDTO family)
+            {
+                if (family.EnfantsIds == null || family.EnfantsIds.Count() == 0)
+                    return new List<Membre>();
+                var enfants = await helios.Membres
+                    .Where(x => family.EnfantsIds.Contains(x.Id))
+                    .ToListAsync();
+                if (enfants.Count != family.EnfantsIds.Count())
+                    throw new KeyNotFoundException($"One or more enfants not found");
+                return enfants;
             }
         }
     }
