@@ -25,6 +25,8 @@ namespace Helios.Context
         public DbSet<Civilite> Civilites { get; set; }
         public DbSet<Membre> Membres { get; set; }
         public DbSet<Droit> Droits { get; set; }
+        public DbSet<TimelineMembre> TimelineMembres { get; set; }
+        public DbSet<TimelineMembreType> TimelineMembreTypes { get; set; }
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
@@ -45,8 +47,8 @@ namespace Helios.Context
                 e.ToTable("Modules");
                 e.HasKey(r => r.Id);
                 e.HasData(Module.InitModules());
-            });
-            modelBuilder.Entity<Droit>(e =>
+            })
+            .Entity<Droit>(e =>
             {
                 e.ToTable("Droits");
                 e.HasKey(r => r.Id);
@@ -62,8 +64,8 @@ namespace Helios.Context
                     new { Id = 9, CentreId = 2, utilisateurId = 4, ModuleId = (int)Models.Modules.Registre, Code = Models.Droits.LECTURE },
                     new { Id = 10, CentreId = 2, utilisateurId = 4, ModuleId = (int)Models.Modules.CreateConference, Code = Models.Droits.AJOUT }
                     );
-            });
-            modelBuilder.Entity<Civilite>(e =>
+            })
+            .Entity<Civilite>(e =>
             {
                 e.ToTable("Civilites");
                 e.HasKey(r => r.Id);
@@ -71,8 +73,8 @@ namespace Helios.Context
                 e.HasIndex(e => e.Code).IsUnique();
                 e.HasDataFromEnum<Civilites, Civilite>();
                 e.Property(r => r.Code).HasConversion<string>();
-            });
-            modelBuilder.Entity<TypeMembre>(e =>
+            })
+            .Entity<TypeMembre>(e =>
             {
                 e.ToTable("TypeMembres");
                 e.HasKey(r => r.Id);
@@ -80,16 +82,16 @@ namespace Helios.Context
                 e.HasIndex(e => e.Code).IsUnique();
                 e.HasDataFromEnum<TypesMembres, TypeMembre>();
                 e.Property(r => r.Code).HasConversion<string>();
-            });
-            modelBuilder.Entity<StatutMembre>(e =>
+            })
+            .Entity<StatutMembre>(e =>
             {
                 e.ToTable("StatutMembres");
                 e.HasKey(r => r.Id);
                 e.HasIndex(e => e.Code).IsUnique();
                 e.HasDataFromEnum<StatutsMembres, StatutMembre>();
                 e.Property(r => r.Code).HasConversion<string>();
-            });
-            modelBuilder.Entity<Role>(e =>
+            })
+            .Entity<Role>(e =>
             {
                 e.ToTable("Roles");
                 e.HasKey(r => r.Id);
@@ -98,14 +100,14 @@ namespace Helios.Context
                 e.HasDataFromEnum<Roles, Role>();
                 e.Property(r => r.Code).HasConversion<string>();
 
-            });
-            modelBuilder.Entity<Membre>(e =>
+            })
+            .Entity<Membre>(e =>
             {
                 e.ToTable("Membres");
                 e.HasKey(u => u.Id);
                 e.HasMany(e => e.Parents).WithMany(e => e.Enfants).UsingEntity(et => et.ToTable("ParentsEnfants"));
-            });
-            modelBuilder.Entity<Utilisateur>(e =>
+            })
+            .Entity<Utilisateur>(e =>
             {
                 e.ToTable("Utilisateurs");
                 e.HasKey(u => u.Id);
@@ -141,8 +143,8 @@ namespace Helios.Context
                      new { UtilisateursId = 2, RolesId = 200 },
                      new { UtilisateursId = 2, RolesId = 300 },
                 }));
-            });
-            modelBuilder.Entity<TypeActivitee>(e =>
+            })
+            .Entity<TypeActivitee>(e =>
             {
                 e.ToTable("TypeActivitees");
                 e.HasKey(r => r.Id);
@@ -150,8 +152,8 @@ namespace Helios.Context
                 e.HasIndex(e => e.Code).IsUnique();
                 e.HasDataFromEnum<TypesActivitees, TypeActivitee>();
                 e.Property(r => r.Code).HasConversion<string>();
-            });
-            modelBuilder.Entity<TypeCentre>(e =>
+            })
+            .Entity<TypeCentre>(e =>
             {
                 e.ToTable("TypeCentres");
                 e.HasKey(r => r.Id);
@@ -159,8 +161,8 @@ namespace Helios.Context
                 e.HasIndex(e => e.Code).IsUnique();
                 e.HasDataFromEnum<TypeCentres, TypeCentre>();
                 e.Property(r => r.Code).HasConversion<string>();
-            });
-            modelBuilder.Entity<Centre>(e =>
+            })
+            .Entity<Centre>(e =>
             {
                 e.ToTable("Centres");
                 e.HasKey(r => r.Id);
@@ -185,18 +187,30 @@ namespace Helios.Context
                     new { Id = 16, Code = "RU", Libelle = "Rouen", Pays = "France", CodePostal = "97100", Adresse = "", TypeCentreId = 200 },
                     new { Id = 17, Code = "SB", Libelle = "Strasbourg", Pays = "France", CodePostal = "97100", Adresse = "", TypeCentreId = 200 }
                 );
-            });
-            modelBuilder.Entity<Activitee>(e =>
+            })
+            .Entity<Activitee>(e =>
             {
                 e.ToTable("Activitees");
                 e.HasKey(r => r.Id);
-            });
-            modelBuilder.Entity<Inscription>(e =>
+            })
+            .Entity<Inscription>(e =>
             {
                 e.ToTable("Inscriptions");
                 e.HasKey(r => r.Id);
+            })
+            .Entity<TimelineMembre>(e =>
+            {
+                e.ToTable("TimelineMembres");
+                e.HasKey(r => r.Id);
+            })
+            .Entity<TimelineMembreType>(e =>
+            {
+                e.ToTable("TimelineMembreTypes");
+                e.HasKey(r => r.Id);
+                e.HasIndex(e => e.Code).IsUnique();
+                e.HasDataFromEnum<TimelineMembreTypes, TimelineMembreType>();
+                e.Property(r => r.Code).HasConversion<string>();
             });
-
 
             foreach (var entityType in modelBuilder.Model.GetEntityTypes())
             {

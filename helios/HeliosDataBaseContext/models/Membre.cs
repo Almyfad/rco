@@ -1,4 +1,4 @@
-﻿namespace Helios.Context.Models
+namespace Helios.Context.Models
 {
     public partial class Membre : ModelBase
     {
@@ -20,10 +20,10 @@
         public string? Connaissances { get; set; }
         public string? Commentaires { get; set; }
         public DateOnly? DateNaissance { get; set; }
-       // public virtual ICollection<Membre>? Enfants { get; set; }
         public virtual Utilisateur? Utilisateur { get; set; }
         public virtual ICollection<Membre>? Parents { get; set; }
         public virtual ICollection<Membre>? Enfants { get; set; }
+        public virtual ICollection<TimelineMembre>? Timeline { get; set; }
 
 
     }

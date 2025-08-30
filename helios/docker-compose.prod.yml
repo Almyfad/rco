@@ -6,6 +6,9 @@ services:
       - "traefik.http.routers.helios.rule=Host(`helios.rose-croix-d-or.org`)"
     networks:
       rconetwork:
+    secrets:
+      - mysql_password
+      - jwt_secret
 networks:
   rconetwork:
     external: true

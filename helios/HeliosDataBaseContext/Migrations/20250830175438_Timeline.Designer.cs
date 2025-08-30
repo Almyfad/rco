@@ -4,6 +4,7 @@ using Helios.Context;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace HeliosDataBaseContext.Migrations
 {
     [DbContext(typeof(HeliosContext))]
-    partial class HeliosContextModelSnapshot : ModelSnapshot
+    [Migration("20250830175438_Timeline")]
+    partial class Timeline
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -1079,156 +1082,14 @@ namespace HeliosDataBaseContext.Migrations
                         .HasColumnType("datetime(6)")
                         .HasDefaultValueSql("CURRENT_TIMESTAMP");
 
-                    b.Property<int>("TypeId")
+                    b.Property<int>("Type")
                         .HasColumnType("int");
 
                     b.HasKey("Id");
 
                     b.HasIndex("MembreId");
 
-                    b.HasIndex("TypeId");
-
-                    b.ToTable("TimelineMembres", (string)null);
-                });
-
-            modelBuilder.Entity("Helios.Context.Models.TimelineMembreType", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    MySqlPropertyBuilderExtensions.UseMySqlIdentityColumn(b.Property<int>("Id"));
-
-                    b.Property<string>("Code")
-                        .IsRequired()
-                        .HasColumnType("varchar(255)");
-
-                    b.Property<DateTime>("Creation")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("datetime(6)")
-                        .HasDefaultValueSql("CURRENT_TIMESTAMP");
-
-                    b.Property<string>("Description")
-                        .HasColumnType("longtext");
-
-                    b.Property<DateTime?>("Modification")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("datetime(6)")
-                        .HasDefaultValueSql("CURRENT_TIMESTAMP");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("Code")
-                        .IsUnique();
-
-                    b.ToTable("TimelineMembreTypes", (string)null);
-
-                    b.HasData(
-                        new
-                        {
-                            Id = 100,
-                            Code = "PremierContact",
-                            Creation = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            Description = "Premier Contact"
-                        },
-                        new
-                        {
-                            Id = 200,
-                            Code = "Bapteme",
-                            Creation = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            Description = "Baptème"
-                        },
-                        new
-                        {
-                            Id = 300,
-                            Code = "MariageBenediction",
-                            Creation = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            Description = "Mariage Bénédiction"
-                        },
-                        new
-                        {
-                            Id = 400,
-                            Code = "MariageSacrement",
-                            Creation = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            Description = "Mariage Sacrement"
-                        },
-                        new
-                        {
-                            Id = 500,
-                            Code = "Societaire",
-                            Creation = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            Description = "Sociétaire"
-                        },
-                        new
-                        {
-                            Id = 600,
-                            Code = "PremierAspect",
-                            Creation = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            Description = "1er Aspect"
-                        },
-                        new
-                        {
-                            Id = 700,
-                            Code = "DeuxiemeAspect",
-                            Creation = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            Description = "2e Aspect"
-                        },
-                        new
-                        {
-                            Id = 800,
-                            Code = "ECS",
-                            Creation = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            Description = "ECS"
-                        },
-                        new
-                        {
-                            Id = 900,
-                            Code = "Ecclesia",
-                            Creation = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            Description = "Ecclesia"
-                        },
-                        new
-                        {
-                            Id = 1000,
-                            Code = "Graal",
-                            Creation = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            Description = "Graal"
-                        },
-                        new
-                        {
-                            Id = 1100,
-                            Code = "TeteDor",
-                            Creation = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            Description = "Tête d'or"
-                        },
-                        new
-                        {
-                            Id = 1200,
-                            Code = "SixiemeAspect",
-                            Creation = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            Description = "6e Aspect"
-                        },
-                        new
-                        {
-                            Id = 1300,
-                            Code = "Codicile",
-                            Creation = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            Description = "Codicile"
-                        },
-                        new
-                        {
-                            Id = 1400,
-                            Code = "Demission",
-                            Creation = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            Description = "Démission"
-                        },
-                        new
-                        {
-                            Id = 1500,
-                            Code = "Deces",
-                            Creation = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            Description = "Décès"
-                        });
+                    b.ToTable("TimelineMembre");
                 });
 
             modelBuilder.Entity("Helios.Context.Models.TypeActivitee", b =>
@@ -1785,15 +1646,7 @@ namespace HeliosDataBaseContext.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("Helios.Context.Models.TimelineMembreType", "Type")
-                        .WithMany()
-                        .HasForeignKey("TypeId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
                     b.Navigation("Membre");
-
-                    b.Navigation("Type");
                 });
 
             modelBuilder.Entity("Helios.Context.Models.Utilisateur", b =>

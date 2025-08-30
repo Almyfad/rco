@@ -13,6 +13,4 @@ services:
       - "traefik.http.routers.helios.entrypoints=websecure"
       - "traefik.http.routers.helios.tls.certresolver=myresolver"
       - "traefik.http.services.helios.loadbalancer.server.port=8080"
-    secrets:
-      - mysql_password
-      - jwt_secret
+
