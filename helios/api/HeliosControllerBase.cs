@@ -6,6 +6,7 @@ using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.JsonWebTokens;
 using Helios.Controllers.User;
 using System.Security.Claims;
+using Microsoft.AspNetCore.Identity;
 
 namespace Helios
 {
@@ -53,35 +54,37 @@ namespace Helios
         public String LoggedUserEmail => LoggedUser?.FindFirst(JwtRegisteredClaimNames.UniqueName)?.Value ?? "";
 
 
-        private Utilisateur? _currentUser;
-        public void ResetCurrentUser() => _currentUser = null;
-        private async Task<Utilisateur> GetCurrentUser()
+        private IQueryable<Utilisateur?> QueryCurrentUser()
         {
-#nullable disable
-            if (_currentUser == null)
-                _currentUser = await _helios.Utilisateurs
-                .AsNoTracking()
-                .Include(x => x.Membre)
-                .Include(x => x.Roles)
-                .Include(x => x.Membre).ThenInclude(x => x.TypeMembre)
-                .Include(x => x.Droits).ThenInclude(x => x.Centre).ThenInclude(x => x.TypeCentre)
-                .Include(x => x.Droits).ThenInclude(x => x.Module).ThenInclude(s => s.SousMenus)
-                .FirstOrDefaultAsync(x => x.Email == LoggedUserEmail);
-
-            return _currentUser;
-
+            return _helios.Utilisateurs
+             .AsNoTracking()
+             .Include(x => x.Membre!)
+             .Include(x => x.Roles!)
+             .Include(x => x.Membre!).ThenInclude(x => x.TypeMembre!)
+             .Include(x => x.Droits!).ThenInclude(x => x.Centre!).ThenInclude(x => x.TypeCentre!)
+             .Include(x => x.Droits!).ThenInclude(x => x.Module!).ThenInclude(s => s.SousMenus!)
+             .Where(x => x.Email == LoggedUserEmail)
+             .Take(1);
         }
 
+        private Utilisateur? _CachedUser;
+        private async Task<Utilisateur> LoadCurrentUser()
+        {
+            if (_CachedUser != null) return _CachedUser;
+            var user = await QueryCurrentUser().FirstOrDefaultAsync();
+            if (user == null)
+                throw new Exception("[000] Accès refusé");
+            return _CachedUser ??= user;
+        }
 
-        public Task<Utilisateur> CurrentUser => GetCurrentUser();
+        public Task<Utilisateur> CurrentUser => LoadCurrentUser();
 
         public Task<UserInfo> UserInfos => GetUserInfos();
 
-        public Task<ICollection<Droit>> DroitsUser => CurrentUser.ContinueWith(x => x.Result?.Droits);
+        public Task<ICollection<Droit>> DroitsUser => CurrentUser.ContinueWith(x => x.Result?.Droits!);
         public Task<bool> isSYSAdmin => CurrentUser.ContinueWith(x => x.Result?.Roles?.Any(x => x.Code == Roles.SYSADMIN) ?? false);
         public Task<bool> isAdmin => CurrentUser.ContinueWith(x => x.Result?.Roles?.Any(x => x.Code == Roles.ADMIN_FULL_ACCESS) ?? false);
-        public Task<bool> isNotSysAdmin => isSYSAdmin.ContinueWith(x => !x.Result);
-        public Task<IEnumerable<Centre>> CentresWithAnyRight => _CentresWithAnyRight();
+        public Task<bool> IsAdminOrSysAdmin => CurrentUser.ContinueWith(x => x.Result?.Roles?.Any(x => x.Code == Roles.ADMIN_FULL_ACCESS || x.Code == Roles.SYSADMIN) ?? false);
         private async Task<UserInfo> GetUserInfos()
         {
             var retour = new UserInfo();
@@ -139,81 +142,80 @@ namespace Helios
 
             retour.Id = user.Id;
             retour.Email = user.Email;
-            retour.Nom = user.Membre?.Nom ?? user.Droits.Count.ToString();
+            retour.Nom = user.Membre?.Nom ?? user.Droits?.Count.ToString();
             retour.Prenom = user.Membre?.Prenom;
             retour.TypeMembre = user.Membre?.TypeMembre.Code;
             retour.IsConnected = true;
             return retour;
 
         }
-        public Task<IEnumerable<Module>> PrivilegedMenus => _PrivilegedMenus();
-        private async Task<IEnumerable<Module>> _PrivilegedMenus() => (await DroitsUser).Select(x => x.Module!);
-        public async Task<IEnumerable<Module>> PrivilegedMenusForCentre(Centre centre) => (await DroitsUser)
-            .Where(x => x.Centre != null && x.Centre.Id == centre.Id)
-            .Select(x => x.Module!);
 
-        protected async Task<bool> _IsAdminOrSysAdmin()
+
+
+
+        private async Task<IEnumerable<Centre>> _LoadReadCentres(params Modules[] modules)
         {
-            if (await isSYSAdmin)
-                return true;
-            if (await isAdmin)
-                return true;
-            return false;
-        }
-
-        public Task<bool> IsAdminOrSysAdmin => _IsAdminOrSysAdmin();
-
-        public async Task<IEnumerable<Centre>> CentresWithRight(params Modules[] modules)
-        {
-
+            if(_CachedCentres != null) return _CachedCentres;
             if (await IsAdminOrSysAdmin)
-                return (await _helios.Centre.AsNoTracking()
+                return _CachedCentres ??= (await _helios.Centre.AsNoTracking()
                     .ToListAsync())
                     .DistinctBy(x => x.Id);
-            return (await DroitsUser)?
+            var _centre = (await DroitsUser)?
              .Where(x => x.Module != null && x.Centre != null)
              .Where(x => modules.ToList().Contains(x.Module!.Code))
              .Select(x => x.Centre!)
              .DistinctBy(x => x.Id);
 
+            if (_centre == null) 
+                throw new Exception("[001] Accès refusé");
+            return _CachedCentres ??= _centre;
         }
-        private async Task<IEnumerable<Centre>> _CentresWithAnyRight()
+        private IEnumerable<Centre>? _CachedCentres;
+        public Task<IEnumerable<Centre>> Centres => _LoadReadCentres();
+
+
+        public Task<IEnumerable<Centre>> CentresWithReadRole(params Modules[] modules)=> _LoadReadCentres(modules);
+
+
+
+        private async Task<Boolean> _ActionsIsAllowedForCentre(int centreId, Modules module, Droits droit)
         {
 
-            if (await IsAdminOrSysAdmin)
-                return (await _helios.Centre.AsNoTracking()
-                    .ToListAsync())
-                    .DistinctBy(x => x.Id);
-            return (await DroitsUser)?
-                .Where(x => x.Module != null && x.Centre != null)
-                .Select(x => x.Centre!)
-                .DistinctBy(x => x.Id);
-        }
-        public async Task<Boolean> ActionsIsAllowed(Centre centre, Modules module, Droits droit)
-        {
-
-            if (await IsAdminOrSysAdmin)
-                return true;
-
-            return (await DroitsUser)?
-            .Where(x => x.Module != null && x.Centre != null)
-            .Any(x => module == x.Module!.Code && centre.Id == x.Centre!.Id && droit == x.Code) ?? false;
-
-
-        }
-        public async Task<Boolean> ActionsIsAllowed(int centreId, Modules module, Droits droit)
-        {
-
-            if (await IsAdminOrSysAdmin)
-                return true;
+            if (await IsAdminOrSysAdmin) return true;
 
             return (await DroitsUser)?
             .Where(x => x.Module != null && x.Centre != null)
             .Any(x => module == x.Module!.Code && centreId == x.Centre!.Id && droit == x.Code) ?? false;
-
-
         }
 
+
+
+        private async Task<Boolean> _ActionsIsAllowedForCentre(Centre centre, Modules module, Droits droit)
+        {
+            return await _ActionsIsAllowedForCentre(centre.Id, module, droit);
+        }
+
+        private async Task<Boolean> _ActionsIsAllowedForMembre(Membre membre, Modules module, Droits droit)
+        {
+            if (await IsAdminOrSysAdmin) return true;
+            var _membre = await _helios.Membres.Include(x => x.Centre)
+                .FirstOrDefaultAsync(x => x.Id == membre.Id);
+            if (_membre == null) throw new Exception("[003] Accès refusé");
+            return await _ActionsIsAllowedForCentre(_membre.Centre!, module, droit);
+        }
+        public async Task<Boolean> ActionsIsAllowedForMembre(Membre? membre, Modules module, Droits droit)
+        {
+            if (membre?.Id == null) throw new KeyNotFoundException($"Membre {membre?.Id} not found or access denied");
+            var result = await _ActionsIsAllowedForMembre(membre, module, droit);
+            if(result==false) throw new Exception("[002] Accès refusé");
+            return result;
+        }
+        public async Task<Boolean> ActionsIsAllowedForCentre(int? centreId, Modules module, Droits droit)
+        {
+            if (centreId == null) throw new KeyNotFoundException($"Centre {centreId} not found or access denied");
+            if (await IsAdminOrSysAdmin) return true;
+            return await _ActionsIsAllowedForCentre(centreId.Value, module, droit);
+        }
 
     }
 }

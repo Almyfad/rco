@@ -1,18 +1,34 @@
 ﻿using Helios.Context.Models;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Filters;
 using Microsoft.EntityFrameworkCore;
+using System.Linq;
 using System.Reflection;
 
 namespace Helios.Controllers.Registre
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class RegistreController : HeliosControllerBase
+    public class RegistreController : HeliosControllerBase, IAsyncActionFilter
     {
+        IEnumerable<Centre> centresAutorises = [];
+
         public RegistreController(IServiceProvider serviceProvider) : base(serviceProvider)
         {
-
         }
+
+        [NonAction]
+        public async Task OnActionExecutionAsync(ActionExecutingContext context, ActionExecutionDelegate next)
+        {
+            centresAutorises = await OsContext.CentresWithReadRole(Modules.Registre);
+            await next();
+        }
+
+        private IEnumerable<int> centresAutorisesLectureId => centresAutorises.Select(x => x.Id);
+        private IQueryable<Membre> MembreAutoriseLecture => helios.Membres.Where(x => centresAutorisesLectureId.Contains(x.Centre!.Id));
+
+
+
 
         [HttpGet("civilites")]
         public async Task<IEnumerable<CiviliteDTO>> GetCivilties()
@@ -23,7 +39,7 @@ namespace Helios.Controllers.Registre
         [HttpGet("centres")]
         public async Task<IEnumerable<CentreDTO>> GetCentres()
         {
-            return (await OsContext.CentresWithRight(Modules.Registre)).Select(x => (CentreDTO)x);
+            return (await OsContext.CentresWithReadRole(Modules.Registre)).Select(x => (CentreDTO)x);
         }
 
 
@@ -39,16 +55,11 @@ namespace Helios.Controllers.Registre
             return await helios.StatutMembres.Select(x => (StatutMembreDTO)x).ToListAsync();
         }
 
-        [HttpPost("membres")]
+        [HttpPost("membres/search")]
         public async Task<DataPager<MembreDTO>> Get(MembreFiltre? filtre, [FromQuery] DataPagerQueryParams pagerQueryParams)
         {
-            var centres = (await OsContext.CentresWithRight(Modules.Registre))?
-                .Select(x => x.Id)
-                .ToList();
-            if (centres == null) throw new NotEnoughPrivilegeException("No centre found");
 
-            return await helios.Membres
-                      .Where(x => centres.Contains(x.Centre!.Id))
+            return await MembreAutoriseLecture
                       .WhereIf(String.IsNullOrWhiteSpace(filtre?.Nom) == false, x => x.Nom.ToUpper().Contains(filtre!.Nom!.ToUpper()))
                       .WhereIf(String.IsNullOrWhiteSpace(filtre?.Prenom) == false, x => x.Prenom.ToUpper().Contains(filtre!.Prenom!.ToUpper()))
                       .WhereIf(String.IsNullOrWhiteSpace(filtre?.Email) == false, x => x.Email != null && x.Email.ToUpper().Contains(filtre!.Email!.ToUpper()))
@@ -67,13 +78,9 @@ namespace Helios.Controllers.Registre
                       .Include(x => x.Civilite)
                       .Include(x => x.StatutMembre)
                       .DataPage(x => x, pagerQueryParams, MembreDTO.FromMembre);
-
-
-
-
         }
 
-        [HttpGet("membres/search")]
+        [HttpGet("membres/simplesearch")]
         public async Task<IEnumerable<SearchMembreDTO>> SearchMembres([FromQuery] string query)
         {
             return await helios.Membres
@@ -85,15 +92,10 @@ namespace Helios.Controllers.Registre
                       .ToListAsync();
         }
 
-        [HttpGet("membres/membre/{id}")]
+        [HttpGet("membres/{id}")]
         public async Task<MembreDTO> GetMembreById(int id)
         {
-            var centres = (await OsContext.CentresWithRight(Modules.Registre))?
-                .Select(x => x.Id)
-                .ToList();
-            if (centres == null) throw new NotEnoughPrivilegeException("No centre found");
-            var membre = await helios.Membres
-                      .Where(x => centres.Contains(x.Centre!.Id))
+            var membre = await MembreAutoriseLecture
                       .Where(x => x.Id == id)
                       .Include(x => x.TypeMembre)
                       .Include(x => x.Centre)
@@ -106,15 +108,10 @@ namespace Helios.Controllers.Registre
             return membre;
         }
 
-        [HttpGet("membres/family/{id}")]
+        [HttpGet("membres/{id}/family")]
         public async Task<FamilyDTO> GetFamilyById(int id)
         {
-            var centres = (await OsContext.CentresWithRight(Modules.Registre))?
-                .Select(x => x.Id)
-                .ToList();
-            if (centres == null) throw new NotEnoughPrivilegeException("No centre found");
-            var membre = await helios.Membres
-                      .Where(x => centres.Contains(x.Centre!.Id))
+            var membre = await MembreAutoriseLecture
                       .Where(x => x.Id == id)
                       .Include(x => x.Parents!).ThenInclude(x => x.StatutMembre)
                       .Include(x => x.Parents!).ThenInclude(x => x.TypeMembre)
@@ -127,22 +124,19 @@ namespace Helios.Controllers.Registre
             return membre;
         }
 
-        [HttpPut("membres/membre/{id}")]
+        [HttpPut("membres/{id}")]
         public async Task<MembreDTO> UpdateMembre(int id, MembreDTO membreDto)
         {
-            var centres = (await OsContext.CentresWithRight(Modules.Registre))?
-                .Select(x => x.Id)
-                .ToList();
-            if (centres == null) throw new NotEnoughPrivilegeException("No centre found");
-            var membre = await helios.Membres
-                      .Where(x => centres.Contains(x.Centre!.Id))
+
+            var membre = await MembreAutoriseLecture
                       .Where(x => x.Id == id)
                       .Include(x => x.TypeMembre)
                       .Include(x => x.Centre)
                       .Include(x => x.StatutMembre)
                       .FirstOrDefaultAsync();
-            if (membre == null) throw new KeyNotFoundException($"Membre {id} not found or access denied");
-            membre.Nom = membreDto.Nom;
+            await OsContext.ActionsIsAllowedForMembre(membre, Modules.Registre, Droits.MODIFICATION);
+
+            membre!.Nom = membreDto.Nom;
             membre.Prenom = membreDto.Prenom;
             membre.Email = membreDto.Email;
             membre.Telephone = membreDto.Telephone;
@@ -174,10 +168,7 @@ namespace Helios.Controllers.Registre
         [HttpPost("membres/membre")]
         public async Task<MembreDTO> CreateMembre(MembreDTO membreDto)
         {
-            var centres = (await OsContext.CentresWithRight(Modules.Registre))?
-                .Select(x => x.Id)
-                .ToList();
-            if (centres == null) throw new NotEnoughPrivilegeException("No centre found");
+            await OsContext.ActionsIsAllowedForCentre(membreDto.Centre.Id, Modules.Registre, Droits.AJOUT);
 
             var membre = new Membre
             {
@@ -243,15 +234,10 @@ namespace Helios.Controllers.Registre
             }
         }
 
-        [HttpPost("membres/family/{id}")]
+        [HttpPost("membres/{id}/family")]
         public async Task<MembreDTO> UpdateFamily(int id, FamilyUpdateDTO family)
         {
-            var centres = (await OsContext.CentresWithRight(Modules.Registre))?
-                .Select(x => x.Id)
-                .ToList();
-            if (centres == null) throw new NotEnoughPrivilegeException("No centre found");
-            var membre = await helios.Membres
-                      .Where(x => centres.Contains(x.Centre!.Id))
+            var membre = await MembreAutoriseLecture
                       .Where(x => x.Id == id)
                       .Include(x => x.TypeMembre)
                       .Include(x => x.Centre)
@@ -260,12 +246,13 @@ namespace Helios.Controllers.Registre
                       .Include(x => x.Parents!)
                       .Include(x => x.Enfants!)
                       .FirstOrDefaultAsync();
-            if (membre == null) throw new KeyNotFoundException($"Membre {id} not found or access denied");
+            await OsContext.ActionsIsAllowedForMembre(membre, Modules.Registre, Droits.MODIFICATION);
 
-            membre.Parents = await getParents(family);
+
+            membre!.Parents = await getParents(family);
             membre.Enfants = await getEnfants(family);
 
-            
+
 
             await helios.SaveChangesAsync();
             return (MembreDTO)membre;
@@ -296,6 +283,94 @@ namespace Helios.Controllers.Registre
                 return enfants;
             }
         }
+
+        [HttpGet("timeline/types")]
+        public async Task<IEnumerable<TimelineMembreType>> GetTypesActivitees()
+        {
+            return await helios.TimelineMembreTypes.Select(x => (TimelineMembreType)x).ToListAsync();
+        }
+
+        [HttpGet("membres/{id}/timeline")]
+        public async Task<IEnumerable<TimelineMembreDTO>> GetTimelineByMembreId(int id)
+        {
+            var membre = await MembreAutoriseLecture
+                      .Where(x => x.Id == id)
+                      .FirstOrDefaultAsync();
+            if (membre == null) throw new KeyNotFoundException($"Membre {id} not found or access denied");
+            return await helios.TimelineMembres
+                      .Where(x => x.Membre!.Id == id)
+                      .Include(x => x.Type)
+                      .OrderByDescending(x => x.Date)
+                      .Select(x => (TimelineMembreDTO)x)
+                      .ToListAsync();
+        }
+        [HttpDelete("membres/{id}/timeline/{timelineId}")]
+        public async Task<IActionResult> DeleteTimeline(int id, int timelineId)
+        {
+
+            var membre = await MembreAutoriseLecture
+                      .Where(x => x.Id == id)
+                      .FirstOrDefaultAsync();
+            await OsContext.ActionsIsAllowedForMembre(membre, Modules.Registre, Droits.MODIFICATION);
+
+
+            var timeline = await helios.TimelineMembres
+                .Where(x => x.Id == timelineId && x.Membre!.Id == id)
+                .FirstOrDefaultAsync();
+            if (timeline == null) throw new KeyNotFoundException($"Timeline {timelineId} not found or access denied");
+
+            helios.TimelineMembres.Remove(timeline);
+            await helios.SaveChangesAsync();
+            return NoContent();
+        }
+
+        [HttpPost("membres/{id}/timeline")]
+        public async Task<IActionResult> AddTimeline(int id, TimelineMembreDTO timelineDto)
+        {
+            var membre = await MembreAutoriseLecture
+                      .Where(x => x.Id == id)
+                      .FirstOrDefaultAsync();
+            await OsContext.ActionsIsAllowedForMembre(membre, Modules.Registre, Droits.MODIFICATION);
+
+            var timeline = new TimelineMembre
+            {
+                Membre = membre!,
+                Date = timelineDto.Date,
+                Type = await getTimeline(),
+                Commentaires = timelineDto.Commentaire
+            };
+
+            helios.TimelineMembres.Add(timeline);
+            await helios.SaveChangesAsync();
+            return CreatedAtAction(nameof(GetTimelineByMembreId), new { id = membre!.Id }, (TimelineMembreDTO)timeline);
+            async Task<TimelineMembreType> getTimeline()
+            {
+                return await helios.TimelineMembreTypes.FirstOrDefaultAsync(x => x.Id == timelineDto.Type.Id)
+                        ?? throw new KeyNotFoundException($"Timeline type {timelineDto.Type.Id} not found");
+            }
+        }
+
+        [HttpPut("membres/{id}/timeline/{timelineId}")]
+        public async Task<IActionResult> UpdateTimeline(int id, int timelineId, TimelineMembreDTO timelineDto)
+        {
+            var membre = await MembreAutoriseLecture
+                      .Where(x => x.Id == id)
+                      .FirstOrDefaultAsync();
+            await OsContext.ActionsIsAllowedForMembre(membre, Modules.Registre, Droits.MODIFICATION);
+
+            var timeline = await helios.TimelineMembres
+                .Where(x => x.Id == timelineId && x.Membre!.Id == id)
+                .FirstOrDefaultAsync();
+            if (timeline == null) throw new KeyNotFoundException($"Timeline {timelineId} not found or access denied");
+
+            timeline.Date = timelineDto.Date;
+            timeline.Type = timelineDto.Type;
+            timeline.Commentaires = timelineDto.Commentaire;
+
+            await helios.SaveChangesAsync();
+            return NoContent();
+        }
+
     }
 
 }
