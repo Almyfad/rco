@@ -1,0 +1,14 @@
+
+mat-spinner {
+    margin-right: 8px;
+}
+
+// Cibler les options dans la liste déroulante de CE composant uniquement
+::ng-deep .async-select-panel {
+    mat-option {        
+        span.mdc-list-item__primary-text {
+            width: 100%;
+        }
+        
+    }
+}
