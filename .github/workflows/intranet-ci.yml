@@ -10,19 +10,19 @@ on:
       - develop
       - 'release/**'
   workflow_dispatch:
+permissions:
+  contents: read
+  packages: write
 jobs:
   build:
     runs-on: self-hosted
     steps:
       - uses: actions/checkout@v4
-      - name: Build docker image
-        run: docker build -t intranet-rco:latest .
-
       - name: Read package.json
+        id: package-version
         uses: jaywcjlove/github-action-package@main
         with:
           path: intranet/package.json
-        id: package-version
 
       - name: Set environment from branch
         id: set_env
@@ -33,3 +33,19 @@ jobs:
 
       - name: Show environment
         run: echo "Environment is ${{ steps.set_env.outputs.env }}"
+
+      - name: Login to GitHub Container Registry
+        uses: docker/login-action@v2
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Build and push intranet image to GHCR
+        uses: docker/build-push-action@v5
+        with:
+          context: intranet
+          push: true
+          tags: |
+            ghcr.io/almyfad/intranet:${{ steps.package-version.outputs.version }}
+            ghcr.io/almyfad/intranet:latest

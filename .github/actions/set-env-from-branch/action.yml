@@ -1,5 +1,12 @@
 name: 'Set Environment From Branch'
-description: 'Détermine l\'environnement et le short_env à partir du nom de la branche.'
+description: 'Détermine environnement et le short_env à partir du nom de la branche.'
+outputs:
+  env:
+    description: 'Nom de lenvironnement (production, staging, development)'
+    value: ${{ steps.env_step.outputs.env }}
+  short_env:
+    description: 'Nom court de lenvironnement (prod, staging, dev)'
+    value: ${{ steps.env_step.outputs.short_env }}
 runs:
   using: 'composite'
   steps:
@@ -17,10 +24,3 @@ runs:
           echo "env=development" >> $GITHUB_OUTPUT
           echo "short_env=dev" >> $GITHUB_OUTPUT
         fi
-outputs:
-  env:
-    description: 'Nom de l\'environnement (production, staging, development)'
-    value: ${{ steps.env_step.outputs.env }}
-  short_env:
-    description: 'Nom court de l\'environnement (prod, staging, dev)'
-    value: ${{ steps.env_step.outputs.short_env }}
