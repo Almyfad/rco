@@ -32,18 +32,7 @@ jobs:
 
       - name: Set environment from branch
         id: set_env
-        run: |
-          BRANCH="${GITHUB_REF#refs/heads/}"
-          if [[ "$BRANCH" == "main" ]]; then
-            echo "env=production" >> $GITHUB_OUTPUT
-            echo "short_env=prod" >> $GITHUB_OUTPUT
-          elif [[ "$BRANCH" =~ ^release.* ]]; then
-            echo "env=staging" >> $GITHUB_OUTPUT
-            echo  "short_env=staging" >> $GITHUB_OUTPUT
-          else
-            echo "env=development" >> $GITHUB_OUTPUT
-            echo "short_env=dev" >> $GITHUB_OUTPUT
-          fi
+        uses: ./.github/actions/set-env-from-branch
 
       - name: Build Docker image
         run: cd helios && docker build -f api/Dockerfile --force-rm -t helios:latest .

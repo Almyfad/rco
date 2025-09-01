@@ -1,0 +1,26 @@
+name: 'Set Environment From Branch'
+description: 'Détermine l\'environnement et le short_env à partir du nom de la branche.'
+runs:
+  using: 'composite'
+  steps:
+    - id: env_step
+      shell: bash
+      run: |
+        BRANCH="${GITHUB_REF#refs/heads/}"
+        if [[ "$BRANCH" == "main" ]]; then
+          echo "env=production" >> $GITHUB_OUTPUT
+          echo "short_env=prod" >> $GITHUB_OUTPUT
+        elif [[ "$BRANCH" =~ ^release.* ]]; then
+          echo "env=staging" >> $GITHUB_OUTPUT
+          echo "short_env=staging" >> $GITHUB_OUTPUT
+        else
+          echo "env=development" >> $GITHUB_OUTPUT
+          echo "short_env=dev" >> $GITHUB_OUTPUT
+        fi
+outputs:
+  env:
+    description: 'Nom de l\'environnement (production, staging, development)'
+    value: ${{ steps.env_step.outputs.env }}
+  short_env:
+    description: 'Nom court de l\'environnement (prod, staging, dev)'
+    value: ${{ steps.env_step.outputs.short_env }}

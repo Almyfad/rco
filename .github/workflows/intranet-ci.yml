@@ -1,0 +1,35 @@
+name: Deploy Intranet
+# Trigger on push to the default branch or on pull requests to the default branch
+on:
+  push:
+    paths:
+      - 'intranet/**'
+      - '.github/workflows/intranet-ci.yml'
+    branches:
+      - main
+      - develop
+      - 'release/**'
+  workflow_dispatch:
+jobs:
+  build:
+    runs-on: self-hosted
+    steps:
+      - uses: actions/checkout@v4
+      - name: Build docker image
+        run: docker build -t intranet-rco:latest .
+
+      - name: Read package.json
+        uses: jaywcjlove/github-action-package@main
+        with:
+          path: intranet/package.json
+        id: package-version
+
+      - name: Set environment from branch
+        id: set_env
+        uses: ./.github/actions/set-env-from-branch
+
+      - name: Show version
+        run: echo "Version is ${{ steps.package-version.outputs.version }}"
+
+      - name: Show environment
+        run: echo "Environment is ${{ steps.set_env.outputs.env }}"

@@ -1,0 +1,14 @@
+services:
+  intranet:
+    image: intranet-rco:latest
+    labels:
+      - "traefik.enable=true"
+      - "traefik.docker.network=traefik"    
+      - "traefik.http.routers.intranetrco.rule=Host(`intranet-dev.${TRAEFIK_HTTP_ROUTERS_HOST}`) && PathPrefix(`/`)"
+      - "traefik.http.routers.intranetrco.entrypoints=websecure"
+      - "traefik.http.routers.intranetrco.tls.certresolver=myresolver"
+    networks:
+      - traefik  
+networks:
+  traefik:
+    external: true       
