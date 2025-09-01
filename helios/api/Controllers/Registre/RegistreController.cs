@@ -55,11 +55,8 @@ namespace Helios.Controllers.Registre
             return await helios.StatutMembres.Select(x => (StatutMembreDTO)x).ToListAsync();
         }
 
-        [HttpPost("membres/search")]
-        public async Task<DataPager<MembreDTO>> Get(MembreFiltre? filtre, [FromQuery] DataPagerQueryParams pagerQueryParams)
-        {
-
-            return await MembreAutoriseLecture
+        private IQueryable<Membre> Search(MembreFiltre? filtre) =>
+                     MembreAutoriseLecture
                       .WhereIf(String.IsNullOrWhiteSpace(filtre?.Nom) == false, x => x.Nom.ToUpper().Contains(filtre!.Nom!.ToUpper()))
                       .WhereIf(String.IsNullOrWhiteSpace(filtre?.Prenom) == false, x => x.Prenom.ToUpper().Contains(filtre!.Prenom!.ToUpper()))
                       .WhereIf(String.IsNullOrWhiteSpace(filtre?.Email) == false, x => x.Email != null && x.Email.ToUpper().Contains(filtre!.Email!.ToUpper()))
@@ -76,12 +73,59 @@ namespace Helios.Controllers.Registre
                       .Include(x => x.TypeMembre)
                       .Include(x => x.Centre)
                       .Include(x => x.Civilite)
-                      .Include(x => x.StatutMembre)
-                      .DataPage(x => x, pagerQueryParams, MembreDTO.FromMembre);
+                      .Include(x => x.StatutMembre);
+
+        [HttpPost("membres/search")]
+        public async Task<DataPager<MembreDTO>> SearchMembre(MembreFiltre? filtre, [FromQuery] DataPagerQueryParams pagerQueryParams)
+        {
+            return await Search(filtre).DataPage(x => x, pagerQueryParams, MembreDTO.FromMembre);
+        }
+
+        [HttpPost("membres/parvis/search")]
+        public  Task<DataPager<MembreDTO>> SearchMembreParvis(MembreFiltre? filtre, [FromQuery] DataPagerQueryParams pagerQueryParams)
+        {
+            TypesMembres[] parvisFiltre = [TypesMembres.Contact, TypesMembres.PremierAspect, TypesMembres.DeuxiemeAspect];
+            return Search(filtre)
+            .Where(x => parvisFiltre.Contains(x.TypeMembre.Code))
+            .DataPage(x => x, pagerQueryParams, MembreDTO.FromMembre);
+        }
+        [HttpPost("membres/contacts/search")]
+        public Task<DataPager<MembreDTO>> SearchMembreContacts(MembreFiltre? filtre, [FromQuery] DataPagerQueryParams pagerQueryParams)
+        {
+            TypesMembres[] contactsFiltre = [TypesMembres.Contact];
+            return Search(filtre)
+            .Where(x => contactsFiltre.Contains(x.TypeMembre.Code))
+            .DataPage(x => x, pagerQueryParams, MembreDTO.FromMembre);
+        }
+        [HttpPost("membres/jeunesse/search")]
+        public Task<DataPager<MembreDTO>> SearchMembreJeunesse(MembreFiltre? filtre, [FromQuery] DataPagerQueryParams pagerQueryParams)
+        {
+            TypesMembres[] jeunesseFiltre = [TypesMembres.Jeunesse];
+            return Search(filtre)
+            .Where(x => jeunesseFiltre.Contains(x.TypeMembre.Code))
+            .DataPage(x => x, pagerQueryParams, MembreDTO.FromMembre);
+        }
+        [HttpPost("membres/jeunes/rosicruciens/search")]
+        public Task<DataPager<MembreDTO>> SearchMembreJeunesRosicruciens(MembreFiltre? filtre, [FromQuery] DataPagerQueryParams pagerQueryParams)
+        {
+            TypesMembres[] jeunesRosicruciensFiltre = [
+                TypesMembres.EnfantGroupeA,
+                TypesMembres.EnfantGroupeB,
+                TypesMembres.EnfantGroupeC,
+                TypesMembres.EnfantGroupeD,
+                TypesMembres.EnfantGroupePreA,
+                TypesMembres.Jeunesse,
+                TypesMembres.GroupeD,
+                TypesMembres.GroupeDPlus,
+                TypesMembres.EnfantHorsGroupe
+                ];
+            return Search(filtre)
+            .Where(x => jeunesRosicruciensFiltre.Contains(x.TypeMembre.Code))
+            .DataPage(x => x, pagerQueryParams, MembreDTO.FromMembre);
         }
 
         [HttpGet("membres/simplesearch")]
-        public async Task<IEnumerable<SearchMembreDTO>> SearchMembres([FromQuery] string query)
+        public async Task<IEnumerable<SearchMembreDTO>> SimpleSearchMembres([FromQuery] string query)
         {
             return await helios.Membres
                       .Where(x => (x.Nom.Trim() + " " + x.Prenom.Trim()).ToUpper().Contains(query.ToUpper()) || (x.Prenom.Trim() + " " + x.Nom.Trim()).ToUpper().Contains(query.ToUpper()))
