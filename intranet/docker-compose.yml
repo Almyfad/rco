@@ -1,14 +1,17 @@
 services:
   intranet:
-    image: intranet-rco:latest
+    image: ghcr.io/almyfad/intranet:latest
+    environment:
+      - API_URL=api.url
     labels:
       - "traefik.enable=true"
-      - "traefik.docker.network=traefik"    
-      - "traefik.http.routers.intranetrco.rule=Host(`intranet-dev.${TRAEFIK_HTTP_ROUTERS_HOST}`) && PathPrefix(`/`)"
-      - "traefik.http.routers.intranetrco.entrypoints=websecure"
-      - "traefik.http.routers.intranetrco.tls.certresolver=myresolver"
+      - "traefik.docker.network=rconetwork"
+      - "traefik.http.routers.intranet.rule=Host(`intranet-dev.rose-croix-d-or.org`) && PathPrefix(`/`)"
+      - "traefik.http.routers.intranet.entrypoints=websecure"
+      - "traefik.http.routers.intranet.tls.certresolver=myresolver"
+
     networks:
-      - traefik  
+      - rconetwork
 networks:
-  traefik:
-    external: true       
+  rconetwork:
+    external: true

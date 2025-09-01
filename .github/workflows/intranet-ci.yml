@@ -16,6 +16,9 @@ permissions:
 jobs:
   build:
     runs-on: self-hosted
+    outputs:
+      env: ${{ steps.set_env.outputs.env }}
+      short_env: ${{ steps.set_env.outputs.short_env }}
     steps:
       - uses: actions/checkout@v4
       - name: Read package.json
@@ -43,9 +46,30 @@ jobs:
 
       - name: Build and push intranet image to GHCR
         uses: docker/build-push-action@v5
+        env:
+            ANGULAR_ENVIRONMENT: ${{ steps.set_env.outputs.env }}
         with:
           context: intranet
           push: true
           tags: |
             ghcr.io/almyfad/intranet:${{ steps.package-version.outputs.version }}
             ghcr.io/almyfad/intranet:latest
+      - name: Docker compose copy
+        run: |
+          mkdir -p $HOME/intranet
+          cp intranet/docker-compose.yml $HOME/intranet/docker-compose.${{ steps.set_env.outputs.short_env }}.yml
+          sed -i "s|image:.*intranet:.*|image: ghcr.io/almyfad/intranet:${{ steps.package-version.outputs.version }}|" $HOME/intranet/docker-compose.${{ steps.set_env.outputs.short_env }}.yml
+      - name: Show updated docker-compose file
+        run: cat $HOME/intranet/docker-compose.${{ steps.set_env.outputs.short_env }}.yml
+  deploy:
+    needs: build
+    runs-on: self-hosted
+    environment: ${{ needs.build.outputs.env }}
+    steps:
+      - name: Docker compose Url
+        run: |
+          sed -i "s|API_URL=.*|API_URL=${{ vars.HELIOS_URL }}|" $HOME/intranet/docker-compose.${{  needs.build.outputs.short_env }}.yml 
+      - name: Show updated docker-compose file
+        run: cat $HOME/intranet/docker-compose.${{  needs.build.outputs.short_env }}.yml
+      - name: docker-compose up
+        run: docker compose -f $HOME/intranet/docker-compose.${{  needs.build.outputs.short_env }}.yml up -d

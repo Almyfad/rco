@@ -32,15 +32,17 @@ import { MaterialModule } from './material.module';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { Configuration } from './core/helios-api-client';
 import { environment } from 'src/environments/environment';
+import { RuntimeEnvService } from './services/runtime-env.service';
 
 export function HttpLoaderFactory(http: HttpClient): any {
   return new TranslateHttpLoader(http, './assets/i18n/', '.json');
 }
 
 
-export function apiConfigFactory(): Configuration {
+export function apiConfigFactory(runtimeEnv: RuntimeEnvService): Configuration {
+  const apiUrl = runtimeEnv?.apiUrl ?? environment.apiURL;
   return new Configuration({
-    basePath: environment.apiURL,
+    basePath: apiUrl,
     withCredentials: true,
   });
 }
@@ -48,6 +50,7 @@ export function apiConfigFactory(): Configuration {
 const configurationProvider: Provider = {
   provide: Configuration,
   useFactory: apiConfigFactory,
+  deps: [RuntimeEnvService],
 };
 
 export const appConfig: ApplicationConfig = {
