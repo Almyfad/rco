@@ -4,10 +4,11 @@ public static class CorsExtension
     {
         col.AddCors(o =>
         {
-                o.AddPolicy("AllowLocalhost",
+                o.AddPolicy("rco.org",
                  policy =>
                  {
-                     policy.WithOrigins("http://localhost:4200") // ou le port de ton front Angular
+                     policy
+                     .SetIsOriginAllowed(origin => new Uri(origin).Host.EndsWith(".rose-croix-d-or.org"))
                            .AllowAnyHeader()
                            .AllowCredentials()
                            .AllowAnyMethod();
@@ -18,6 +19,6 @@ public static class CorsExtension
 
     public static IApplicationBuilder UseAppicationAngularCors(this WebApplication app)
     {
-        return app.UseCors("AllowLocalhost");
+        return app.UseCors("rco.org");
     }
 }
