@@ -10,6 +10,7 @@ on:
       - develop
       - 'release/**'
   workflow_dispatch:
+    
 permissions:
   contents: read
   packages: write
