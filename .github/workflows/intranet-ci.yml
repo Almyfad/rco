@@ -70,7 +70,7 @@ jobs:
       - name: Docker compose copy
         run: |
           mkdir -p $HOME/intranet
-          cp intranet/docker-compose.yml $HOME/intranet/docker-compose.${{ needs.get-env.outputs.short_env }}.yml
+          docker compose -f intranet/docker-compose.yml -f intranet/docker-compose.${{ needs.get-env.outputs.short_env }}.yml config > $HOME/intranet/docker-compose.${{ needs.get-env.outputs.short_env }}.yml
           sed -i "s|image:.*intranet:.*|image: ghcr.io/almyfad/intranet:${{ steps.package-version.outputs.version }}|" $HOME/intranet/docker-compose.${{ needs.get-env.outputs.short_env }}.yml
           sed -i "s|API_URL=.*|API_URL=${{ vars.HELIOS_URL }}|" $HOME/intranet/docker-compose.${{  needs.get-env.outputs.short_env }}.yml
 

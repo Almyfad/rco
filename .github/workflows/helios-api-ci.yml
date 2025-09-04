@@ -38,6 +38,7 @@ jobs:
       - name: Show environment
         run: echo "Environment is ${{ steps.env.outputs.env }}"
   build:
+    if:  github.ref == 'refs/heads/develop' 
     needs: get-env
     runs-on: self-hosted
     steps:
@@ -87,8 +88,8 @@ jobs:
           dotnet-version: 9.x
       - name: Create Docker secret
         run: |
-          echo "${{ secrets.MYSQL_PASSWORD }}" > $HOME/helios/.secret.helios.${{ needs.build.outputs.short_env }}.mysql.password
-          echo "${{ secrets.HELIOS_JWT_SECRET }}" > $HOME/helios/.secret.helios.${{ needs.build.outputs.short_env }}.jwt.secret
+          echo "${{ secrets.MYSQL_PASSWORD }}" > $HOME/helios/.secret.helios.${{ needs.get-env.outputs.short_env }}.mysql.password
+          echo "${{ secrets.HELIOS_JWT_SECRET }}" > $HOME/helios/.secret.helios.${{ needs.get-env.outputs.short_env }}.jwt.secret
 
       - name: Install EF Core Tools
         run: dotnet tool install --global dotnet-ef --version 9.*
@@ -119,7 +120,6 @@ jobs:
       - name: Generate ${{ needs.get-env.outputs.short_env }} compose to $HOME
         run: |
           mkdir -p $HOME/helios
-          cp helios/api/Dockerfile $HOME/helios/Dockerfile
           docker compose -f helios/docker-compose.yml -f helios/docker-compose.${{ needs.get-env.outputs.short_env }}.yml config > $HOME/helios/docker-compose.${{ needs.get-env.outputs.short_env }}.yml
           sed -i "s|image:.*helios:.*|image: ghcr.io/almyfad/helios:${{ steps.package_version.outputs.version }}|" $HOME/helios/docker-compose.${{ needs.get-env.outputs.short_env }}.yml
 
