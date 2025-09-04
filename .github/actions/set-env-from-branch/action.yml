@@ -1,4 +1,4 @@
-name: 'Set Environment From Branch'
+name: 'Get Environment From Branch'
 description: 'Détermine environnement et le short_env à partir du nom de la branche.'
 outputs:
   env:

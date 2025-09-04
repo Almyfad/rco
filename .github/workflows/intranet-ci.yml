@@ -15,11 +15,22 @@ permissions:
   contents: read
   packages: write
 jobs:
-  build:
+  get-env:
     runs-on: self-hosted
     outputs:
-      env: ${{ steps.set_env.outputs.env }}
-      short_env: ${{ steps.set_env.outputs.short_env }}
+      env: ${{ steps.env.outputs.env }}
+      short_env: ${{ steps.env.outputs.short_env }}
+    steps:
+      - name: Get environment from branch
+        id: env
+        uses: ./.github/actions/set-env-from-branch
+
+      - name: Show environment
+        run: echo "Environment is ${{ steps.env.outputs.env }}"
+  build:
+    if:  github.ref == 'refs/heads/develop' 
+    needs: get-env
+    runs-on: self-hosted
     steps:
       - uses: actions/checkout@v4
       - name: Read package.json
@@ -27,16 +38,6 @@ jobs:
         uses: jaywcjlove/github-action-package@main
         with:
           path: intranet/package.json
-
-      - name: Set environment from branch
-        id: set_env
-        uses: ./.github/actions/set-env-from-branch
-
-      - name: Show version
-        run: echo "Version is ${{ steps.package-version.outputs.version }}"
-
-      - name: Show environment
-        run: echo "Environment is ${{ steps.set_env.outputs.env }}"
 
       - name: Login to GitHub Container Registry
         uses: docker/login-action@v2
@@ -47,30 +48,34 @@ jobs:
 
       - name: Build and push intranet image to GHCR
         uses: docker/build-push-action@v5
-        env:
-            ANGULAR_ENVIRONMENT: ${{ steps.set_env.outputs.env }}
         with:
           context: intranet
           push: true
           tags: |
             ghcr.io/almyfad/intranet:${{ steps.package-version.outputs.version }}
             ghcr.io/almyfad/intranet:latest
+  deploy:
+    needs: get-env
+    runs-on: self-hosted
+    environment: ${{ needs.get-env.outputs.env }}
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Read package.json
+        id: package-version
+        uses: jaywcjlove/github-action-package@main
+        with:
+          path: intranet/package.json
       - name: Docker compose copy
         run: |
           mkdir -p $HOME/intranet
-          cp intranet/docker-compose.yml $HOME/intranet/docker-compose.${{ steps.set_env.outputs.short_env }}.yml
-          sed -i "s|image:.*intranet:.*|image: ghcr.io/almyfad/intranet:${{ steps.package-version.outputs.version }}|" $HOME/intranet/docker-compose.${{ steps.set_env.outputs.short_env }}.yml
+          cp intranet/docker-compose.yml $HOME/intranet/docker-compose.${{ needs.get-env.outputs.short_env }}.yml
+          sed -i "s|image:.*intranet:.*|image: ghcr.io/almyfad/intranet:${{ steps.package-version.outputs.version }}|" $HOME/intranet/docker-compose.${{ needs.get-env.outputs.short_env }}.yml
+          sed -i "s|API_URL=.*|API_URL=${{ vars.HELIOS_URL }}|" $HOME/intranet/docker-compose.${{  needs.get-env.outputs.short_env }}.yml
+
       - name: Show updated docker-compose file
-        run: cat $HOME/intranet/docker-compose.${{ steps.set_env.outputs.short_env }}.yml
-  deploy:
-    needs: build
-    runs-on: self-hosted
-    environment: ${{ needs.build.outputs.env }}
-    steps:
-      - name: Docker compose Url
-        run: |
-          sed -i "s|API_URL=.*|API_URL=${{ vars.HELIOS_URL }}|" $HOME/intranet/docker-compose.${{  needs.build.outputs.short_env }}.yml 
-      - name: Show updated docker-compose file
-        run: cat $HOME/intranet/docker-compose.${{  needs.build.outputs.short_env }}.yml
+        run: cat $HOME/intranet/docker-compose.${{ needs.get-env.outputs.short_env }}.yml
+
       - name: docker-compose up
-        run: docker compose -f $HOME/intranet/docker-compose.${{  needs.build.outputs.short_env }}.yml up -d
+        run: docker compose -f $HOME/intranet/docker-compose.${{  needs.get-env.outputs.short_env }}.yml up -d
