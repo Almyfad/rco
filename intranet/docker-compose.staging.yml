@@ -1,5 +1,5 @@
 services:
-  intranet:
+  intranet-staging:
     container_name: intranet-staging
     labels:
       - "traefik.enable=true"

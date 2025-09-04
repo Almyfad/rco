@@ -1,5 +1,5 @@
 services:
-  intranet:
+  intranet-prod:
     container_name: intranet-prod
     labels:
       - "traefik.enable=true"
