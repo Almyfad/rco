@@ -1,8 +1,6 @@
 services:
   helios:
     container_name: helios-dev
-    environment:
-      - ASPNETCORE_ENVIRONMENT=Development
     labels:
       traefik.http.routers.helios.rule: Host(`helios-dev.rose-croix-d-or.org`)
     networks:

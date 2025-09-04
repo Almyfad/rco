@@ -16,7 +16,6 @@ permissions:
   contents: read
   packages: write
 env:
-  ASPNETCORE_ENVIRONMENT: Production
   MYSQL_DATABASE: ${{ vars.MYSQL_DATABASE }}
   MYSQL_USER: ${{ vars.MYSQL_USER }}
   MYSQL_HOST: ${{ vars.MYSQL_HOST }}
