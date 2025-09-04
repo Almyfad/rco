@@ -1,5 +1,6 @@
 services:
   helios:
+    container_name: helios-prod
     environment:
       - ASPNETCORE_ENVIRONMENT=Production
     labels: 
@@ -14,8 +15,6 @@ networks:
     external: true
 secrets:
   mysql_password:
-    external: true
-    name: $HOME/helios/.secret.helios.prod.mysql.password
+    file: $HOME/helios/.secret.helios.prod.mysql.password
   jwt_secret:
-    external: true
-    name: $HOME/helios/.secret.helios.prod.jwt.secret
+    file: $HOME/helios/.secret.helios.prod.jwt.secret

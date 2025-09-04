@@ -1,5 +1,6 @@
 services:
   helios:
+    container_name: helios-dev
     environment:
       - ASPNETCORE_ENVIRONMENT=Development
     labels:
