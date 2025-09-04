@@ -1,5 +1,5 @@
 services:
-  helios-prod:
+  helios:
     container_name: helios-prod
     environment:
       - ASPNETCORE_ENVIRONMENT=Production
