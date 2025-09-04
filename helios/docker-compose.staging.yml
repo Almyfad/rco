@@ -15,7 +15,7 @@ networks:
 secrets:
   mysql_password:
     external: true
-    name: .secret.helios.staging.mysql.password
+    name: $HOME/helios/.secret.helios.staging.mysql.password
   jwt_secret:
     external: true
-    name: .secret.helios.staging.jwt.secret
+    name: $HOME/helios/.secret.helios.staging.jwt.secret
