@@ -38,6 +38,7 @@ jobs:
       - name: Show environment
         run: echo "Environment is ${{ steps.env.outputs.env }}"
   build:
+    if:  github.ref == 'refs/heads/develop' 
     needs: get-env
     runs-on: self-hosted
     steps:
@@ -119,7 +120,6 @@ jobs:
       - name: Generate ${{ needs.get-env.outputs.short_env }} compose to $HOME
         run: |
           mkdir -p $HOME/helios
-          cp helios/api/Dockerfile $HOME/helios/Dockerfile
           docker compose -f helios/docker-compose.yml -f helios/docker-compose.${{ needs.get-env.outputs.short_env }}.yml config > $HOME/helios/docker-compose.${{ needs.get-env.outputs.short_env }}.yml
           sed -i "s|image:.*helios:.*|image: ghcr.io/almyfad/helios:${{ steps.package_version.outputs.version }}|" $HOME/helios/docker-compose.${{ needs.get-env.outputs.short_env }}.yml
 
