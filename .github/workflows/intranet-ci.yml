@@ -21,6 +21,7 @@ jobs:
       env: ${{ steps.env.outputs.env }}
       short_env: ${{ steps.env.outputs.short_env }}
     steps:
+      - uses: actions/checkout@v4
       - name: Get environment from branch
         id: env
         uses: ./.github/actions/set-env-from-branch
