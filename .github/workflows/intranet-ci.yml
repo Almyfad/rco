@@ -74,7 +74,7 @@ jobs:
           sed -i "s|image:.*intranet:.*|image: ghcr.io/almyfad/intranet:${{ steps.package-version.outputs.version }}|" $HOME/intranet/docker-compose.${{ needs.get-env.outputs.short_env }}.yml
           sed -i "s|API_URL=.*|API_URL=${{ vars.HELIOS_URL }}|" $HOME/intranet/docker-compose.${{  needs.get-env.outputs.short_env }}.yml
 
-      - name: Show updated docker-compose file
+      - name: Show updated docker-compose.${{ needs.get-env.outputs.short_env }}.yml file
         run: cat $HOME/intranet/docker-compose.${{ needs.get-env.outputs.short_env }}.yml
 
       - name: docker-compose up
