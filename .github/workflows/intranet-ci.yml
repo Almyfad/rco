@@ -70,13 +70,14 @@ jobs:
           path: intranet/package.json
       - name: Docker compose copy
         run: |
-          mkdir -p $HOME/intranet
-          docker compose -f intranet/docker-compose.yml -f intranet/docker-compose.${{ needs.get-env.outputs.short_env }}.yml config > $HOME/intranet/docker-compose.${{ needs.get-env.outputs.short_env }}.yml
-          sed -i "s|image:.*intranet:.*|image: ghcr.io/almyfad/intranet:${{ steps.package-version.outputs.version }}|" $HOME/intranet/docker-compose.${{ needs.get-env.outputs.short_env }}.yml
-          sed -i "s|API_URL=.*|API_URL=${{ vars.HELIOS_URL }}|" $HOME/intranet/docker-compose.${{  needs.get-env.outputs.short_env }}.yml
+          mkdir -p $HOME/intranet/${{ needs.get-env.outputs.short_env }}
+          docker compose -f intranet/docker-compose.yml -f intranet/docker-compose.${{ needs.get-env.outputs.short_env }}.yml config > $HOME/intranet/${{ needs.get-env.outputs.short_env }}/docker-compose.${{ needs.get-env.outputs.short_env }}.yml
+          cd $HOME/intranet/${{ needs.get-env.outputs.short_env }}
+          sed -i "s|image:.*intranet:.*|image: ghcr.io/almyfad/intranet:${{ steps.package-version.outputs.version }}|" docker-compose.${{ needs.get-env.outputs.short_env }}.yml
+          sed -i "s|API_URL=.*|API_URL=${{ vars.HELIOS_URL }}|" docker-compose.${{  needs.get-env.outputs.short_env }}.yml
 
       - name: Show updated docker-compose.${{ needs.get-env.outputs.short_env }}.yml file
-        run: cat $HOME/intranet/docker-compose.${{ needs.get-env.outputs.short_env }}.yml
+        run: cat $HOME/intranet/${{ needs.get-env.outputs.short_env }}/docker-compose.${{ needs.get-env.outputs.short_env }}.yml
 
-      - name: docker-compose up
-        run: docker compose -f $HOME/intranet/docker-compose.${{  needs.get-env.outputs.short_env }}.yml up -d
+      - name: Start services
+        run: docker compose -f $HOME/intranet/${{ needs.get-env.outputs.short_env }}/docker-compose.${{ needs.get-env.outputs.short_env }}.yml up -d

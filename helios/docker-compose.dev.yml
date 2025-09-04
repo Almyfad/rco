@@ -1,5 +1,5 @@
 services:
-  helios-dev:
+  helios:
     container_name: helios-dev
     environment:
       - ASPNETCORE_ENVIRONMENT=Development
@@ -15,6 +15,6 @@ networks:
     external: true
 secrets:
   mysql_password:
-    file: $HOME/helios/.secret.helios.dev.mysql.password
+    file: .secret.helios.dev.mysql.password
   jwt_secret:
-    file: $HOME/helios/.secret.helios.dev.jwt.secret
+    file: .secret.helios.dev.jwt.secret

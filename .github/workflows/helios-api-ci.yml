@@ -83,14 +83,44 @@ jobs:
         with:
           file: helios/api/Helios.csproj
           xpath: '//PropertyGroup/AssemblyVersion'
+
+      - name: Validate environment variables
+        run: |
+          if [ -z "$MYSQL_DATABASE" ]; then echo "ERROR: MYSQL_DATABASE is not set"; exit 1; fi
+          if [ -z "$MYSQL_USER" ]; then echo "ERROR: MYSQL_USER is not set"; exit 1; fi
+          if [ -z "$MYSQL_HOST" ]; then echo "ERROR: MYSQL_HOST is not set"; exit 1; fi
+          if [ -z "$MYSQL_PASSWORD" ]; then echo "ERROR: MYSQL_PASSWORD is not set"; exit 1; fi
+          echo "✅ All required environment variables are set"
+
+      - name: Generate ${{ needs.get-env.outputs.short_env }} compose to $HOME
+        run: |
+          mkdir -p $HOME/helios/${{ needs.get-env.outputs.short_env }}
+          docker compose -f helios/docker-compose.yml -f helios/docker-compose.${{ needs.get-env.outputs.short_env }}.yml config > $HOME/helios/${{ needs.get-env.outputs.short_env }}/docker-compose.${{ needs.get-env.outputs.short_env }}.yml
+          cd $HOME/helios/${{ needs.get-env.outputs.short_env }}
+          sed -i "s|image:.*helios:.*|image: ghcr.io/almyfad/helios:${{ steps.package_version.outputs.version }}|" docker-compose.${{ needs.get-env.outputs.short_env }}.yml
+          sed -i "s|file:.*jwt.secret|file: .secret.helios.${{ needs.get-env.outputs.short_env }}.jwt.secret|" docker-compose.${{ needs.get-env.outputs.short_env }}.yml
+          sed -i "s|file:.*mysql.password|file: .secret.helios.${{ needs.get-env.outputs.short_env }}.mysql.password|" docker-compose.${{ needs.get-env.outputs.short_env }}.yml
+      - name: Create Docker secret
+        run: |
+          echo "${{ secrets.MYSQL_PASSWORD }}" > $HOME/helios/${{ needs.get-env.outputs.short_env }}/.secret.helios.${{ needs.get-env.outputs.short_env }}.mysql.password
+          echo "${{ secrets.HELIOS_JWT_SECRET }}" > $HOME/helios/${{ needs.get-env.outputs.short_env }}/.secret.helios.${{ needs.get-env.outputs.short_env }}.jwt.secret
+
+      - name: Show updated docker-compose.${{ needs.get-env.outputs.short_env }}.yml file
+        run: cat $HOME/helios/${{ needs.get-env.outputs.short_env }}/docker-compose.${{ needs.get-env.outputs.short_env }}.yml
+
+      - name: Deploy to ${{ needs.get-env.outputs.env }}
+        run: docker compose  -f $HOME/helios/${{ needs.get-env.outputs.short_env }}/docker-compose.${{ needs.get-env.outputs.short_env }}.yml up -d
+  migration:
+    needs: deploy
+    runs-on: self-hosted
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
       - name: Setup .NET
         uses: actions/setup-dotnet@v4
         with:
           dotnet-version: 9.x
-      - name: Create Docker secret
-        run: |
-          echo "${{ secrets.MYSQL_PASSWORD }}" > $HOME/helios/.secret.helios.${{ needs.get-env.outputs.short_env }}.mysql.password
-          echo "${{ secrets.HELIOS_JWT_SECRET }}" > $HOME/helios/.secret.helios.${{ needs.get-env.outputs.short_env }}.jwt.secret
 
       - name: Install EF Core Tools
         run: dotnet tool install --global dotnet-ef --version 9.*
@@ -102,14 +132,6 @@ jobs:
         run: dotnet restore
         working-directory: ./helios/api
 
-      - name: Validate environment variables
-        run: |
-          if [ -z "$MYSQL_DATABASE" ]; then echo "ERROR: MYSQL_DATABASE is not set"; exit 1; fi
-          if [ -z "$MYSQL_USER" ]; then echo "ERROR: MYSQL_USER is not set"; exit 1; fi
-          if [ -z "$MYSQL_HOST" ]; then echo "ERROR: MYSQL_HOST is not set"; exit 1; fi
-          if [ -z "$MYSQL_PASSWORD" ]; then echo "ERROR: MYSQL_PASSWORD is not set"; exit 1; fi
-          echo "✅ All required environment variables are set"
-
       - name: Apply EF Core Migrations
         run: |
          echo "Applying migrations for HeliosDataBaseContext..."
@@ -117,15 +139,3 @@ jobs:
          echo "Database name: $MYSQL_DATABASE" 
          dotnet ef database update --configuration Release
         working-directory: ./helios/HeliosDataBaseContext
-
-      - name: Generate ${{ needs.get-env.outputs.short_env }} compose to $HOME
-        run: |
-          mkdir -p $HOME/helios
-          docker compose -f helios/docker-compose.yml -f helios/docker-compose.${{ needs.get-env.outputs.short_env }}.yml config > $HOME/helios/docker-compose.${{ needs.get-env.outputs.short_env }}.yml
-          sed -i "s|image:.*helios:.*|image: ghcr.io/almyfad/helios:${{ steps.package_version.outputs.version }}|" $HOME/helios/docker-compose.${{ needs.get-env.outputs.short_env }}.yml
-
-      - name: Show updated docker-compose.${{ needs.get-env.outputs.short_env }}.yml file
-        run: cat $HOME/helios/docker-compose.${{ needs.get-env.outputs.short_env }}.yml
-
-      - name: Deploy to ${{ needs.get-env.outputs.env }}
-        run: cd $HOME/helios && docker compose  -f $HOME/helios/docker-compose.${{ needs.get-env.outputs.short_env }}.yml up -d

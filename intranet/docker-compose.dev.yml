@@ -1,8 +1,5 @@
 services:
-  intranet-dev:
+  intranet:
     container_name: intranet-dev
     labels:
-      - "traefik.enable=true"
-      - "traefik.docker.network=rconetwork"
       - "traefik.http.routers.intranet.rule=Host(`intranet-dev.rose-croix-d-or.org`) && PathPrefix(`/`)"
-      - "traefik.http.routers.intranet.entrypoints=websecure"
