@@ -5,6 +5,12 @@ services:
       - API_URL=api.url
     networks:
       - rconetwork
+    labels:
+      - "traefik.enable=true"
+      - "traefik.docker.network=rconetwork"
+      - "traefik.http.routers.intranet.entrypoints=websecure"
+      - "traefik.http.services.intranet.loadbalancer.server.port=80"
+      - "traefik.http.routers.intranet.tls.certresolver=myresolver"
 networks:
   rconetwork:
     external: true
