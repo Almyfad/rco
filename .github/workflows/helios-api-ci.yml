@@ -11,7 +11,10 @@ on:
       - develop
       - 'release/**'
   workflow_dispatch:
-
+    
+permissions:
+  contents: read
+  packages: write
 env:
   ASPNETCORE_ENVIRONMENT: Production
   MYSQL_DATABASE: ${{ vars.MYSQL_DATABASE }}
@@ -46,6 +49,7 @@ jobs:
         uses: KageKirin/get-csproj-version@v0
         with:
           file: helios/api/Helios.csproj
+          xpath: '//PropertyGroup/AssemblyVersion'
 
       - name: Login to GitHub Container Registry
         uses: docker/login-action@v2
@@ -54,10 +58,11 @@ jobs:
           username: ${{ github.actor }}
           password: ${{ secrets.GITHUB_TOKEN }}
 
-      - name: Build and push intranet image to GHCR
+      - name: Build and push helios image to GHCR
         uses: docker/build-push-action@v5
         with:
-          context: helios/api
+          context: helios
+          file: helios/api/Dockerfile
           push: true
           tags: |
             ghcr.io/almyfad/helios:${{ steps.package_version.outputs.version }}
@@ -75,6 +80,7 @@ jobs:
         uses: KageKirin/get-csproj-version@v0
         with:
           file: helios/api/Helios.csproj
+          xpath: '//PropertyGroup/AssemblyVersion'
       - name: Setup .NET
         uses: actions/setup-dotnet@v4
         with:
@@ -116,6 +122,9 @@ jobs:
           cp helios/api/Dockerfile $HOME/helios/Dockerfile
           docker compose -f helios/docker-compose.yml -f helios/docker-compose.${{ needs.get-env.outputs.short_env }}.yml config > $HOME/helios/docker-compose.${{ needs.get-env.outputs.short_env }}.yml
           sed -i "s|image:.*helios:.*|image: ghcr.io/almyfad/helios:${{ steps.package_version.outputs.version }}|" $HOME/helios/docker-compose.${{ needs.get-env.outputs.short_env }}.yml
+
+      - name: Show updated docker-compose.${{ needs.get-env.outputs.short_env }}.yml file
+        run: cat $HOME/helios/docker-compose.${{ needs.get-env.outputs.short_env }}.yml
 
       - name: Deploy to ${{ needs.get-env.outputs.env }}
         run: cd $HOME/helios && docker compose  -f $HOME/helios/docker-compose.${{ needs.get-env.outputs.short_env }}.yml up -d
