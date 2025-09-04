@@ -88,8 +88,8 @@ jobs:
           dotnet-version: 9.x
       - name: Create Docker secret
         run: |
-          echo "${{ secrets.MYSQL_PASSWORD }}" > $HOME/helios/.secret.helios.${{ needs.build.outputs.short_env }}.mysql.password
-          echo "${{ secrets.HELIOS_JWT_SECRET }}" > $HOME/helios/.secret.helios.${{ needs.build.outputs.short_env }}.jwt.secret
+          echo "${{ secrets.MYSQL_PASSWORD }}" > $HOME/helios/.secret.helios.${{ needs.get-env.outputs.short_env }}.mysql.password
+          echo "${{ secrets.HELIOS_JWT_SECRET }}" > $HOME/helios/.secret.helios.${{ needs.get-env.outputs.short_env }}.jwt.secret
 
       - name: Install EF Core Tools
         run: dotnet tool install --global dotnet-ef --version 9.*
