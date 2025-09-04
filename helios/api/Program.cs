@@ -11,12 +11,21 @@ builder.Services.AddCookieConfiguration();
 builder.Services.AddOpenApi(options =>
 {
     options.AddSchemaTransformer<EnumSchemaTransformer>();
+
+    options.AddDocumentTransformer((doc, context, cancellationToken) =>
+    {
+        var version = System.Reflection.Assembly.GetExecutingAssembly().GetName().Version?.ToString();
+        doc.Info.Version = version ?? "v1.0.0";
+        doc.Info.Title = "Helios API";
+        doc.Info.Description = "Helios API documentation";
+        return Task.CompletedTask;
+    });
 });
 builder.Services.AddControllers().AddJsonOptions(o =>
 {
     o.JsonSerializerOptions.ReferenceHandler = ReferenceHandler.IgnoreCycles;
     o.JsonSerializerOptions.Converters.Add(new JsonStringEnumConverter());
-    o.JsonSerializerOptions.MaxDepth = 256;
+    o.JsonSerializerOptions.MaxDepth = 256; 
 });
 builder.Services.AddHeliosContext();
 builder.Services.AddHttpContextAccessor();
