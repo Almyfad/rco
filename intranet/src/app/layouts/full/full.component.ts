@@ -24,7 +24,7 @@ import { AlternativeCustomizerComponent } from './shared/alternative-customizer/
 import { BrandingComponent } from './vertical/sidebar/branding.component';
 import { MenuService } from 'src/app/services/menu.service';
 import { AuthService } from 'src/app/services/auth.service';
-import { computeMsgId } from '@angular/compiler';
+
 
 const MOBILE_VIEW = 'screen and (max-width: 768px)';
 const TABLET_VIEW = 'screen and (min-width: 769px) and (max-width: 1024px)';
@@ -90,7 +90,6 @@ export class FullComponent implements OnInit, AfterViewInit, OnDestroy {
   private htmlElement!: HTMLHtmlElement;
   private readonly menuService = inject(MenuService);
   private readonly auth = inject(AuthService);
-
   uname = computed(() => this.auth.currentUser()?.prenom ?? this.auth.currentUser().email?.split('@')[0] ?? 'Unknown');
 
   get isOver(): boolean {

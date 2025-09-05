@@ -4,6 +4,7 @@ import { AppSettings } from 'src/app/config';
 import { CommonModule } from '@angular/common';
 import { RouterOutlet } from '@angular/router';
 import { MaterialModule } from 'src/app/material.module';
+import pkg from 'packageJson';
 
 @Component({
   selector: 'app-blank',
@@ -13,7 +14,7 @@ import { MaterialModule } from 'src/app/material.module';
 })
 export class BlankComponent {
   private htmlElement!: HTMLHtmlElement;
-
+  appVersion = pkg.version;
   options = this.settings.getOptions();
 
   constructor(private settings: CoreService) {
