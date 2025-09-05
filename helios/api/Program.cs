@@ -34,8 +34,7 @@ builder.Services.AddAppCors();
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
-if (app.Environment.IsDevelopment())
-{
+
     app.UseAppicationAngularCors();
     app.MapOpenApi();
     app.MapScalarApiReference(o =>
@@ -54,11 +53,10 @@ if (app.Environment.IsDevelopment())
         context.Response.ContentType = "image/x-icon";
         await context.Response.SendFileAsync("icons/favicon-96x96.png");
     });
+app.MapGet("/health", () => Results.Ok("Helios API is running"));
+app.MapGet("/", () => Results.Redirect("/scalar", permanent: false));
 
-}
 
 app.UseAuthorization();
-
 app.MapControllers();
-
 app.Run();
