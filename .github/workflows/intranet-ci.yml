@@ -76,8 +76,9 @@ jobs:
           sed -i "s|name: intranet|name: ${{ needs.get-env.outputs.short_env }}|" docker-compose.yml
           sed -i "s|image:.*intranet:.*|image: ghcr.io/almyfad/intranet:${{ steps.package-version.outputs.version }}|" docker-compose.yml
           sed -i "s|API_URL=.*|API_URL=${{ vars.HELIOS_URL }}|" docker-compose.yml
-          sed -i "s|traefik.http.routers.helios(.*)|traefik.http.routers.helios${{ needs.get-env.outputs.short_env }}$1|" docker-compose.yml
-          
+          sed -i "s|traefik.http.routers.intranet\(.*\)|traefik.http.routers.intranet${{ needs.get-env.outputs.short_env }}\1|" docker-compose.yml
+          sed -i "s|traefik.http.services.intranet\(.*\)|traefik.http.services.intranet${{ needs.get-env.outputs.short_env }}\1|" docker-compose.yml
+
       - name: Show updated docker-compose.yml file
         run: cat $HOME/intranet/${{ needs.get-env.outputs.short_env }}/docker-compose.yml
 

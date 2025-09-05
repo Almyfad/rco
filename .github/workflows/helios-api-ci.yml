@@ -100,7 +100,9 @@ jobs:
           sed -i "s|image:.*helios:.*|image: ghcr.io/almyfad/helios:${{ steps.package_version.outputs.version }}|" docker-compose.yml
           sed -i "s|file:.*jwt.secret|file: .secret.helios.${{ needs.get-env.outputs.short_env }}.jwt.secret|" docker-compose.yml
           sed -i "s|file:.*mysql.password|file: .secret.helios.${{ needs.get-env.outputs.short_env }}.mysql.password|" docker-compose.yml
-          sed -i "s|traefik.http.routers.helios(.*)|traefik.http.routers.helios${{ needs.get-env.outputs.short_env }}$1|" docker-compose.yml
+          sed -i "s|traefik.http.routers.helios\(.*\)|traefik.http.routers.helios${{ needs.get-env.outputs.short_env }}\1|" docker-compose.yml
+          sed -i "s|traefik.http.services.helios\(.*\)|traefik.http.services.helios${{ needs.get-env.outputs.short_env }}\1|" docker-compose.yml
+
       - name: Create Docker secret
         run: |
           echo "${{ secrets.MYSQL_PASSWORD }}" > $HOME/helios/${{ needs.get-env.outputs.short_env }}/.secret.helios.${{ needs.get-env.outputs.short_env }}.mysql.password
