@@ -1,5 +1,5 @@
 import { BreakpointObserver, MediaMatcher } from '@angular/cdk/layout';
-import { Component, inject, OnInit, ViewChild, ViewEncapsulation, ViewContainerRef, AfterViewInit, OnDestroy } from '@angular/core';
+import { Component, inject, OnInit, ViewChild, ViewEncapsulation, ViewContainerRef, AfterViewInit, OnDestroy, computed } from '@angular/core';
 import { Subscription } from 'rxjs';
 import { MatSidenav, MatSidenavContent } from '@angular/material/sidenav';
 import { CoreService } from 'src/app/services/core.service';
@@ -23,6 +23,8 @@ import { CustomizerComponent } from './shared/customizer/customizer.component';
 import { AlternativeCustomizerComponent } from './shared/alternative-customizer/alternative-customizer.component';
 import { BrandingComponent } from './vertical/sidebar/branding.component';
 import { MenuService } from 'src/app/services/menu.service';
+import { AuthService } from 'src/app/services/auth.service';
+
 
 const MOBILE_VIEW = 'screen and (max-width: 768px)';
 const TABLET_VIEW = 'screen and (min-width: 769px) and (max-width: 1024px)';
@@ -87,7 +89,9 @@ export class FullComponent implements OnInit, AfterViewInit, OnDestroy {
   private isCollapsedWidthFixed = false;
   private htmlElement!: HTMLHtmlElement;
   private readonly menuService = inject(MenuService);
-  
+  private readonly auth = inject(AuthService);
+  uname = computed(() => this.auth.currentUser()?.prenom ?? this.auth.currentUser().email?.split('@')[0] ?? 'Unknown');
+
   get isOver(): boolean {
     return this.isMobileScreen;
   }

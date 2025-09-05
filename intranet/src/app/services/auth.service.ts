@@ -1,80 +1,68 @@
-import { computed, inject, Injectable, signal } from '@angular/core';
+import { computed, effect, inject, Injectable, signal } from '@angular/core';
 import { UserInfo, UserService } from '../core/helios-api-client';
 import { Router } from '@angular/router';
-import { Observable, switchMap, tap } from 'rxjs';
+import { firstValueFrom, Observable, switchMap, tap } from 'rxjs';
+import { toSignal } from '@angular/core/rxjs-interop';
 
+
+enum State {
+  LoggedOut,
+  LoggingIn,
+  LoggedIn,
+  LoggingOut
+}
 @Injectable({
   providedIn: 'root'
 })
 export class AuthService {
 
-  private readonly STORAGE_KEY = 'userInfo';
 
   constructor() {
-    // Charger les données depuis le session storage au démarrage
-    this.loadUserFromStorage();
-    this.getUserInfoFromApi().subscribe();
+    effect(() => {
+      const state = this.state();
+      console.log("Auth state changed to", State[state]);
+
+      this._currentUser.set({ isConnected: state === State.LoggedIn } as UserInfo);
+
+      firstValueFrom(this.userService.apiUserInfosGet()).then(userInfo => {
+        this._currentUser.set(userInfo);
+      });
+    });
   }
 
   private readonly userService = inject(UserService)
   private readonly router = inject(Router);
-  private readonly _currentUser = signal<UserInfo>({});
+  private readonly state = signal<State>(State.LoggedOut);
+  private readonly _currentUser = signal<UserInfo>({ isConnected: false } as UserInfo);
   readonly currentUser = computed(() => this._currentUser());
   readonly isLoggedIn = computed(() => this._currentUser().isConnected || false);
-
+  readonly isLoggingIn = computed(() => this.state() === State.LoggingIn);
+  readonly isLoggingOut = computed(() => this.state() === State.LoggingOut);
+  readonly isLoggedOut = computed(() => this.state() === State.LoggedOut);
+  readonly isProcessing = computed(() => this.state() === State.LoggingIn || this.state() === State.LoggingOut);
 
   login(email: string, password: string): Observable<any> {
+    this.state.set(State.LoggingIn);
     return this.userService.apiUserLoginPost({ email: email, password }).pipe(
-      switchMap(() => this.getUserInfoFromApi())
+      tap(() => {
+        this.state.set(State.LoggedIn);
+      })
     );
   }
+
 
   logout(): Observable<any> {
+    this.state.set(State.LoggingOut);
     return this.userService.apiUserLogoutPost().pipe(
       tap(() => {
-        this._currentUser.set({});
-        this.clearUserFromStorage();
-        this.router.navigate(['/authentication/login']);
+        this.state.set(State.LoggedOut);
       })
     );
   }
 
 
-  getUserInfoFromApi(): Observable<UserInfo> {  
-    return this.userService.apiUserInfosGet().pipe(
-      tap((userInfo) => {
-        this._currentUser.set(userInfo);
-        this.saveUserToStorage(userInfo);
-      })
-    );
-  }
 
-  private saveUserToStorage(userInfo: UserInfo): void {
-    try {
-      sessionStorage.setItem(this.STORAGE_KEY, JSON.stringify(userInfo));
-    } catch (error) {
-      console.error('Erreur lors de la sauvegarde dans le session storage:', error);
-    }
-  }
 
-  private loadUserFromStorage(): void {
-    try {
-      const storedUser = sessionStorage.getItem(this.STORAGE_KEY);
-      if (storedUser) {
-        const userInfo: UserInfo = JSON.parse(storedUser);
-        this._currentUser.set(userInfo);
-      }
-    } catch (error) {
-      console.error('Erreur lors du chargement depuis le session storage:', error);
-      this.clearUserFromStorage();
-    }
-  }
 
-  private clearUserFromStorage(): void {
-    try {
-      sessionStorage.removeItem(this.STORAGE_KEY);
-    } catch (error) {
-      console.error('Erreur lors de la suppression du session storage:', error);
-    }
-  }
+
 }
