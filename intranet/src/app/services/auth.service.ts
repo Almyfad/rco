@@ -38,6 +38,7 @@ export class AuthService {
   readonly isLoggedIn = computed(() => this._currentUser().isConnected || false);
   readonly isLoggingIn = computed(() => this.state() === State.LoggingIn);
   readonly isLoggingOut = computed(() => this.state() === State.LoggingOut);
+  readonly isLoggedOut = computed(() => this.state() === State.LoggedOut);
   readonly isProcessing = computed(() => this.state() === State.LoggingIn || this.state() === State.LoggingOut);
 
   login(email: string, password: string): Observable<any> {
@@ -51,10 +52,10 @@ export class AuthService {
 
 
   logout(): Observable<any> {
+    this.state.set(State.LoggingOut);
     return this.userService.apiUserLogoutPost().pipe(
       tap(() => {
         this.state.set(State.LoggedOut);
-        this.router.navigate(['/authentication/login']);
       })
     );
   }

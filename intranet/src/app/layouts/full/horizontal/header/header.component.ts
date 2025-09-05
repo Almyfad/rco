@@ -1,4 +1,4 @@
-import { Component, Output, EventEmitter, Input } from '@angular/core';
+import { Component, Output, EventEmitter, Input, computed, inject } from '@angular/core';
 import { CoreService } from 'src/app/services/core.service';
 import { MatDialog } from '@angular/material/dialog';
 import { navItems } from '../../vertical/sidebar/sidebar-data';
@@ -10,6 +10,7 @@ import { BrandingComponent } from '../../vertical/sidebar/branding.component';
 import { AppSettings } from 'src/app/config';
 import { FormsModule } from '@angular/forms';
 import { NgScrollbarModule } from 'ngx-scrollbar';
+import { AuthService } from 'src/app/services/auth.service';
 
 interface notifications {
   id: number;
@@ -60,6 +61,9 @@ export class AppHorizontalHeaderComponent {
   @Output() toggleCollapsed = new EventEmitter<void>();
 
   isCollapse: boolean = false; // Initially hidden
+  private readonly auth = inject(AuthService);
+
+  uname = computed(() => this.auth.currentUser()?.prenom ?? this.auth.currentUser().email?.split('@')[0] ?? 'Unknown');
 
   toggleCollpase() {
     this.isCollapse = !this.isCollapse; // Toggle visibility

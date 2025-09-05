@@ -5,6 +5,8 @@ import {
   Input,
   signal,
   ViewEncapsulation,
+  inject,
+  computed,
 } from '@angular/core';
 import { CoreService } from 'src/app/services/core.service';
 import { SidenavService } from 'src/app/services/sidenav.service';
@@ -18,6 +20,7 @@ import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { NgScrollbarModule } from 'ngx-scrollbar';
 import { AppSettings } from 'src/app/config';
+import { AuthService } from 'src/app/services/auth.service';
 
 interface notifications {
   id: number;
@@ -67,6 +70,9 @@ export class HeaderComponent {
   @Output() toggleMobileNav = new EventEmitter<void>();
   @Output() toggleMobileFilterNav = new EventEmitter<void>();
   @Output() toggleCollapsed = new EventEmitter<void>();
+  private readonly auth = inject(AuthService);
+
+  uname = computed(() => this.auth.currentUser()?.prenom ?? this.auth.currentUser().email?.split('@')[0] ?? 'Unknown');
 
   isCollapse: boolean = false; // Initially hidden
 
