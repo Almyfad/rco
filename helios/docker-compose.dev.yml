@@ -1,6 +1,5 @@
 services:
   helios:
-    container_name: helios-dev
     labels:
       traefik.http.routers.helios.rule: Host(`helios-dev.rose-croix-d-or.org`)
     networks:

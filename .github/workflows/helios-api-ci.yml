@@ -94,21 +94,24 @@ jobs:
       - name: Generate ${{ needs.get-env.outputs.short_env }} compose to $HOME
         run: |
           mkdir -p $HOME/helios/${{ needs.get-env.outputs.short_env }}
-          docker compose -f helios/docker-compose.yml -f helios/docker-compose.${{ needs.get-env.outputs.short_env }}.yml config > $HOME/helios/${{ needs.get-env.outputs.short_env }}/docker-compose.${{ needs.get-env.outputs.short_env }}.yml
+          docker compose -f helios/docker-compose.yml -f helios/docker-compose.${{ needs.get-env.outputs.short_env }}.yml config > $HOME/helios/${{ needs.get-env.outputs.short_env }}/docker-compose.yml
           cd $HOME/helios/${{ needs.get-env.outputs.short_env }}
-          sed -i "s|image:.*helios:.*|image: ghcr.io/almyfad/helios:${{ steps.package_version.outputs.version }}|" docker-compose.${{ needs.get-env.outputs.short_env }}.yml
-          sed -i "s|file:.*jwt.secret|file: .secret.helios.${{ needs.get-env.outputs.short_env }}.jwt.secret|" docker-compose.${{ needs.get-env.outputs.short_env }}.yml
-          sed -i "s|file:.*mysql.password|file: .secret.helios.${{ needs.get-env.outputs.short_env }}.mysql.password|" docker-compose.${{ needs.get-env.outputs.short_env }}.yml
+          sed -i "s|name: helios|name: ${{ needs.get-env.outputs.short_env }}|" docker-compose.yml
+          sed -i "s|image:.*helios:.*|image: ghcr.io/almyfad/helios:${{ steps.package_version.outputs.version }}|" docker-compose.yml
+          sed -i "s|file:.*jwt.secret|file: .secret.helios.${{ needs.get-env.outputs.short_env }}.jwt.secret|" docker-compose.yml
+          sed -i "s|file:.*mysql.password|file: .secret.helios.${{ needs.get-env.outputs.short_env }}.mysql.password|" docker-compose.yml
       - name: Create Docker secret
         run: |
           echo "${{ secrets.MYSQL_PASSWORD }}" > $HOME/helios/${{ needs.get-env.outputs.short_env }}/.secret.helios.${{ needs.get-env.outputs.short_env }}.mysql.password
           echo "${{ secrets.HELIOS_JWT_SECRET }}" > $HOME/helios/${{ needs.get-env.outputs.short_env }}/.secret.helios.${{ needs.get-env.outputs.short_env }}.jwt.secret
 
-      - name: Show updated docker-compose.${{ needs.get-env.outputs.short_env }}.yml file
-        run: cat $HOME/helios/${{ needs.get-env.outputs.short_env }}/docker-compose.${{ needs.get-env.outputs.short_env }}.yml
+      - name: Show updated docker-compose.yml file
+        run: cat $HOME/helios/${{ needs.get-env.outputs.short_env }}/docker-compose.yml
 
       - name: Deploy to ${{ needs.get-env.outputs.env }}
-        run: docker compose  -f $HOME/helios/${{ needs.get-env.outputs.short_env }}/docker-compose.${{ needs.get-env.outputs.short_env }}.yml up -d
+        run: |
+          cd $HOME/helios/${{ needs.get-env.outputs.short_env }}
+          docker compose up -d
   migration:
     needs: deploy
     runs-on: self-hosted
