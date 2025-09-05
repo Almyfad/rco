@@ -71,13 +71,16 @@ jobs:
       - name: Docker compose copy
         run: |
           mkdir -p $HOME/intranet/${{ needs.get-env.outputs.short_env }}
-          docker compose -f intranet/docker-compose.yml -f intranet/docker-compose.${{ needs.get-env.outputs.short_env }}.yml config > $HOME/intranet/${{ needs.get-env.outputs.short_env }}/docker-compose.${{ needs.get-env.outputs.short_env }}.yml
+          docker compose -f intranet/docker-compose.yml -f intranet/docker-compose.${{ needs.get-env.outputs.short_env }}.yml config > $HOME/intranet/${{ needs.get-env.outputs.short_env }}/docker-compose.yml
           cd $HOME/intranet/${{ needs.get-env.outputs.short_env }}
-          sed -i "s|image:.*intranet:.*|image: ghcr.io/almyfad/intranet:${{ steps.package-version.outputs.version }}|" docker-compose.${{ needs.get-env.outputs.short_env }}.yml
-          sed -i "s|API_URL=.*|API_URL=${{ vars.HELIOS_URL }}|" docker-compose.${{  needs.get-env.outputs.short_env }}.yml
+          sed -i "s|name: intranet|name: ${{ needs.get-env.outputs.short_env }}|" docker-compose.yml
+          sed -i "s|image:.*intranet:.*|image: ghcr.io/almyfad/intranet:${{ steps.package-version.outputs.version }}|" docker-compose.yml
+          sed -i "s|API_URL=.*|API_URL=${{ vars.HELIOS_URL }}|" docker-compose.yml
+          sed -i "s|traefik.http.routers.helios(.*)|traefik.http.routers.helios${{ needs.get-env.outputs.short_env }}$1|" docker-compose.yml
+      - name: Show updated docker-compose.yml file
+        run: cat $HOME/intranet/${{ needs.get-env.outputs.short_env }}/docker-compose.yml
 
-      - name: Show updated docker-compose.${{ needs.get-env.outputs.short_env }}.yml file
-        run: cat $HOME/intranet/${{ needs.get-env.outputs.short_env }}/docker-compose.${{ needs.get-env.outputs.short_env }}.yml
-
-      - name: Start services
-        run: docker compose -f $HOME/intranet/${{ needs.get-env.outputs.short_env }}/docker-compose.${{ needs.get-env.outputs.short_env }}.yml up -d
+      - name: Start ${{ needs.get-env.outputs.short_env }} services
+        run: |
+          cd $HOME/intranet/${{ needs.get-env.outputs.short_env }}
+          docker compose up -d

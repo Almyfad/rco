@@ -1,8 +1,5 @@
 services:
   helios:
-    container_name: helios-staging
-    environment:
-      - ASPNETCORE_ENVIRONMENT=Staging
     labels:
       - "traefik.http.routers.helios.rule=Host(`helios-staging.rose-croix-d-or.org`)"
     networks:
