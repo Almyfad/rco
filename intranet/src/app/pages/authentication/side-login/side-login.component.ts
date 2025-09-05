@@ -1,4 +1,4 @@
-import { Component, inject, OnInit } from '@angular/core';
+import { Component, effect, inject, OnInit, signal } from '@angular/core';
 import { CoreService } from 'src/app/services/core.service';
 import {
   FormGroup,
@@ -11,6 +11,7 @@ import { Router, RouterModule } from '@angular/router';
 import { MaterialModule } from '../../../material.module';
 import { BrandingComponent } from '../../../layouts/full/vertical/sidebar/branding.component';
 import { AuthService } from 'src/app/services/auth.service';
+import { set } from 'date-fns';
 
 @Component({
   selector: 'app-side-login',
@@ -18,26 +19,25 @@ import { AuthService } from 'src/app/services/auth.service';
   imports: [RouterModule, MaterialModule, FormsModule, ReactiveFormsModule, BrandingComponent],
   templateUrl: './side-login.component.html',
 })
-export class AppSideLoginComponent implements OnInit {
+export class AppSideLoginComponent {
   options = this.settings.getOptions();
+  isloading = signal(false);
 
-  constructor(private settings: CoreService, private router: Router) { }
+  constructor(private settings: CoreService, private router: Router) {
+    effect(() => {
+      const isLoading = this.authService.isLoggingIn();
+      this.isloading.set(isLoading);
+      const isLoggedIn = this.authService.isLoggedIn();
+      if (isLoggedIn) {
+        this.router.navigate(['/']);
+        return;
+
+      }
+    });
+  }
 
   private readonly authService = inject(AuthService);
 
-  ngOnInit(): void {
-    if (this.authService.isLoggedIn()) {
-      this.router.navigate(['/']);
-    } else {
-      this.authService.getUserInfoFromApi().subscribe({
-        next: (userInfo) => {
-          if (this.authService.isLoggedIn()) {
-            this.router.navigate(['/']);
-          }
-        }
-      });
-    }
-  }
 
 
   form = new FormGroup({
@@ -53,11 +53,9 @@ export class AppSideLoginComponent implements OnInit {
     if (this.form.invalid) return;
     this.authService.login(this.f.uname!.value!, this.f.password!.value!).subscribe({
       next: (response) => {
-        this.router.navigate(['/']);
       },
       error: (error) => {
         console.error('Login failed', error);
-        // Handle login failure, e.g., show an error message
       }
     });
   }
