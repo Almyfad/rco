@@ -24,16 +24,16 @@
 
     }
 
-    public class CentreEqualityComparer : IEqualityComparer<Centre>
+    public class CentreEqualityComparer : IEqualityComparer<Centre?>
     {
         public bool Equals(Centre? x, Centre? y)
         {
             return x?.Id == y?.Id;
         }
 
-        public int GetHashCode(Centre obj)
+        public int GetHashCode(Centre? obj)
         {
-            return obj.Id;
+            return obj?.Id ?? 0;
         }
     }
 }

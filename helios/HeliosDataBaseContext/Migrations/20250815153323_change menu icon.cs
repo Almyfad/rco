@@ -5,7 +5,9 @@
 namespace HeliosDataBaseContext.Migrations
 {
     /// <inheritdoc />
+#pragma warning disable CS8981 // Le nom de type contient uniquement des caractères ascii en minuscules. De tels noms peuvent devenir réservés pour la langue.
     public partial class changemenuicon : Migration
+#pragma warning restore CS8981 // Le nom de type contient uniquement des caractères ascii en minuscules. De tels noms peuvent devenir réservés pour la langue.
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)

@@ -62,7 +62,7 @@ namespace Helios.Context
                     new { Id = 7, CentreId = 1, utilisateurId = 4, ModuleId = (int)Models.Modules.RegistreFicheEleves, Code = Models.Droits.AJOUT },
                     new { Id = 8, CentreId = 1, utilisateurId = 4, ModuleId = (int)Models.Modules.Comptabilite, Code = Models.Droits.AJOUT },
                     new { Id = 9, CentreId = 2, utilisateurId = 4, ModuleId = (int)Models.Modules.Registre, Code = Models.Droits.LECTURE },
-                    new { Id = 10, CentreId = 2, utilisateurId = 4, ModuleId = (int)Models.Modules.CreateConference, Code = Models.Droits.AJOUT }
+                    new { Id = 10, CentreId = 2, utilisateurId = 4, ModuleId = (int)Models.Modules.Planning, Code = Models.Droits.AJOUT }
                     );
             })
             .Entity<Civilite>(e =>
