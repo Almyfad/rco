@@ -36,6 +36,18 @@ export const routes: Routes = [
           import('./pages/registre/registre.route').then((m) => m.RegistreRoutes),
       },
       {
+        path: 'planning',
+        data: {
+          title: 'Gestion des plannings',
+          urls: [
+            { title: 'Accueil', url: '/' },
+            { title: 'Gestion des plannings' },
+          ],
+        },
+        loadComponent: () =>
+          import('./pages/planning/planning.component').then((m) => m.PlanningComponent),
+      },
+      {
         path: 'sidenav-demo',
         loadComponent: () =>
           import('./components/sidenav-demo/sidenav-demo.component').then(
