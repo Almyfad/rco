@@ -8,6 +8,7 @@
             clearOptionText="Tous les programmes" 
             [multiple]="true" 
             [options]="programmeOptions()" [loading]="programmeLoading()"
+            [values]="programmeDataSource()"
             (selectionChange)="onProgrammeSelection($event)">
             </app-async-select>
         <ejs-schedule  #scheduleObj locale="fr" [eventSettings]="eventSettings" [startHour]="startHour" [endHour]="endHour"

@@ -11,7 +11,7 @@ import { RuntimeEnvService } from 'src/app/services/runtime-env.service';
 import { DatePipe } from '@angular/common';
 import { PlanningService, ProgrammeDTO2 } from 'src/app/core/helios-api-client';
 import { toSignal } from '@angular/core/rxjs-interop';
-import { AsyncSelectComponent } from "src/app/components/async-select/async-select.component";
+import { AsyncSelectComponent, SelectedOption } from "src/app/components/async-select/async-select.component";
 import { map, take } from 'rxjs';
 import { V } from '@angular/cdk/keycodes';
 // Chargez les données CLDR
@@ -88,15 +88,19 @@ export class PlanningComponent {
 
 
 
-  onProgrammeSelection(value: ProgrammeDTO2[]) {
+  onProgrammeSelection(value: SelectedOption<ProgrammeDTO2>) {
     if (!this.scheduleObj) return;
 
-    this.programmes().data.forEach(v => {
-      this.scheduleObj?.removeResource(v.id, 'Programme');
-    });
-    value.forEach(v => {
-      this.scheduleObj?.addResource(v, 'Programme', 0);
-    });
+    if (value.checked == true) {
+      console.log("add resource", value);
+      this.scheduleObj.addResource(value.options, 'Programme', 0);
+    }
+    else {
+      console.log("remove resource", value);
+      this.scheduleObj.removeResource(value.options.id, 'Programme');
+    }
+
+
   }
 
 }
