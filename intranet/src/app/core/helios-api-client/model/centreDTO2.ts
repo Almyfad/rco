@@ -7,15 +7,10 @@
  * https://openapi-generator.tech
  * Do not edit the class manually.
  */
-import { NullableOfCivilites } from './nullableOfCivilites';
 
 
-export interface CiviliteDTO { 
+export interface CentreDTO2 { 
     id: number | null;
     libelle: string | null;
-    code: NullableOfCivilites | null;
 }
-export namespace CiviliteDTO {
-}
-
 

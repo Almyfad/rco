@@ -4,6 +4,7 @@ using Helios.Context;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace HeliosDataBaseContext.Migrations
 {
     [DbContext(typeof(HeliosContext))]
-    partial class HeliosContextModelSnapshot : ModelSnapshot
+    [Migration("20250907183332_Rename Programme")]
+    partial class RenameProgramme
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -39,13 +42,13 @@ namespace HeliosDataBaseContext.Migrations
 
             modelBuilder.Entity("CentreProgramme", b =>
                 {
-                    b.Property<int>("CentresId")
+                    b.Property<int>("CentreId")
                         .HasColumnType("int");
 
                     b.Property<int>("ProgrammesId")
                         .HasColumnType("int");
 
-                    b.HasKey("CentresId", "ProgrammesId");
+                    b.HasKey("CentreId", "ProgrammesId");
 
                     b.HasIndex("ProgrammesId");
 
@@ -956,6 +959,9 @@ namespace HeliosDataBaseContext.Migrations
 
                     MySqlPropertyBuilderExtensions.UseMySqlIdentityColumn(b.Property<int>("Id"));
 
+                    b.Property<string>("Annee")
+                        .HasColumnType("longtext");
+
                     b.Property<DateTime>("Creation")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("datetime(6)")
@@ -972,9 +978,6 @@ namespace HeliosDataBaseContext.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("datetime(6)")
                         .HasDefaultValueSql("CURRENT_TIMESTAMP");
-
-                    b.Property<string>("couleur")
-                        .HasColumnType("longtext");
 
                     b.HasKey("Id");
 
@@ -1731,7 +1734,7 @@ namespace HeliosDataBaseContext.Migrations
                 {
                     b.HasOne("Helios.Context.Models.Centre", null)
                         .WithMany()
-                        .HasForeignKey("CentresId")
+                        .HasForeignKey("CentreId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 

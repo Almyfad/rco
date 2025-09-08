@@ -4,6 +4,7 @@ using Helios.Context;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace HeliosDataBaseContext.Migrations
 {
     [DbContext(typeof(HeliosContext))]
-    partial class HeliosContextModelSnapshot : ModelSnapshot
+    [Migration("20250907194503_Remove année")]
+    partial class Removeannée
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -972,9 +975,6 @@ namespace HeliosDataBaseContext.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("datetime(6)")
                         .HasDefaultValueSql("CURRENT_TIMESTAMP");
-
-                    b.Property<string>("couleur")
-                        .HasColumnType("longtext");
 
                     b.HasKey("Id");
 

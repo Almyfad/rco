@@ -1,5 +1,4 @@
 ﻿using Helios.Context.Models;
-using System.Text.Json.Serialization;
 
 namespace Helios.Controllers.User
 {

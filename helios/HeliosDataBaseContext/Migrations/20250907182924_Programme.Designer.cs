@@ -4,6 +4,7 @@ using Helios.Context;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace HeliosDataBaseContext.Migrations
 {
     [DbContext(typeof(HeliosContext))]
-    partial class HeliosContextModelSnapshot : ModelSnapshot
+    [Migration("20250907182924_Programme")]
+    partial class Programme
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -37,19 +40,19 @@ namespace HeliosDataBaseContext.Migrations
                     b.ToTable("ActiviteeTypeMembre");
                 });
 
-            modelBuilder.Entity("CentreProgramme", b =>
+            modelBuilder.Entity("CentreProgrammeActivitee", b =>
                 {
-                    b.Property<int>("CentresId")
+                    b.Property<int>("CentreId")
                         .HasColumnType("int");
 
                     b.Property<int>("ProgrammesId")
                         .HasColumnType("int");
 
-                    b.HasKey("CentresId", "ProgrammesId");
+                    b.HasKey("CentreId", "ProgrammesId");
 
                     b.HasIndex("ProgrammesId");
 
-                    b.ToTable("CentreProgramme");
+                    b.ToTable("CentreProgrammeActivitee");
                 });
 
             modelBuilder.Entity("Helios.Context.Models.Activitee", b =>
@@ -948,13 +951,16 @@ namespace HeliosDataBaseContext.Migrations
                         });
                 });
 
-            modelBuilder.Entity("Helios.Context.Models.Programme", b =>
+            modelBuilder.Entity("Helios.Context.Models.ProgrammeActivitee", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int");
 
                     MySqlPropertyBuilderExtensions.UseMySqlIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("Annee")
+                        .HasColumnType("longtext");
 
                     b.Property<DateTime>("Creation")
                         .ValueGeneratedOnAdd()
@@ -973,12 +979,9 @@ namespace HeliosDataBaseContext.Migrations
                         .HasColumnType("datetime(6)")
                         .HasDefaultValueSql("CURRENT_TIMESTAMP");
 
-                    b.Property<string>("couleur")
-                        .HasColumnType("longtext");
-
                     b.HasKey("Id");
 
-                    b.ToTable("Programmes", (string)null);
+                    b.ToTable("ProgrammeActivitee");
                 });
 
             modelBuilder.Entity("Helios.Context.Models.Role", b =>
@@ -1451,7 +1454,7 @@ namespace HeliosDataBaseContext.Migrations
                         .HasColumnType("datetime(6)")
                         .HasDefaultValueSql("CURRENT_TIMESTAMP");
 
-                    b.Property<int?>("ProgrammeId")
+                    b.Property<int?>("ProgrammeActiviteeId")
                         .HasColumnType("int");
 
                     b.HasKey("Id");
@@ -1459,7 +1462,7 @@ namespace HeliosDataBaseContext.Migrations
                     b.HasIndex("Code")
                         .IsUnique();
 
-                    b.HasIndex("ProgrammeId");
+                    b.HasIndex("ProgrammeActiviteeId");
 
                     b.ToTable("TypeMembres", (string)null);
 
@@ -1727,15 +1730,15 @@ namespace HeliosDataBaseContext.Migrations
                         .IsRequired();
                 });
 
-            modelBuilder.Entity("CentreProgramme", b =>
+            modelBuilder.Entity("CentreProgrammeActivitee", b =>
                 {
                     b.HasOne("Helios.Context.Models.Centre", null)
                         .WithMany()
-                        .HasForeignKey("CentresId")
+                        .HasForeignKey("CentreId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("Helios.Context.Models.Programme", null)
+                    b.HasOne("Helios.Context.Models.ProgrammeActivitee", null)
                         .WithMany()
                         .HasForeignKey("ProgrammesId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -1748,7 +1751,7 @@ namespace HeliosDataBaseContext.Migrations
                         .WithMany("Activites")
                         .HasForeignKey("CentreId");
 
-                    b.HasOne("Helios.Context.Models.Programme", "Programme")
+                    b.HasOne("Helios.Context.Models.ProgrammeActivitee", "Programme")
                         .WithMany("Activitees")
                         .HasForeignKey("ProgrammeId");
 
@@ -1877,9 +1880,9 @@ namespace HeliosDataBaseContext.Migrations
 
             modelBuilder.Entity("Helios.Context.Models.TypeMembre", b =>
                 {
-                    b.HasOne("Helios.Context.Models.Programme", null)
+                    b.HasOne("Helios.Context.Models.ProgrammeActivitee", null)
                         .WithMany("Aspects")
-                        .HasForeignKey("ProgrammeId");
+                        .HasForeignKey("ProgrammeActiviteeId");
                 });
 
             modelBuilder.Entity("Helios.Context.Models.Utilisateur", b =>
@@ -1945,7 +1948,7 @@ namespace HeliosDataBaseContext.Migrations
                     b.Navigation("SousMenus");
                 });
 
-            modelBuilder.Entity("Helios.Context.Models.Programme", b =>
+            modelBuilder.Entity("Helios.Context.Models.ProgrammeActivitee", b =>
                 {
                     b.Navigation("Activitees");
 

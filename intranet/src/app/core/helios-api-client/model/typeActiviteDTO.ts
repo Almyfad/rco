@@ -7,13 +7,15 @@
  * https://openapi-generator.tech
  * Do not edit the class manually.
  */
-import { TimelineMembreType } from './timelineMembreType';
+import { TypesActivitees } from './typesActivitees';
 
 
-export interface TimelineMembreDTO { 
+export interface TypeActiviteDTO { 
     id: number;
-    type: TimelineMembreType;
-    date: string;
-    commentaire: string | null;
+    description: string | null;
+    code: TypesActivitees;
 }
+export namespace TypeActiviteDTO {
+}
+
 

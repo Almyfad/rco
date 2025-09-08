@@ -1,10 +1,42 @@
-
-
 <mat-card class="cardWithShadow">
     <mat-card-header>
-        <mat-card-title>Gestion des plannings</mat-card-title>
+        <mat-card-title>Plannings et Programmes</mat-card-title>
     </mat-card-header>
-    <mat-card-content>        
-        <ejs-schedule locale="fr" [eventSettings]="eventSettings" [selectedDate]="selectedDate"> </ejs-schedule>
+    <mat-card-content>
+            <app-async-select label="Filtrer par programme" 
+            placeholder="Sélectionnez un ou plusieurs programmes"
+            clearOptionText="Tous les programmes" 
+            [multiple]="true" 
+            [options]="programmeOptions()" [loading]="programmeLoading()"
+            (selectionChange)="onProgrammeSelection($event)">
+            </app-async-select>
+        <ejs-schedule  #scheduleObj locale="fr" [eventSettings]="eventSettings" [startHour]="startHour" [endHour]="endHour"
+            [group]="groupBy" [enableAdaptiveUI]="enableAdaptiveUI">
+            <e-views>
+                <e-view option="TimelineYear" [allowVirtualScrolling]="virtualscroll" orientation="Vertical"></e-view>
+                <e-view option="TimelineMonth"></e-view>
+                <e-view option="Day"></e-view>
+                <e-view option="Week"></e-view>
+                <e-view option="Month"></e-view>
+                <e-view option="WorkWeek"></e-view>
+                <e-view option="Timeline"></e-view>
+            </e-views>
+            <e-resources>
+                <e-resource field="programmeId" title="Programme" name="Programme" [dataSource]="programmeDataSource()"
+                    textField="libelle" idField="id" colorField="couleur">
+                </e-resource>
+            </e-resources>
+            <ng-template #eventSettingsTemplate let-data>
+                <div>
+                    <div class="title">{{data.libelle}}</div>
+                    <div class="meta">
+                        <small>{{data.centre?.libelle }}</small>
+                    </div>
+                    <div class="meta">
+                        <span>{{data.debut | date:'shortTime'}} - {{data.fin | date:'shortTime'}}</span>
+                    </div>
+                </div>
+            </ng-template>
+        </ejs-schedule>
     </mat-card-content>
 </mat-card>

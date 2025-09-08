@@ -7,13 +7,13 @@
  * https://openapi-generator.tech
  * Do not edit the class manually.
  */
-import { TimelineMembreType } from './timelineMembreType';
+import { CentreDTO } from './centreDTO';
 
 
-export interface TimelineMembreDTO { 
+export interface ProgrammeDTO2 { 
     id: number;
-    type: TimelineMembreType;
-    date: string;
-    commentaire: string | null;
+    libelle: string;
+    description: string | null;
+    centres: Array<CentreDTO> | null;
 }
 

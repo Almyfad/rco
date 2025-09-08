@@ -25,6 +25,7 @@ namespace Helios.Context
         public DbSet<Civilite> Civilites { get; set; }
         public DbSet<Membre> Membres { get; set; }
         public DbSet<Droit> Droits { get; set; }
+        public DbSet<Programme> Programmes { get; set; }
         public DbSet<TimelineMembre> TimelineMembres { get; set; }
         public DbSet<TimelineMembreType> TimelineMembreTypes { get; set; }
 
@@ -210,7 +211,13 @@ namespace Helios.Context
                 e.HasIndex(e => e.Code).IsUnique();
                 e.HasDataFromEnum<TimelineMembreTypes, TimelineMembreType>();
                 e.Property(r => r.Code).HasConversion<string>();
-            });
+            })
+            .Entity<Programme>(e =>
+            {
+                e.ToTable("Programmes");
+                e.HasKey(r => r.Id);
+            })
+            ;
 
             foreach (var entityType in modelBuilder.Model.GetEntityTypes())
             {

@@ -77,6 +77,17 @@ export const routes: Routes = [
     ],
   },
   {
+    path: 'public/planning',
+    component: FullComponent,
+    children: [
+      {
+        path: 'authentication',
+        loadComponent: () =>
+          import('./pages/planning/planning.component').then((m) => m.PlanningComponent),
+      },
+    ],
+  },
+  {
     path: '**',
     redirectTo: 'authentication/error',
   },

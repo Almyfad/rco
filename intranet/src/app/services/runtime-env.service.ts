@@ -1,4 +1,5 @@
 import { Injectable } from '@angular/core';
+import { environment } from 'src/environments/environment';
 
 @Injectable({ providedIn: 'root' })
 export class RuntimeEnvService {
@@ -9,6 +10,6 @@ export class RuntimeEnvService {
   }
 
   get apiUrl(): string {
-    return this.get('API_URL', 'http://localhost:32771');
+    return this.get('API_URL', environment.apiURL ?? 'http://localhost:32771');
   }
 }
