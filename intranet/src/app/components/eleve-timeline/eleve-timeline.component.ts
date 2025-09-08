@@ -87,7 +87,7 @@ export class EleveTimelineComponent {
       id: 0,
       ...this.newEventForm.value
     } as TimelineMembreDTO
-    this.registre.apiRegistreMembresIdTimelinePost(this.eleve()!.id, timeline).subscribe(
+    this.registre.apiRegistreMembresIdTimelineAddPost(this.eleve()!.id, timeline).subscribe(
       {
         next: () => {
           this.snackBar.success('élément ajouté');
@@ -119,7 +119,7 @@ export class EleveTimelineComponent {
   }
   updateEvent(t: TimelineControl) {
     if (t.control.invalid || !this.eleve()) return;
-    this.registre.apiRegistreMembresIdTimelineTimelineIdPut(this.eleve()!.id, t.timeline.id, t.control.value).subscribe(
+    this.registre.apiRegistreMembresIdTimelineTimelineIdUpdatePut(this.eleve()!.id, t.timeline.id, t.control.value).subscribe(
       {
         next: () => {
           this.snackBar.success('élément mis à jour');

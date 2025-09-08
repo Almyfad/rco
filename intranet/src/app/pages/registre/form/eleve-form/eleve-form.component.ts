@@ -154,10 +154,10 @@ export class EleveFormComponent {
         dateNaissance: formValue.dateNaissance ? formValue.dateNaissance.toISOString().split('T')[0] : null
       };
       iif(() => this.isEditMode(),
-        this.rs.apiRegistreMembresIdPut(membreData.id, membreData),
-        this.rs.apiRegistreMembresMembrePost(membreData)
+        this.rs.apiRegistreMembresIdUpdatePut(membreData.id, membreData),
+        this.rs.apiRegistreMembresCreatePost(membreData)
       ).pipe(
-        switchMap(() => this.rs.apiRegistreMembresIdFamilyPost(membreData.id, this.family())),
+        switchMap(() => this.rs.apiRegistreMembresIdFamilyUpdatePost(membreData.id, this.family())),
         finalize(() => this.saving.set(false))
       )
         .subscribe({

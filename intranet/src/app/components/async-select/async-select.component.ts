@@ -54,11 +54,16 @@ export class AsyncSelectComponent<T> {
     loading = input(false);
     options = input.required<SelectOption<T>[] | null>();
 
-    // FormControl interne utilisé par le template
     selectControl = this.fb.control<T | T[] | null>(this.multiple ? [] : null);
     private isDisabled = false;
 
     constructor() {
+        effect(() => {
+            const currentValues = this.values();
+            this.selectControl.setValue(currentValues, { emitEvent: false });
+            this.lastValues.set(currentValues);
+        });
+
         // Propager les changements du FormControl interne vers le form control parent
         this.selectControl.valueChanges.subscribe(value => {
             this.values.set(value);
@@ -79,11 +84,7 @@ export class AsyncSelectComponent<T> {
             this.lastValues.set(this.values());
         });
     }
-    // ControlValueAccessor methods
-    writeValue(value: any): void {
-        // Ne pas émettre valueChanges lors de la mise à jour par writeValue
-        this.selectControl.setValue(value, { emitEvent: false });
-    }
+
 
     registerOnChange(fn: any): void {
     }
@@ -100,17 +101,10 @@ export class AsyncSelectComponent<T> {
         }
     }
 
-    // méthodes utilitaires pour template / API externe
-    // Permet de définir la valeur sélectionnée depuis l'extérieur
-    setValue(value: T): void {
-        this.writeValue(value);
-        this.values.set(value);
-    }
 
     // Réinitialise la sélection
     clear(): void {
-        const val = this.multiple ? [] : null;
-        this.writeValue(val);
+        const val = this.multiple ? [] : null;      
         this.values.set(val);
     }
 

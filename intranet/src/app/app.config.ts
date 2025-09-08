@@ -31,7 +31,6 @@ import { NgScrollbarModule } from 'ngx-scrollbar';
 import { MaterialModule } from './material.module';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { Configuration } from './core/helios-api-client';
-import { environment } from 'src/environments/environment';
 import { RuntimeEnvService } from './services/runtime-env.service';
 
 export function HttpLoaderFactory(http: HttpClient): any {
@@ -40,7 +39,7 @@ export function HttpLoaderFactory(http: HttpClient): any {
 
 
 export function apiConfigFactory(runtimeEnv: RuntimeEnvService): Configuration {
-  const apiUrl = runtimeEnv?.apiUrl ?? environment.apiURL;
+  const apiUrl = runtimeEnv?.apiUrl;
   return new Configuration({
     basePath: apiUrl,
     withCredentials: true,

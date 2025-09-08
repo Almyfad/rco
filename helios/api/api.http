@@ -1,4 +1,4 @@
-@api_HostAddress = http://localhost:32769
+@api_HostAddress = http://localhost:32771
 
 ###
 GET {{api_HostAddress}}/openapi/v1.json
@@ -6,6 +6,12 @@ Accept: application/json
 ###
 GET {{api_HostAddress}}/scalar/v1
 
+
+
+###
+GET {{api_HostAddress}}/api/planning/activities/
+Accept: application/json
+###
 
 ### Login (enregistre le cookie dans la session "auth")
 # @name login

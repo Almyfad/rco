@@ -69,15 +69,6 @@ namespace Helios.Context.Models
                         Path = "/conferences",
                     },
                  new Module
-                 {
-                     Id =(int) Modules.CreateConference,
-                     Code = Modules.CreateConference,
-                     ParentId = (int)Modules.Conferences,
-                     Label = "Créer Conférence",
-                     Icon = "calendar-plus",
-                     Path = "/creer/conference",
-                 },
-                 new Module
                     {
                         Id =(int) Modules.ConferencesInscriptions,
                         Code = Modules.ConferencesInscriptions,
@@ -254,9 +245,20 @@ namespace Helios.Context.Models
                         Path = "/compta/comptescaisse",
                  },
                  //----------------------
+                 //Planning
+                 //----------------------                
+                new Module
+                 {
+                     Id =(int) Modules.Planning,
+                     Code = Modules.Planning,
+                     Label = "Planning",
+                     Icon = "calendar-plus",
+                     Path = "/planning",
+                 },
+                 //----------------------
                  //Developpement
                  //----------------------
-                 new Module
+                new Module
                     {
                         Id =(int) Modules.Developpement,
                         Code = Modules.Developpement,
@@ -312,7 +314,6 @@ namespace Helios.Context.Models
         Conferences = 2000,
         ConferencesInscriptions = 2100,
         ConferencesUserInscriptions = 2200,
-        CreateConference = 2300,
         Registre = 3000,
         RegistreFicheEleves = 3010,
         RegistreFicheParvis = 3020,
@@ -331,6 +332,7 @@ namespace Helios.Context.Models
         ComptabiliteParametres = 4020,
         ComptabiliteSaisieEcrituresRepetitives = 4030,
         ComptabiliteComptesCaisse = 4040,
+        Planning = 7000,
         Developpement = 10000,
         Administation = 5000,
         Logout = 50000,

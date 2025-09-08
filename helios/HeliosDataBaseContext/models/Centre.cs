@@ -14,6 +14,7 @@
         public long? brevoFolderId { get; set; }
         public virtual ICollection<Membre>? Membres { get; set; }      
         public virtual ICollection<Activitee>? Activites { get; set; }
+        public virtual ICollection<Programme>? Programmes { get; set; }
 
         public bool Equals(Centre? other)
         {
@@ -24,16 +25,16 @@
 
     }
 
-    public class CentreEqualityComparer : IEqualityComparer<Centre>
+    public class CentreEqualityComparer : IEqualityComparer<Centre?>
     {
         public bool Equals(Centre? x, Centre? y)
         {
             return x?.Id == y?.Id;
         }
 
-        public int GetHashCode(Centre obj)
+        public int GetHashCode(Centre? obj)
         {
-            return obj.Id;
+            return obj?.Id ?? 0;
         }
     }
 }

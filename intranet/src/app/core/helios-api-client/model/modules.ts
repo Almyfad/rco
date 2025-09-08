@@ -1,5 +1,5 @@
 /**
- * Helios | v1
+ * Helios API
  *
  * 
  *
@@ -15,7 +15,6 @@ export const Modules = {
     Conferences: 'Conferences',
     ConferencesInscriptions: 'ConferencesInscriptions',
     ConferencesUserInscriptions: 'ConferencesUserInscriptions',
-    CreateConference: 'CreateConference',
     Registre: 'Registre',
     RegistreFicheEleves: 'RegistreFicheEleves',
     RegistreFicheParvis: 'RegistreFicheParvis',
@@ -38,6 +37,7 @@ export const Modules = {
     Mailing: 'Mailing',
     MailingListes: 'MailingListes',
     MailingCampagnes: 'MailingCampagnes',
+    Planning: 'Planning',
     Developpement: 'Developpement',
     Logout: 'Logout'
 } as const;

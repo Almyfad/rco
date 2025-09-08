@@ -1,5 +1,5 @@
 /**
- * Helios | v1
+ * Helios API
  *
  * 
  *

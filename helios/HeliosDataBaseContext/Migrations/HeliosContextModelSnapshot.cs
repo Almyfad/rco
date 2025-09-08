@@ -37,6 +37,21 @@ namespace HeliosDataBaseContext.Migrations
                     b.ToTable("ActiviteeTypeMembre");
                 });
 
+            modelBuilder.Entity("CentreProgramme", b =>
+                {
+                    b.Property<int>("CentresId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("ProgrammesId")
+                        .HasColumnType("int");
+
+                    b.HasKey("CentresId", "ProgrammesId");
+
+                    b.HasIndex("ProgrammesId");
+
+                    b.ToTable("CentreProgramme");
+                });
+
             modelBuilder.Entity("Helios.Context.Models.Activitee", b =>
                 {
                     b.Property<int>("Id")
@@ -45,7 +60,7 @@ namespace HeliosDataBaseContext.Migrations
 
                     MySqlPropertyBuilderExtensions.UseMySqlIdentityColumn(b.Property<int>("Id"));
 
-                    b.Property<int>("CentreId")
+                    b.Property<int?>("CentreId")
                         .HasColumnType("int");
 
                     b.Property<DateTime>("Creation")
@@ -71,12 +86,20 @@ namespace HeliosDataBaseContext.Migrations
                         .HasColumnType("datetime(6)")
                         .HasDefaultValueSql("CURRENT_TIMESTAMP");
 
+                    b.Property<int?>("ProgrammeId")
+                        .HasColumnType("int");
+
+                    b.Property<bool>("Public")
+                        .HasColumnType("tinyint(1)");
+
                     b.Property<int>("TypeActiviteeId")
                         .HasColumnType("int");
 
                     b.HasKey("Id");
 
                     b.HasIndex("CentreId");
+
+                    b.HasIndex("ProgrammeId");
 
                     b.HasIndex("TypeActiviteeId");
 
@@ -475,7 +498,7 @@ namespace HeliosDataBaseContext.Migrations
                             Id = 10,
                             CentreId = 2,
                             Code = 200,
-                            ModuleId = 2300,
+                            ModuleId = 7000,
                             utilisateurId = 4
                         });
                 });
@@ -699,16 +722,6 @@ namespace HeliosDataBaseContext.Migrations
                         },
                         new
                         {
-                            Id = 2300,
-                            Code = 2300,
-                            Creation = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            Icon = "calendar-plus",
-                            Label = "Créer Conférence",
-                            ParentId = 2000,
-                            Path = "/creer/conference"
-                        },
-                        new
-                        {
                             Id = 2100,
                             Code = 2100,
                             Creation = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
@@ -897,6 +910,15 @@ namespace HeliosDataBaseContext.Migrations
                         },
                         new
                         {
+                            Id = 7000,
+                            Code = 7000,
+                            Creation = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            Icon = "calendar-plus",
+                            Label = "Planning",
+                            Path = "/planning"
+                        },
+                        new
+                        {
                             Id = 10000,
                             Code = 10000,
                             Creation = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
@@ -924,6 +946,39 @@ namespace HeliosDataBaseContext.Migrations
                             Label = "Deconnexion",
                             Path = "/logout"
                         });
+                });
+
+            modelBuilder.Entity("Helios.Context.Models.Programme", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    MySqlPropertyBuilderExtensions.UseMySqlIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<DateTime>("Creation")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("datetime(6)")
+                        .HasDefaultValueSql("CURRENT_TIMESTAMP");
+
+                    b.Property<string>("Description")
+                        .HasColumnType("longtext");
+
+                    b.Property<string>("Libelle")
+                        .IsRequired()
+                        .HasColumnType("longtext");
+
+                    b.Property<DateTime?>("Modification")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("datetime(6)")
+                        .HasDefaultValueSql("CURRENT_TIMESTAMP");
+
+                    b.Property<string>("couleur")
+                        .HasColumnType("longtext");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Programmes", (string)null);
                 });
 
             modelBuilder.Entity("Helios.Context.Models.Role", b =>
@@ -1396,10 +1451,15 @@ namespace HeliosDataBaseContext.Migrations
                         .HasColumnType("datetime(6)")
                         .HasDefaultValueSql("CURRENT_TIMESTAMP");
 
+                    b.Property<int?>("ProgrammeId")
+                        .HasColumnType("int");
+
                     b.HasKey("Id");
 
                     b.HasIndex("Code")
                         .IsUnique();
+
+                    b.HasIndex("ProgrammeId");
 
                     b.ToTable("TypeMembres", (string)null);
 
@@ -1667,13 +1727,30 @@ namespace HeliosDataBaseContext.Migrations
                         .IsRequired();
                 });
 
+            modelBuilder.Entity("CentreProgramme", b =>
+                {
+                    b.HasOne("Helios.Context.Models.Centre", null)
+                        .WithMany()
+                        .HasForeignKey("CentresId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("Helios.Context.Models.Programme", null)
+                        .WithMany()
+                        .HasForeignKey("ProgrammesId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+                });
+
             modelBuilder.Entity("Helios.Context.Models.Activitee", b =>
                 {
                     b.HasOne("Helios.Context.Models.Centre", "Centre")
                         .WithMany("Activites")
-                        .HasForeignKey("CentreId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .HasForeignKey("CentreId");
+
+                    b.HasOne("Helios.Context.Models.Programme", "Programme")
+                        .WithMany("Activitees")
+                        .HasForeignKey("ProgrammeId");
 
                     b.HasOne("Helios.Context.Models.TypeActivitee", "TypeActivitee")
                         .WithMany("Activites")
@@ -1682,6 +1759,8 @@ namespace HeliosDataBaseContext.Migrations
                         .IsRequired();
 
                     b.Navigation("Centre");
+
+                    b.Navigation("Programme");
 
                     b.Navigation("TypeActivitee");
                 });
@@ -1796,6 +1875,13 @@ namespace HeliosDataBaseContext.Migrations
                     b.Navigation("Type");
                 });
 
+            modelBuilder.Entity("Helios.Context.Models.TypeMembre", b =>
+                {
+                    b.HasOne("Helios.Context.Models.Programme", null)
+                        .WithMany("Aspects")
+                        .HasForeignKey("ProgrammeId");
+                });
+
             modelBuilder.Entity("Helios.Context.Models.Utilisateur", b =>
                 {
                     b.HasOne("Helios.Context.Models.Membre", "Membre")
@@ -1857,6 +1943,13 @@ namespace HeliosDataBaseContext.Migrations
             modelBuilder.Entity("Helios.Context.Models.Module", b =>
                 {
                     b.Navigation("SousMenus");
+                });
+
+            modelBuilder.Entity("Helios.Context.Models.Programme", b =>
+                {
+                    b.Navigation("Activitees");
+
+                    b.Navigation("Aspects");
                 });
 
             modelBuilder.Entity("Helios.Context.Models.StatutMembre", b =>

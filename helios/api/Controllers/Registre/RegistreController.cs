@@ -168,7 +168,7 @@ namespace Helios.Controllers.Registre
             return membre;
         }
 
-        [HttpPut("membres/{id}")]
+        [HttpPut("membres/{id}/update")]
         public async Task<MembreDTO> UpdateMembre(int id, MembreDTO membreDto)
         {
 
@@ -209,7 +209,7 @@ namespace Helios.Controllers.Registre
             return (MembreDTO)membre;
         }
 
-        [HttpPost("membres/membre")]
+        [HttpPost("membres/create")]
         public async Task<MembreDTO> CreateMembre(MembreDTO membreDto)
         {
             await OsContext.ActionsIsAllowedForCentre(membreDto.Centre.Id, Modules.Registre, Droits.AJOUT);
@@ -278,7 +278,7 @@ namespace Helios.Controllers.Registre
             }
         }
 
-        [HttpPost("membres/{id}/family")]
+        [HttpPost("membres/{id}/family/update")]
         public async Task<MembreDTO> UpdateFamily(int id, FamilyUpdateDTO family)
         {
             var membre = await MembreAutoriseLecture
@@ -368,7 +368,7 @@ namespace Helios.Controllers.Registre
             return NoContent();
         }
 
-        [HttpPost("membres/{id}/timeline")]
+        [HttpPost("membres/{id}/timeline/add")]
         public async Task<IActionResult> AddTimeline(int id, TimelineMembreDTO timelineDto)
         {
             var membre = await MembreAutoriseLecture
@@ -394,7 +394,7 @@ namespace Helios.Controllers.Registre
             }
         }
 
-        [HttpPut("membres/{id}/timeline/{timelineId}")]
+        [HttpPut("membres/{id}/timeline/{timelineId}/update")]
         public async Task<IActionResult> UpdateTimeline(int id, int timelineId, TimelineMembreDTO timelineDto)
         {
             var membre = await MembreAutoriseLecture
