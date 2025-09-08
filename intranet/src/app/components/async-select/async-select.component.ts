@@ -1,6 +1,6 @@
-import { Component, computed, EventEmitter, forwardRef, inject, Input, input, model, Output } from '@angular/core';
+import { Component, computed, effect, EventEmitter, forwardRef, inject, Input, input, model, Output, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { MatSelectModule } from '@angular/material/select';
+import { MatSelectChange, MatSelectModule } from '@angular/material/select';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatIconModule } from '@angular/material/icon';
@@ -13,7 +13,10 @@ export interface SelectOption<T> {
     icon?: string;
     iconColor?: string;
 }
-
+export interface SelectedOption<T> {
+    checked?: boolean;
+    options: T;
+}
 @Component({
     selector: 'app-async-select',
     standalone: true,
@@ -42,8 +45,10 @@ export class AsyncSelectComponent<T> {
     @Input() clearOptionText: string = 'Aucun filtre';
     @Input() multiple: boolean = false;
     @Input() compareWith?: (a: T | null, b: T | null) => boolean;
-    @Output() selectionChange = new EventEmitter<T | T[] | null>();
+    @Output() selectionChange = new EventEmitter<SelectedOption<T>>();
     values = model<T | T[] | null>(this.multiple ? [] : null);
+    lastValues = signal<T | T[] | null>(this.multiple ? [] : null);
+    selectedValue = model<SelectedOption<T> | null>(null);
     readonly fb = inject(FormBuilder);
 
     loading = input(false);
@@ -51,16 +56,27 @@ export class AsyncSelectComponent<T> {
 
     // FormControl interne utilisé par le template
     selectControl = this.fb.control<T | T[] | null>(this.multiple ? [] : null);
-    private onChange: (v: any) => void = () => { };
-    private onTouched: () => void = () => { };
     private isDisabled = false;
 
     constructor() {
         // Propager les changements du FormControl interne vers le form control parent
         this.selectControl.valueChanges.subscribe(value => {
-            this.onChange(value);
-            this.selectionChange.emit(value);
             this.values.set(value);
+
+            if (!this.multiple) return;
+            if (!Array.isArray(value)) return;
+
+            const selectedOptions: T[] = value as T[];
+            const lastValues = this.lastValues();
+            const added = selectedOptions.filter(v => !(lastValues as (T[] | null))?.some(lv => this.compareWithFn(v, lv)));
+            if (added.length > 0) {
+                this.selectionChange.emit({ options: added[0], checked: true });
+            }
+            const removed = (lastValues as (T[] | null))?.filter(lv => !selectedOptions.some(v => this.compareWithFn(v, lv)));
+            if (removed && removed.length > 0) {
+                this.selectionChange.emit({ options: removed[0], checked: false });
+            }
+            this.lastValues.set(this.values());
         });
     }
     // ControlValueAccessor methods
@@ -70,11 +86,9 @@ export class AsyncSelectComponent<T> {
     }
 
     registerOnChange(fn: any): void {
-        this.onChange = fn;
     }
 
     registerOnTouched(fn: any): void {
-        this.onTouched = fn;
     }
 
     setDisabledState(isDisabled: boolean): void {
@@ -90,8 +104,6 @@ export class AsyncSelectComponent<T> {
     // Permet de définir la valeur sélectionnée depuis l'extérieur
     setValue(value: T): void {
         this.writeValue(value);
-        this.onChange(value);
-        this.selectionChange.emit(value);
         this.values.set(value);
     }
 
@@ -99,14 +111,11 @@ export class AsyncSelectComponent<T> {
     clear(): void {
         const val = this.multiple ? [] : null;
         this.writeValue(val);
-        this.onChange(val);
-        this.selectionChange.emit(val);
         this.values.set(val);
     }
 
     // à appeler depuis le template (ex: (blur))
     markTouched(): void {
-        this.onTouched();
     }
 
     compareWithFn = (o1: T | null, o2: T | null): boolean => {
@@ -114,7 +123,10 @@ export class AsyncSelectComponent<T> {
         if (o1 === o2) return true;
         if (o1 && o2 && typeof o1 === 'object' && typeof o2 === 'object') {
             const a = o1 as any, b = o2 as any;
+            if ('Id' in a && 'Id' in b) return a.Id === b.Id;
             if ('id' in a && 'id' in b) return a.id === b.id;
+            if ('code' in a && 'code' in b) return a.code === b.code;
+            if ('Code' in a && 'Code' in b) return a.Code === b.Code;
         }
         return false;
     }

@@ -1,5 +1,5 @@
-import { Component, inject, OnInit, OnDestroy, computed, Signal, Input } from '@angular/core';
-import { MembreDTO, RegistreService, DataPagerOfMembreDTO, MembreFiltre, TypeMembreDTO, NullableOfStatutsMembres } from 'src/app/core/helios-api-client';
+import { Component, inject, OnInit, OnDestroy, computed, Signal, Input, signal, effect } from '@angular/core';
+import { MembreDTO, RegistreService, DataPagerOfMembreDTO, MembreFiltre, TypeMembreDTO, NullableOfStatutsMembres, CentreDTO } from 'src/app/core/helios-api-client';
 import { MatTableDataSource } from '@angular/material/table';
 import { SidenavService } from 'src/app/services/sidenav.service';
 import { EleveDetailComponent } from '../eleve-detail/eleve-detail.component';
@@ -15,7 +15,7 @@ import { ReactiveFormsModule, FormControl } from '@angular/forms';
 import { MaterialModule } from 'src/app/material.module';
 import { CommonModule } from '@angular/common';
 import { StatutMembreComponent,getStatusColor,getStatusIcon } from '../statut-membre/statut-membre.component';
-import { AsyncSelectComponent, SelectOption } from 'src/app/components/async-select/async-select.component';
+import { AsyncSelectComponent, SelectedOption, SelectOption } from 'src/app/components/async-select/async-select.component';
 import { debounceTime, distinctUntilChanged, Subject, takeUntil, Observable } from 'rxjs';
 import { RegistreModuleService } from '../services/registre-module.service';
 import { TablerIconsModule } from "angular-tabler-icons";
@@ -73,22 +73,25 @@ export class ElevesDataTableComponent implements OnInit, OnDestroy {
   centresOptions = computed(() => {
     const centres = this.registre.centres();
     return centres.data.map(centre => ({
-      value: centre.libelle,
+      value: centre.libelle || 'null',
       label: centre.libelle || 'Centre sans nom'
     }));
   });
   selectedCentres: string[] = [];
+  selectedCentresSignal = signal<string | string[] | null>(null);
 
   // Propriétés pour le filtre aspects (types membres)
   aspectsLoading = computed(() => this.registre.aspects().loading);
-  aspectsOptions: Signal<SelectOption<TypeMembreDTO>[]> = computed(() => {
+  aspectsOptions = computed(() => {
     const aspects = this.registre.aspects();
     return aspects.data.map(aspect => ({
-      value: aspect,
+      value: aspect.id || 0,
       label: aspect.libelle || 'Type membre sans nom'
     }));
   });
+  
   selectedAspects: number[] = [];
+  selectedAspectsSignal = signal<number | number[] | null>(null);
 
   // Propriétés pour le filtre statuts
   statutsLoading = computed(() => this.registre.statuts().loading);
@@ -102,12 +105,31 @@ export class ElevesDataTableComponent implements OnInit, OnDestroy {
     }));
   });
   selectedStatuts: number[] = [];
+  selectedStatutsSignal = signal<number | number[] | null>(null);
 
   // Propriété pour le collapse des filtres
   filtersExpanded = false;
 
   constructor() {
-    // Plus besoin de charger manuellement car nous utilisons les signaux
+    effect(() => {
+      const selectedCentres = this.selectedCentresSignal();
+      console.log('ElevesDataTableComponent - effect selectedCentresSignal - selectedCentres:', selectedCentres);
+      this.selectedCentres = Array.isArray(selectedCentres) ? selectedCentres : (selectedCentres ? [selectedCentres] : []);
+      this.currentPage = 0; 
+      this.fetchEleves();
+    });
+    effect(() => {
+      const selectedAspects = this.selectedAspectsSignal();
+      this.selectedAspects = Array.isArray(selectedAspects) ? selectedAspects : (selectedAspects ? [selectedAspects] : []);
+      this.currentPage = 0; 
+      this.fetchEleves();
+    });
+    effect(() => {
+      const selectedStatuts = this.selectedStatutsSignal();
+      this.selectedStatuts = Array.isArray(selectedStatuts) ? selectedStatuts : (selectedStatuts ? [selectedStatuts] : []);
+      this.currentPage = 0; 
+      this.fetchEleves();
+    });
   }
 
   ngOnInit(): void {
@@ -262,49 +284,6 @@ export class ElevesDataTableComponent implements OnInit, OnDestroy {
     });
   }
 
-
-
-  
-
-  /**
-   * Gère la sélection de centres (multiselect)
-   * @param selectedCentres - Tableau des centres sélectionnés
-   */
-  onCentreSelection(selectedCentres: any): void {
-    this.selectedCentres = Array.isArray(selectedCentres) ? selectedCentres : (selectedCentres ? [selectedCentres] : []);
-    this.currentPage = 0; // Reset à la première page lors d'un nouveau filtre
-    this.fetchEleves();
-  }
-
-  /**
-   * Gère la sélection d'aspects/types de membres (multiselect)
-   * @param selectedAspects - Tableau des aspects sélectionnés
-   */
-  onAspectSelection(selectedAspects: any): void {
-    // Conversion des valeurs string en number pour l'API
-    const aspectIds = Array.isArray(selectedAspects) 
-      ? selectedAspects.map(id => parseInt(id, 10)).filter(id => !isNaN(id))
-      : (selectedAspects ? [parseInt(selectedAspects, 10)].filter(id => !isNaN(id)) : []);
-    
-    this.selectedAspects = aspectIds;
-    this.currentPage = 0; // Reset à la première page lors d'un nouveau filtre
-    this.fetchEleves();
-  }
-
-  /**
-   * Gère la sélection multiple des statuts
-   * @param selectedStatuts - Les statuts sélectionnés (peut être un tableau ou une valeur unique)
-   */
-  onStatutSelection(selectedStatuts: any): void {
-    // Conversion des valeurs en number pour l'API
-    const statutIds = Array.isArray(selectedStatuts) 
-      ? selectedStatuts.map(id => parseInt(id, 10)).filter(id => !isNaN(id))
-      : (selectedStatuts ? [parseInt(selectedStatuts, 10)].filter(id => !isNaN(id)) : []);
-    
-    this.selectedStatuts = statutIds;
-    this.currentPage = 0; // Reset à la première page lors d'un nouveau filtre
-    this.fetchEleves();
-  }
 
   /**
    * Gère les changements de pagination
