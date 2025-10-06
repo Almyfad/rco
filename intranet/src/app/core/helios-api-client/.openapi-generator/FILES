@@ -14,13 +14,14 @@ git_push.sh
 index.ts
 model/activityDTO.ts
 model/centreDTO.ts
-model/centreDTO2.ts
 model/centreInfos.ts
 model/centreModule.ts
+model/centreProgrammeDTO.ts
 model/civiliteDTO.ts
 model/dataPagerOfMembreDTO.ts
 model/familyDTO.ts
 model/familyUpdateDTO.ts
+model/flatProgrammeDTO.ts
 model/loginRequest.ts
 model/membreDTO.ts
 model/membreFiltre.ts

@@ -59,6 +59,10 @@ body {
 .rounded {
   border-radius: $border-radius !important;
 }
+.rounded-top {
+  border-top-left-radius: $border-radius !important;
+  border-top-right-radius: $border-radius !important;
+}
 
 .rounded-circle {
   border-radius: 50% !important;

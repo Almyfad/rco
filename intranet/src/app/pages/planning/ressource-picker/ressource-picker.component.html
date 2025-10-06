@@ -1,0 +1,22 @@
+<app-chips [autoupdate]="false" [label]="centre().libelle ??''" [selected]="selected()"
+    [matMenuTriggerFor]="menu"></app-chips>
+
+<mat-menu #menu="matMenu">
+    <button mat-menu-item (click)="selectAll()">
+        <span>Tous</span>
+        <mat-icon class="all">done_all</mat-icon>
+    </button>
+    @for(p of centre().programmes || []; track p.id) {
+    <button mat-menu-item (click)="picked(p)">
+        {{ p.libelle }}
+        @if(isMenuSelected(p)) {
+        <mat-icon class="normal">check</mat-icon>
+        } @else {
+        <mat-icon class="normal">radio_button_unchecked</mat-icon>
+        }
+    </button>
+    }
+    <button mat-menu-item (click)="deselectAll()"><span>Aucun</span>
+        <mat-icon class="none">close</mat-icon>
+    </button>
+</mat-menu>

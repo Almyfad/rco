@@ -16,24 +16,30 @@ enum State {
 })
 export class AuthService {
 
+  private readonly STORAGE_KEY = 'auth_isConnected';
 
   constructor() {
     effect(() => {
       const state = this.state();
-      console.log("Auth state changed to", State[state]);
-
-      this._currentUser.set({ isConnected: state === State.LoggedIn } as UserInfo);
-
+      console.log("🔒 Auth state is ", State[state]);
+      console.log("checking server connection state...");
       firstValueFrom(this.userService.apiUserInfosGet()).then(userInfo => {
         this._currentUser.set(userInfo);
+        this.saveConnectionState(userInfo.isConnected || false);
+        this.state.set(userInfo.isConnected ? State.LoggedIn : State.LoggedOut);
+        
+        if (state === State.LoggedOut) {
+          this.router.navigate(['/authentication/login']);
+        }
       });
+
     });
   }
 
   private readonly userService = inject(UserService)
   private readonly router = inject(Router);
-  private readonly state = signal<State>(State.LoggedOut);
-  private readonly _currentUser = signal<UserInfo>({ isConnected: false } as UserInfo);
+  private readonly state = signal<State>(this.getStoredConnectionState() ? State.LoggedIn : State.LoggedOut);
+  private readonly _currentUser = signal<UserInfo>({ isConnected: this.getStoredConnectionState() } as UserInfo);
   readonly currentUser = computed(() => this._currentUser());
   readonly isLoggedIn = computed(() => this._currentUser().isConnected || false);
   readonly isLoggingIn = computed(() => this.state() === State.LoggingIn);
@@ -56,8 +62,34 @@ export class AuthService {
     return this.userService.apiUserLogoutPost().pipe(
       tap(() => {
         this.state.set(State.LoggedOut);
+        // Effacer l'état de connexion du localStorage lors de la déconnexion
+        this.saveConnectionState(false);
       })
     );
+  }
+
+  /**
+   * Sauvegarde l'état de connexion dans le localStorage
+   */
+  private saveConnectionState(isConnected: boolean): void {
+    try {
+      localStorage.setItem(this.STORAGE_KEY, JSON.stringify(isConnected));
+    } catch (error) {
+      console.warn('Impossible de sauvegarder l\'état de connexion dans le localStorage:', error);
+    }
+  }
+
+  /**
+   * Récupère l'état de connexion depuis le localStorage
+   */
+  private getStoredConnectionState(): boolean {
+    try {
+      const stored = localStorage.getItem(this.STORAGE_KEY);
+      return stored ? JSON.parse(stored) : false;
+    } catch (error) {
+      console.warn('Impossible de récupérer l\'état de connexion depuis le localStorage:', error);
+      return false;
+    }
   }
 
 

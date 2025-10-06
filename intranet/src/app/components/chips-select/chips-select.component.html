@@ -1,0 +1,38 @@
+@if(chips().length === 0) {
+  <div class="empty-state">
+    <span>{{emptyStateText}}</span>
+  </div>
+} @else {
+
+<div class="chips-container">
+  @for (chip of chips(); track chip.value) {
+      <div 
+          (click)="onChipClick(chip)" 
+          class="chip" 
+          [class.selected]="chip.selected ?? false">
+          <mat-icon 
+              *ngIf="chip.icon" 
+              class="chip-icon">
+              {{chip.icon}}
+          </mat-icon>
+          <span class="chip-label">{{chip.label}}</span>
+      </div>
+  }
+  
+  <!-- Actions globales -->
+  <div class="global-actions">
+    <div 
+        (click)="selectAll()" 
+        class="action-icon select_all" 
+        title="Tout sélectionner">
+        <mat-icon>done_all</mat-icon>
+    </div>
+    <div 
+        (click)="deselectAll()" 
+        class="action-icon deselect_all" 
+        title="Tout désélectionner">
+        <mat-icon>close</mat-icon>
+    </div>
+  </div>
+</div>
+}

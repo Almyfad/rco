@@ -1,0 +1,58 @@
+@import '../../../assets/scss/variables';
+.chip {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 0px 8px;
+    border-radius: 20px;
+    border: 2px solid #ddd;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    font-size: 14px;
+    font-weight: 500;
+    user-select: none;
+    min-height: 32px;
+    box-sizing: border-box;
+
+    &:hover {
+        transform: translateY(-1px);
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+    }
+
+    &.selected {
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+        background-color: $secondary;
+        color: $white;
+        font-weight: 600;
+
+        &:hover {
+            transform: translateY(-1px);
+            box-shadow: 0 4px 16px rgba(0, 0, 0, 0.25);
+        }
+    }
+
+    &:not(.selected) {
+        &:hover {
+            background-color: rgba(0, 0, 0, 0.05) !important;
+        }
+    }
+
+    .chip-icon {
+        font-size: 18px;
+        width: 18px;
+        height: 18px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+
+    .chip-label {
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+    }
+
+    &:active {
+        transform: scale(0.98);
+    }
+}

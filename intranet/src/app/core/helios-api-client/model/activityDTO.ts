@@ -8,7 +8,6 @@
  * Do not edit the class manually.
  */
 import { TypeActiviteDTO } from './typeActiviteDTO';
-import { CentreDTO2 } from './centreDTO2';
 import { ProgrammeDTO } from './programmeDTO';
 
 
@@ -19,7 +18,9 @@ export interface ActivityDTO {
     fin: string;
     typeActivite: TypeActiviteDTO;
     programme: ProgrammeDTO | null;
-    centre: CentreDTO2 | null;
+    programmeId: number | null;
+    centreId: number | null;
+    centreNom: string | null;
     description: string | null;
 }
 

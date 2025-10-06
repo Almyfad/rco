@@ -14,6 +14,7 @@ export interface ProgrammeDTO {
     id: number;
     libelle: string;
     description: string | null;
+    couleur: string | null;
     centres: Array<CentreDTO> | null;
 }
 

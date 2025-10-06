@@ -1,0 +1,26 @@
+@if(centres.isLoading()) {
+<p>Loading centres...</p>
+} @else {
+<div class="chips-container">
+
+    @for(centre of centres.value();track centre) {
+    @if(ressourcesPicked()[centre.id!]) {
+    <app-ressource-picker [centre]="centre" [(ressourcePicked)]="ressourcesPicked()[centre.id!]">
+
+    </app-ressource-picker>
+    }
+    }
+    <span>
+        {{allprogrammesCount()}} sélectionné{{allprogrammesCount() > 1 ? 's' : '' }}
+    </span>
+    <!-- Actions globales -->
+    <div class="global-actions">
+        <div (click)="selectAll()" class="action-icon select_all" title="Tout sélectionner">
+            <mat-icon>done_all</mat-icon>
+        </div>
+        <div (click)="deselectAll()" class="action-icon deselect_all" title="Tout désélectionner">
+            <mat-icon>close</mat-icon>
+        </div>
+    </div>
+</div>
+}

@@ -9,8 +9,12 @@
  */
 
 
-export interface CentreDTO2 { 
-    id: number | null;
-    libelle: string | null;
+export interface FlatProgrammeDTO { 
+    id: number;
+    libelle: string;
+    description: string | null;
+    couleur: string | null;
+    centreId: number | null;
+    centreLibelle: string | null;
 }
 

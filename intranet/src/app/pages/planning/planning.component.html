@@ -1,30 +1,74 @@
 <mat-card class="cardWithShadow">
     <mat-card-header>
-        <mat-card-title>Plannings et Programmes</mat-card-title>
+        <mat-card-title>Scheduler</mat-card-title>
     </mat-card-header>
     <mat-card-content>
-            <app-async-select label="Filtrer par programme" 
-            placeholder="Sélectionnez un ou plusieurs programmes"
-            clearOptionText="Tous les programmes" 
-            [multiple]="true" 
-            [options]="programmeOptions()" [loading]="programmeLoading()"
-            [values]="programmeDataSource()"
-            (selectionChange)="onProgrammeSelection($event)">
-            </app-async-select>
-        <ejs-schedule  #scheduleObj locale="fr" [eventSettings]="eventSettings" [startHour]="startHour" [endHour]="endHour"
-            [group]="groupBy" [enableAdaptiveUI]="enableAdaptiveUI">
+        <div class="d-flex gap-8 p-8 bg-secondary text-on-primary align-items-center rounded-top">
+
+            <button mat-raised-button (click)="scheduleObj.refresh()">
+                <div class="d-flex align-items-center gap-8">
+                    <i-tabler name="calendar-plus"></i-tabler> Nouveau
+                </div>
+            </button>
+            <mat-divider [vertical]="true"></mat-divider>
+            
+            <button mat-raised-button (click)="changeview('Day')">
+                <div class="d-flex align-items-center gap-8">
+                    <i-tabler name="calendar-due"></i-tabler> Jour
+                </div>
+            </button>
+            <button mat-raised-button (click)="changeview('Week')">
+                <div class="d-flex align-items-center gap-8">
+                    <i-tabler name="calendar-week"></i-tabler> Semaine
+                </div>
+            </button>
+            <button mat-raised-button (click)="changeview('Month')">
+                <div class="d-flex align-items-center gap-8">
+                    <i-tabler name="calendar-month"></i-tabler> Mois
+                </div>
+            </button>
+            <button mat-raised-button (click)="changeview('Agenda')">
+                <div class="d-flex align-items-center gap-8">
+                    <i-tabler name="list"></i-tabler> Agenda
+                </div>
+            </button>
+            <div class="vchrono">
+                <mat-checkbox [(ngModel)]="vchrono"></mat-checkbox>
+                <div>Vue chronologique</div>
+            </div>
+            <div class="vchrono">
+                <mat-checkbox [checked]="true"></mat-checkbox>
+                <div>Par centres</div>
+            </div>
+            <div class="vchrono">
+                <mat-checkbox [checked]="true"></mat-checkbox>
+                <div>Par programmes</div>
+            </div>
+        </div>
+        <div class="centremenu p-8">
+
+            <h3 class="m-8 text-center">Centres</h3>
+            <app-ressources-picker [(ressources)]="resourcesPicked"></app-ressources-picker>
+        </div>
+        <ejs-schedule #scheduleObj locale="fr" [eventSettings]="eventSettings" [startHour]="startHour"
+            [endHour]="endHour" [group]="groupBy()" [enableAdaptiveUI]="enableAdaptiveUI">
             <e-views>
                 <e-view option="TimelineYear" [allowVirtualScrolling]="virtualscroll" orientation="Vertical"></e-view>
                 <e-view option="TimelineMonth"></e-view>
                 <e-view option="Day"></e-view>
                 <e-view option="Week"></e-view>
                 <e-view option="Month"></e-view>
+                <e-view option="Agenda"></e-view>
                 <e-view option="WorkWeek"></e-view>
                 <e-view option="Timeline"></e-view>
             </e-views>
             <e-resources>
-                <e-resource field="programmeId" title="Programme" name="Programme" [dataSource]="programmeDataSource()"
-                    textField="libelle" idField="id" colorField="couleur">
+                <e-resource field="centreId" title="Centre" [name]="centreR" [allowMultiple]="false"
+                    [dataSource]="selectedCentres()" textField="libelle" idField="id" colorField="couleur">
+                </e-resource>
+                <e-resource field="programmeId" title="Programme" [name]="programmeR" [allowMultiple]="false"
+                    textField="libelle" [dataSource]="selectedProgrammes()" groupIDField="centreId" idField="id"
+                    colorField="couleur">
                 </e-resource>
             </e-resources>
             <ng-template #eventSettingsTemplate let-data>

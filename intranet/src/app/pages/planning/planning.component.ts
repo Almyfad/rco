@@ -1,19 +1,26 @@
-import { Component, computed, inject, ViewChild } from '@angular/core';
-import { DayService, WeekService, WorkWeekService, MonthService, AgendaService, MonthAgendaService, TimelineViewsService, TimelineMonthService, ScheduleModule, EventSettingsModel, EventRenderedArgs, TimelineYearService, GroupModel, ScheduleComponent, ResourcesModel } from '@syncfusion/ej2-angular-schedule';
+import { Component, computed, effect, inject, model, signal, ViewChild } from '@angular/core';
+import { DayService, WeekService, WorkWeekService, MonthService, AgendaService, MonthAgendaService, TimelineViewsService, TimelineMonthService, ScheduleModule, EventSettingsModel, TimelineYearService, GroupModel, ScheduleComponent, View } from '@syncfusion/ej2-angular-schedule';
 import { MatCardModule } from "@angular/material/card";
 import { L10n, loadCldr } from '@syncfusion/ej2-base';
+
+import { CheckBoxModule } from '@syncfusion/ej2-angular-buttons';
 import frNumberData from '@syncfusion/ej2-cldr-data/main/fr/numbers.json';
 import frtimeZoneData from '@syncfusion/ej2-cldr-data/main/fr/timeZoneNames.json';
 import frGregorian from '@syncfusion/ej2-cldr-data/main/fr/ca-gregorian.json';
 import frNumberingSystem from '@syncfusion/ej2-cldr-data/supplemental/numberingSystems.json';
-import { DataManager, ODataV4Adaptor, Query } from '@syncfusion/ej2-data';
+import { DataManager, ODataV4Adaptor } from '@syncfusion/ej2-data';
 import { RuntimeEnvService } from 'src/app/services/runtime-env.service';
 import { DatePipe } from '@angular/common';
-import { PlanningService, ProgrammeDTO2 } from 'src/app/core/helios-api-client';
-import { toSignal } from '@angular/core/rxjs-interop';
-import { AsyncSelectComponent, SelectedOption } from "src/app/components/async-select/async-select.component";
-import { map, take } from 'rxjs';
-import { V } from '@angular/cdk/keycodes';
+import { FormsModule } from '@angular/forms';
+import { CentreDTO, FlatProgrammeDTO } from 'src/app/core/helios-api-client';
+import { AppBarModule, ToolbarModule, ContextMenuModule } from '@syncfusion/ej2-angular-navigations';
+import { Ressources, RessourcesPickerComponent } from "./ressources-picker/ressources-picker.component";
+import { MatIconModule } from "@angular/material/icon";
+import { MatButtonModule } from '@angular/material/button';
+import { MatDivider } from "@angular/material/divider";
+import { IconCalendarFilled } from 'angular-tabler-icons/icons';
+import { TablerIconComponent, TablerIconsModule } from "angular-tabler-icons";
+import { MatCheckbox } from "@angular/material/checkbox";
 // Chargez les données CLDR
 loadCldr(frNumberData, frtimeZoneData, frGregorian, frNumberingSystem);
 L10n.load({
@@ -32,15 +39,41 @@ L10n.load({
     }
   }
 });
+
+
 @Component({
   selector: 'app-planning',
-  imports: [ScheduleModule, MatCardModule, DatePipe, AsyncSelectComponent],
+  imports: [ScheduleModule, MatCardModule, DatePipe, AppBarModule,
+    ToolbarModule, ContextMenuModule, CheckBoxModule, RessourcesPickerComponent, MatIconModule, MatButtonModule, MatDivider, TablerIconsModule, MatCheckbox, FormsModule],
   standalone: true,
   templateUrl: './planning.component.html',
   styleUrl: './planning.component.scss',
   providers: [DayService, WeekService, WorkWeekService, MonthService, AgendaService, MonthAgendaService, TimelineViewsService, TimelineMonthService, TimelineYearService]
 })
 export class PlanningComponent {
+
+  centreR = "Centre_rsrc";
+  programmeR = "Programme_rsrc";
+  @ViewChild('scheduleObj') scheduleObj: ScheduleComponent;
+
+
+  constructor() {
+    effect(() => {
+      const currentView = this.currentView();
+      const vchrono = this.vchrono();
+      if (vchrono) {
+        if(currentView === 'Agenda') {
+          this.scheduleObj.currentView = 'MonthAgenda';
+          return;
+        }
+        this.scheduleObj.currentView = ('Timeline' + currentView) as View;
+      } else {
+        this.scheduleObj.currentView = this.currentView();
+      }
+    });
+  }
+
+
 
   readonly env = inject(RuntimeEnvService);
   private dataManager: DataManager = new DataManager({
@@ -64,43 +97,32 @@ export class PlanningComponent {
       endTime: { name: 'fin' },
     },
   };
-  public groupBy: GroupModel = {
-    resources: ['Programme'],
-    byDate: false,
-    enableCompactView: false
-  };
-  planningService = inject(PlanningService);
-  Programme: string;
-  selectedProgrammeId: any;
 
-  programmes = toSignal(
-    this.planningService.apiPlanningProgrammesGet().pipe(
-      map(x => ({ data: x, loading: false })),
-      take(1)
-    ),
-    { initialValue: { data: [], loading: true } }
-  );
-  programmeDataSource = computed(() => this.programmes().data);
-  programmeOptions = computed(() => this.programmes().data.map(p => ({ label: p.libelle, value: p })));
-  programmeLoading = computed(() => this.programmes().loading);
-  @ViewChild('scheduleObj')
-  public scheduleObj?: ScheduleComponent;
-
-
-
-  onProgrammeSelection(value: SelectedOption<ProgrammeDTO2>) {
-    if (!this.scheduleObj) return;
-
-    if (value.checked == true) {
-      console.log("add resource", value);
-      this.scheduleObj.addResource(value.options, 'Programme', 0);
+  selectedCentres = computed(() => this.resourcesPicked()?.map(r => r.centre));
+  selectedProgrammes = computed(() => this.resourcesPicked()?.flatMap(r => r.programmes.map(p => ({ ...p, centreId: r.centre.id }))));
+  public groupBy = computed(() => {
+    const selectedCentres = this.selectedCentres();
+    const selectedProgrammes = this.selectedProgrammes();
+    let res = [];
+    if (selectedCentres && selectedCentres.length > 0) {
+      res.push(this.centreR);
     }
-    else {
-      console.log("remove resource", value);
-      this.scheduleObj.removeResource(value.options.id, 'Programme');
+    if (selectedProgrammes && selectedProgrammes.length > 0) {
+      res.push(this.programmeR);
     }
+    return {
+      resources: res,
+      byDate: false,
+      enableCompactView: false
+    };
+  });
 
+  programmeRessourceEnable = signal(true);
 
+  resourcesPicked = model<Ressources[]>([]);
+  vchrono = model(false);
+  currentView = signal<View>('Month');
+  changeview(view: View) {
+    this.currentView.set(view);
   }
-
 }

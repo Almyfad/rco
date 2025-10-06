@@ -24,8 +24,8 @@ export class AppSideLoginComponent {
   constructor(private settings: CoreService, private router: Router) {
     effect(() => {
       const isLoading = this.authService.isLoggingIn();
-      this.isloading.set(isLoading);
       const isLoggedIn = this.authService.isLoggedIn();
+      this.isloading.set(isLoading);
       if (isLoggedIn) {
         this.router.navigate(['/']);
         return;

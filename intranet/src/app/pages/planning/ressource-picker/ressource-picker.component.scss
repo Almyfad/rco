@@ -1,0 +1,11 @@
+@import '../../../../assets/scss/variables';
+
+.all {
+    color: $success;
+}
+.none {
+    color: $error ;
+}
+.normal {
+    color: $primary;
+}

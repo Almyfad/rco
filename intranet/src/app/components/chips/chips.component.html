@@ -1,0 +1,8 @@
+<div (click)="onChipClick()" class="chip" [class.selected]="selected()">
+    @if(icon) {
+        <mat-icon class="chip-icon">
+            {{icon}}
+        </mat-icon>
+    }
+    <span class="chip-label">{{label}}</span>
+</div>
