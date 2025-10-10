@@ -1,4 +1,4 @@
-import { Component, computed, input, model } from '@angular/core';
+import { Component, computed, effect, input, model } from '@angular/core';
 import { CentreProgrammeDTO, ProgrammeDTO2 } from 'src/app/core/helios-api-client/model/models';
 import { MatMenuModule } from "@angular/material/menu";
 import { ChipsComponent } from "src/app/components/chips/chips.component";
@@ -11,6 +11,7 @@ import { MatIconModule } from "@angular/material/icon";
   styleUrl: './ressource-picker.component.scss'
 })
 export class RessourcePickerComponent {
+  programme = input<boolean>(false);
   deselectAll() {
     this.ressourcePicked.set([]);
   }
@@ -39,4 +40,23 @@ export class RessourcePickerComponent {
   }
   );
 
+  centreSelected = model<boolean>(false);
+  /**
+   *
+   */
+  constructor() {
+    effect(() => {
+      const centreSelected = this.centreSelected();
+      if (centreSelected) {
+        this.ressourcePicked.set(this.centre().programmes ?? []);
+      } else {
+        this.ressourcePicked.set([]);
+      }
+    });
+    effect(() => {
+      const allProgrammes = this.centre().programmes ?? [];
+      const pickedProgrammes = this.ressourcePicked() ?? [];
+      this.centreSelected.set(pickedProgrammes.length === allProgrammes.length && allProgrammes.length > 0);
+    });
+  }
 }

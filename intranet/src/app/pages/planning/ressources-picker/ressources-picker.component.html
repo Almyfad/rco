@@ -5,13 +5,18 @@
 
     @for(centre of centres.value();track centre) {
     @if(ressourcesPicked()[centre.id!]) {
-    <app-ressource-picker [centre]="centre" [(ressourcePicked)]="ressourcesPicked()[centre.id!]">
+    <app-ressource-picker [centre]="centre" [(ressourcePicked)]="ressourcesPicked()[centre.id!]"
+        [programme]="programme()">
 
     </app-ressource-picker>
     }
     }
     <span>
-        {{allprogrammesCount()}} sélectionné{{allprogrammesCount() > 1 ? 's' : '' }}
+        @if(programme()) {
+        {{allprogrammesCount()}} programme{{allprogrammesCount() > 1 ? 's' : '' }} sélectionné{{allprogrammesCount() > 1 ? 's' : '' }}
+        } @else {
+        {{selectedCentresCount()}} centre{{selectedCentresCount() > 1 ? 's' : '' }} sélectionné{{selectedCentresCount() > 1 ? 's' : '' }}
+        }
     </span>
     <!-- Actions globales -->
     <div class="global-actions">

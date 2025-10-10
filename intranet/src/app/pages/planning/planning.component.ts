@@ -103,11 +103,12 @@ export class PlanningComponent {
   public groupBy = computed(() => {
     const selectedCentres = this.selectedCentres();
     const selectedProgrammes = this.selectedProgrammes();
+    const vprogramme = this.vprogramme();
     let res = [];
     if (selectedCentres && selectedCentres.length > 0) {
       res.push(this.centreR);
     }
-    if (selectedProgrammes && selectedProgrammes.length > 0) {
+    if (selectedProgrammes && selectedProgrammes.length > 0 && vprogramme) {
       res.push(this.programmeR);
     }
     return {
@@ -121,6 +122,7 @@ export class PlanningComponent {
 
   resourcesPicked = model<Ressources[]>([]);
   vchrono = model(false);
+  vprogramme = model(false);
   currentView = signal<View>('Month');
   changeview(view: View) {
     this.currentView.set(view);

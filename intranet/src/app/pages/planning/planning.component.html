@@ -37,8 +37,8 @@
                 <div>Vue chronologique</div>
             </div>
             <div class="vchrono">
-                <mat-checkbox [checked]="true"></mat-checkbox>
-                <div>Par centres</div>
+                <mat-checkbox [(ngModel)]="vprogramme"></mat-checkbox>
+                <div>Programmes</div>
             </div>
             <div class="vchrono">
                 <mat-checkbox [checked]="true"></mat-checkbox>
@@ -48,7 +48,7 @@
         <div class="centremenu p-8">
 
             <h3 class="m-8 text-center">Centres</h3>
-            <app-ressources-picker [(ressources)]="resourcesPicked"></app-ressources-picker>
+            <app-ressources-picker [(ressources)]="resourcesPicked" [programme]="vprogramme()"></app-ressources-picker>
         </div>
         <ejs-schedule #scheduleObj locale="fr" [eventSettings]="eventSettings" [startHour]="startHour"
             [endHour]="endHour" [group]="groupBy()" [enableAdaptiveUI]="enableAdaptiveUI">

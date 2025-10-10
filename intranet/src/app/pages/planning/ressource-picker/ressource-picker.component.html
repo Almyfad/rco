@@ -1,6 +1,6 @@
+@if(programme()) {
 <app-chips [autoupdate]="false" [label]="centre().libelle ??''" [selected]="selected()"
     [matMenuTriggerFor]="menu"></app-chips>
-
 <mat-menu #menu="matMenu">
     <button mat-menu-item (click)="selectAll()">
         <span>Tous</span>
@@ -20,3 +20,6 @@
         <mat-icon class="none">close</mat-icon>
     </button>
 </mat-menu>
+} @else {
+<app-chips [autoupdate]="true" [label]="centre().libelle ??''" [(selected)]="centreSelected"></app-chips>
+}

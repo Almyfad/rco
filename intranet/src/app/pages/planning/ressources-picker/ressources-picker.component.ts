@@ -1,4 +1,4 @@
-import { Component, computed, effect, inject, model, ModelSignal, signal, WritableSignal } from '@angular/core';
+import { Component, computed, effect, inject, input, model, ModelSignal, signal, WritableSignal } from '@angular/core';
 import { RessourcePickerComponent } from "../ressource-picker/ressource-picker.component";
 import { CentreDTO, FlatProgrammeDTO, PlanningService, ProgrammeDTO2, RegistreService } from 'src/app/core/helios-api-client';
 import { rxResource } from '@angular/core/rxjs-interop';
@@ -61,7 +61,6 @@ export class RessourcesPickerComponent {
     const picked = this._ressourcesPicked();
     const centres = this.centres.value();
     const ressources: Ressources[] = [];
-    
     for (const centreId in picked) {
       if (picked.hasOwnProperty(centreId)) {
         const programmes = picked[centreId]();
@@ -79,10 +78,13 @@ export class RessourcesPickerComponent {
 
   // Model public exposé au parent
   ressources = model<Ressources[]>([]);
-
+  programme = input<boolean>(false);
   allprogrammesCount = computed(() => {
     const all = this.ressources().flatMap(r => r.programmes);
     return all.length;
+  });
+  selectedCentresCount = computed(() => {
+    return this.ressources().length;
   });
 
 
@@ -112,6 +114,10 @@ export class RessourcesPickerComponent {
     effect(() => {
       const newRessources = this._ressources();
       this.ressources.set(newRessources);
+    });
+    effect(() => {
+      const vprogramme = this.programme();
+      this.deselectAll();
     });
   }
 }
