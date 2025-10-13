@@ -79,10 +79,13 @@ export class PlanningComponent {
   public onPopupOpen(args: PopupOpenEventArgs): void {
     this.planningModuleService.popupopen.set(args);
     args.cancel = true;
-    this.sideNavService.setTitle(args.type === 'Editor' ? (args.data as any).libelle || 'Nouvel événement' : 'Détails de l`événement');
-    this.sideNavService.setWidth('620px');
-    this.sideNavService.setComponent(EventFormComponent);
-    this.sideNavService.open();
+    
+    // Chaîner les appels pour éviter plusieurs cycles de détection de changement
+    this.sideNavService
+      .setTitle(args.type === 'Editor' ? (args.data as any).libelle || 'Nouvel événement' : 'Détails de l`événement')
+      .setWidth('620px')
+      .setComponent(EventFormComponent)
+      .open();
   }
   openNewEventDialog() {
     this.scheduleObj.openEditor({'newEvent': {}}, 'Add');

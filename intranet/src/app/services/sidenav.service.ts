@@ -1,5 +1,5 @@
 import { Injectable, ViewContainerRef, ComponentRef, Type, signal } from '@angular/core';
-import { BehaviorSubject, Observable } from 'rxjs';
+import { BehaviorSubject, Observable, Subscription } from 'rxjs';
 import { AppSettings } from '../config';
 import { CoreService } from './core.service';
 
@@ -12,6 +12,7 @@ export class SidenavService {
     private componentRefSubject = new BehaviorSubject<ComponentRef<any> | null>(null);
     private viewContainerRef?: ViewContainerRef;
     private optionsChangeSubject = new BehaviorSubject<AppSettings | null>(null);
+    private optionsSubscription?: Subscription;
     title = signal<string>('Settings');
     width = signal<string>('300px');
     // Observables publics
@@ -33,12 +34,17 @@ export class SidenavService {
      * Ouvre la sidenav
      */
     open(delay: number = 0): SidenavService {
+        // Utiliser requestAnimationFrame pour une ouverture plus fluide
         if (delay >= 500) {
             setTimeout(() => {
-                this.isOpenSubject.next(true);
+                requestAnimationFrame(() => {
+                    this.isOpenSubject.next(true);
+                });
             }, delay);
         } else {
-            this.isOpenSubject.next(true);
+            requestAnimationFrame(() => {
+                this.isOpenSubject.next(true);
+            });
         }
         return this;
     }
@@ -85,26 +91,39 @@ export class SidenavService {
             return this;
         }
 
-        // Nettoie le composant précédent
-        this.clearComponent();
-
-        // Crée le nouveau composant
-        const componentRef = this.viewContainerRef.createComponent<T>(componentType);
-
-        // Applique les inputs si fournis
-        if (inputs) {
-            Object.assign(componentRef.instance as object, inputs);
+        // Éviter la re-création si c'est le même composant
+        if (this.currentComponentSubject.value === componentType) {
+            return this;
         }
 
-        // Écoute les changements d'options si le composant a un EventEmitter optionsChange
-        if ((componentRef.instance as any).optionsChange) {
-            (componentRef.instance as any).optionsChange.subscribe((options: AppSettings) => {
-                this.handleOptionsChange(options);
-            });
-        }
+        // Utiliser requestAnimationFrame pour éviter les blocages
+        requestAnimationFrame(() => {
+            // Nettoie le composant précédent
+            this.clearComponent();
 
-        this.componentRefSubject.next(componentRef);
-        this.currentComponentSubject.next(componentType);
+            // Crée le nouveau composant
+            const componentRef = this.viewContainerRef!.createComponent<T>(componentType);
+
+            // Applique les inputs si fournis
+            if (inputs) {
+                Object.assign(componentRef.instance as object, inputs);
+            }
+
+            // Écoute les changements d'options si le composant a un EventEmitter optionsChange
+            if ((componentRef.instance as any).optionsChange) {
+                // Nettoyer l'ancienne subscription
+                if (this.optionsSubscription) {
+                    this.optionsSubscription.unsubscribe();
+                }
+                
+                this.optionsSubscription = (componentRef.instance as any).optionsChange.subscribe((options: AppSettings) => {
+                    this.handleOptionsChange(options);
+                });
+            }
+
+            this.componentRefSubject.next(componentRef);
+            this.currentComponentSubject.next(componentType);
+        });
 
         return this;
     }
@@ -113,6 +132,12 @@ export class SidenavService {
      * Nettoie le composant actuel
      */
     clearComponent(): void {
+        // Nettoyer les subscriptions
+        if (this.optionsSubscription) {
+            this.optionsSubscription.unsubscribe();
+            this.optionsSubscription = undefined;
+        }
+
         const currentComponentRef = this.componentRefSubject.value;
         if (currentComponentRef) {
             currentComponentRef.destroy();
