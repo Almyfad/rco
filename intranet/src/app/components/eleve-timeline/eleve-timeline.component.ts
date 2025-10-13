@@ -9,7 +9,7 @@ import { DatePipe } from '@angular/common';
 import { MatDatepickerModule } from "@angular/material/datepicker";
 import { MatNativeDateModule } from '@angular/material/core';
 
-import { AsyncSelectComponent, SelectOption } from "../async-select/async-select.component";
+import { TimelineTypeSelectComponent } from "../async-select/timeline-type-select.component";
 import { RegistreModuleService } from 'src/app/pages/registre/services/registre-module.service';
 import { TablerIconsModule } from "angular-tabler-icons";
 import { MatIconModule } from "@angular/material/icon";
@@ -27,7 +27,7 @@ import { SnackBarService } from 'src/app/layouts/full/shared/snack-bar/snack-bar
     DatePipe,
     MatNativeDateModule,
     MatDatepickerModule,
-    AsyncSelectComponent,
+    TimelineTypeSelectComponent,
     TablerIconsModule,
     MatIconModule
   ],
@@ -45,15 +45,6 @@ export class EleveTimelineComponent {
   timeline = model.required<TimelineMembreDTO[] | null>();
 
 
-  typeoptions = computed<SelectOption<TimelineMembreType>[]>(() => {
-    const data = this.rs.timelineEventTypes().data;
-    return data.map((item) => ({
-      label: item.description ?? "Unknown",
-      value: item
-    }));
-  });
-
-  isloading = computed(() => this.rs.timelineEventTypes().loading);
 
   private _formBuilder = inject(FormBuilder);
 

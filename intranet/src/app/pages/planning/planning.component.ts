@@ -1,5 +1,5 @@
-import { Component, computed, effect, inject, model, signal, ViewChild } from '@angular/core';
-import { DayService, WeekService, WorkWeekService, MonthService, AgendaService, MonthAgendaService, TimelineViewsService, TimelineMonthService, ScheduleModule, EventSettingsModel, TimelineYearService, GroupModel, ScheduleComponent, View } from '@syncfusion/ej2-angular-schedule';
+import { Component, computed, effect, inject, model, Signal, signal, ViewChild } from '@angular/core';
+import { DayService, WeekService, WorkWeekService, MonthService, AgendaService, MonthAgendaService, TimelineViewsService, TimelineMonthService, ScheduleModule, EventSettingsModel, TimelineYearService, GroupModel, ScheduleComponent, View, DragAndDropService, ResizeService, PopupOpenEventArgs, CellClickEventArgs, SelectEventArgs } from '@syncfusion/ej2-angular-schedule';
 import { MatCardModule } from "@angular/material/card";
 import { L10n, loadCldr } from '@syncfusion/ej2-base';
 
@@ -11,16 +11,19 @@ import frNumberingSystem from '@syncfusion/ej2-cldr-data/supplemental/numberingS
 import { DataManager, ODataV4Adaptor } from '@syncfusion/ej2-data';
 import { RuntimeEnvService } from 'src/app/services/runtime-env.service';
 import { DatePipe } from '@angular/common';
-import { FormsModule } from '@angular/forms';
-import { CentreDTO, FlatProgrammeDTO } from 'src/app/core/helios-api-client';
+import { FormBuilder, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
 import { AppBarModule, ToolbarModule, ContextMenuModule } from '@syncfusion/ej2-angular-navigations';
 import { Ressources, RessourcesPickerComponent } from "./ressources-picker/ressources-picker.component";
 import { MatIconModule } from "@angular/material/icon";
 import { MatButtonModule } from '@angular/material/button';
 import { MatDivider } from "@angular/material/divider";
-import { IconCalendarFilled } from 'angular-tabler-icons/icons';
 import { TablerIconComponent, TablerIconsModule } from "angular-tabler-icons";
 import { MatCheckbox } from "@angular/material/checkbox";
+import { MatFormFieldModule } from "@angular/material/form-field";
+import { MatInputModule } from '@angular/material/input';
+import { SidenavService } from 'src/app/services/sidenav.service';
+import { EventFormComponent } from './event-form/event-form.component';
+import { PlanningModuleService } from './planning-module.service';
 // Chargez les données CLDR
 loadCldr(frNumberData, frtimeZoneData, frGregorian, frNumberingSystem);
 L10n.load({
@@ -33,6 +36,10 @@ L10n.load({
       'today': 'Aujourd`hui',
       'timelineMonth': 'Mois chronologique',
       'timelineYear': 'Année chronologique',
+      'saveButton': 'Ajouter',
+      'cancelButton': 'Fermer',
+      'deleteButton': 'Supprimer',
+      'newEvent': 'Ajouter un événement',
     },
     'calendar': {
       'today': 'Aujourd`hui'
@@ -44,13 +51,42 @@ L10n.load({
 @Component({
   selector: 'app-planning',
   imports: [ScheduleModule, MatCardModule, DatePipe, AppBarModule,
-    ToolbarModule, ContextMenuModule, CheckBoxModule, RessourcesPickerComponent, MatIconModule, MatButtonModule, MatDivider, TablerIconsModule, MatCheckbox, FormsModule],
+    ToolbarModule, ContextMenuModule, CheckBoxModule, RessourcesPickerComponent,
+   ReactiveFormsModule, MatInputModule, MatIconModule,
+    MatButtonModule, MatDivider, TablerIconsModule, MatCheckbox, FormsModule, MatFormFieldModule],
   standalone: true,
   templateUrl: './planning.component.html',
   styleUrl: './planning.component.scss',
-  providers: [DayService, WeekService, WorkWeekService, MonthService, AgendaService, MonthAgendaService, TimelineViewsService, TimelineMonthService, TimelineYearService]
+  providers: [DragAndDropService, ResizeService, DayService, WeekService, WorkWeekService, MonthService, AgendaService, MonthAgendaService, TimelineViewsService, TimelineMonthService, TimelineYearService]
 })
 export class PlanningComponent {
+  private sideNavService = inject(SidenavService);
+  private planningModuleService = inject(PlanningModuleService);
+  onCellclick($event: CellClickEventArgs): void {
+    this.planningModuleService.cellsclick.set($event);
+    this.scheduleObj.openEditor({}, 'Add');
+  }
+  
+  onRangeSelect($event: SelectEventArgs): void {
+    if ($event.requestType !== "cellSelect") return;
+    if (!$event.data) return;
+    this.planningModuleService.selectevent.set($event);
+    this.scheduleObj.openEditor({}, 'Add');
+    console.log('Range selected:', $event);
+
+  }
+  
+  public onPopupOpen(args: PopupOpenEventArgs): void {
+    this.planningModuleService.popupopen.set(args);
+    args.cancel = true;
+    this.sideNavService.setTitle(args.type === 'Editor' ? (args.data as any).libelle || 'Nouvel événement' : 'Détails de l`événement');
+    this.sideNavService.setWidth('620px');
+    this.sideNavService.setComponent(EventFormComponent);
+    this.sideNavService.open();
+  }
+  openNewEventDialog() {
+    this.scheduleObj.openEditor({'newEvent': {}}, 'Add');
+  }
 
   centreR = "Centre_rsrc";
   programmeR = "Programme_rsrc";
@@ -62,7 +98,7 @@ export class PlanningComponent {
       const currentView = this.currentView();
       const vchrono = this.vchrono();
       if (vchrono) {
-        if(currentView === 'Agenda') {
+        if (currentView === 'Agenda') {
           this.scheduleObj.currentView = 'MonthAgenda';
           return;
         }
@@ -72,8 +108,6 @@ export class PlanningComponent {
       }
     });
   }
-
-
 
   readonly env = inject(RuntimeEnvService);
   private dataManager: DataManager = new DataManager({
@@ -99,6 +133,7 @@ export class PlanningComponent {
   };
 
   selectedCentres = computed(() => this.resourcesPicked()?.map(r => r.centre));
+
   selectedProgrammes = computed(() => this.resourcesPicked()?.flatMap(r => r.programmes.map(p => ({ ...p, centreId: r.centre.id }))));
   public groupBy = computed(() => {
     const selectedCentres = this.selectedCentres();
@@ -127,4 +162,7 @@ export class PlanningComponent {
   changeview(view: View) {
     this.currentView.set(view);
   }
+
+
+
 }

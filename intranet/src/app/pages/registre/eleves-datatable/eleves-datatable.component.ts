@@ -1,5 +1,5 @@
 import { Component, inject, OnInit, OnDestroy, computed, Signal, Input, signal, effect } from '@angular/core';
-import { MembreDTO, RegistreService, DataPagerOfMembreDTO, MembreFiltre, TypeMembreDTO, NullableOfStatutsMembres, CentreDTO } from 'src/app/core/helios-api-client';
+import { MembreDTO, RegistreService, DataPagerOfMembreDTO, MembreFiltre, TypeMembreDTO, NullableOfStatutsMembres, CentreDTO, StatutMembreDTO } from 'src/app/core/helios-api-client';
 import { MatTableDataSource } from '@angular/material/table';
 import { SidenavService } from 'src/app/services/sidenav.service';
 import { EleveDetailComponent } from '../eleve-detail/eleve-detail.component';
@@ -11,15 +11,17 @@ import { MatPaginatorModule, PageEvent } from '@angular/material/paginator';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { MatIconModule } from '@angular/material/icon';
-import { ReactiveFormsModule, FormControl } from '@angular/forms';
+import { ReactiveFormsModule, FormsModule, FormControl } from '@angular/forms';
 import { MaterialModule } from 'src/app/material.module';
 import { CommonModule } from '@angular/common';
 import { StatutMembreComponent,getStatusColor,getStatusIcon } from '../statut-membre/statut-membre.component';
-import { AsyncSelectComponent, SelectedOption, SelectOption } from 'src/app/components/async-select/async-select.component';
+import { AsyncSelectComponent } from 'src/app/components/async-select/async-select.component';
 import { debounceTime, distinctUntilChanged, Subject, takeUntil, Observable } from 'rxjs';
 import { RegistreModuleService } from '../services/registre-module.service';
 import { TablerIconsModule } from "angular-tabler-icons";
 import { EleveFormComponent } from '../form/eleve-form/eleve-form.component';
+import { CentreSelectComponent, TypeMembreSelectComponent, StatusSelectComponent } from "src/app/components/async-select";
+import { rxResource } from "@angular/core/rxjs-interop";
 
 @Component({
   selector: 'app-eleves-datatable',
@@ -32,10 +34,13 @@ import { EleveFormComponent } from '../form/eleve-form/eleve-form.component';
     MatInputModule,
     MatIconModule,
     ReactiveFormsModule,
+    FormsModule,
     MaterialModule,
     StatutMembreComponent,
-    AsyncSelectComponent,
     TablerIconsModule,
+    CentreSelectComponent,
+    TypeMembreSelectComponent,
+    StatusSelectComponent
 ],
   templateUrl: './eleves-datatable.component.html',
   styleUrl: './eleves-datatable.component.scss'
@@ -52,13 +57,6 @@ export class ElevesDataTableComponent implements OnInit, OnDestroy {
 
 
   displayedColumns: string[] = ['statut', 'nom', 'prenom', 'email', 'telephone', 'adresse', 'ville', 'pays'];
-  dataSource = new MatTableDataSource<MembreDTO>([]);
-  loading = false;
-
-  // Propriétés de pagination
-  totalElements = 0;
-  pageSize = 50;
-  currentPage = 0;
   pageSizeOptions = [10, 25, 50, 100];
 
   // Contrôles de filtrage
@@ -68,72 +66,101 @@ export class ElevesDataTableComponent implements OnInit, OnDestroy {
   villeFilterControl = new FormControl('');
   paysFilterControl = new FormControl('');
   
-  // Propriétés pour le filtre centre
-  centresLoading = computed(() => this.registre.centres().loading);
-  centresOptions = computed(() => {
-    const centres = this.registre.centres();
-    return centres.data.map(centre => ({
-      value: centre.libelle || 'null',
-      label: centre.libelle || 'Centre sans nom'
-    }));
-  });
-  selectedCentres: string[] = [];
-  selectedCentresSignal = signal<string | string[] | null>(null);
-
-  // Propriétés pour le filtre aspects (types membres)
-  aspectsLoading = computed(() => this.registre.aspects().loading);
-  aspectsOptions = computed(() => {
-    const aspects = this.registre.aspects();
-    return aspects.data.map(aspect => ({
-      value: aspect.id || 0,
-      label: aspect.libelle || 'Type membre sans nom'
-    }));
-  });
+  // Signaux pour les filtres de sélection (writable signals)
+  centres = signal<CentreDTO[] | null>(null);
+  typesmembres = signal<TypeMembreDTO[] | null>(null);
+  status = signal<StatutMembreDTO[] | null>(null);
   
-  selectedAspects: number[] = [];
-  selectedAspectsSignal = signal<number | number[] | null>(null);
-
-  // Propriétés pour le filtre statuts
-  statutsLoading = computed(() => this.registre.statuts().loading);
-  statutsOptions = computed(() => {
-    const statuts = this.registre.statuts();
-    return statuts.data.map(statut => ({
-      value: statut.id || 0,
-      label: statut.libelle || 'Statut sans nom',
-      icon: getStatusIcon(statut.code as NullableOfStatutsMembres),
-      iconColor: getStatusColor(statut.code as NullableOfStatutsMembres)
-    }));
+  // Computed pour récupérer les valeurs sélectionnées
+  selectedCentres = computed(() => {
+    return this.centres() || [];
   });
-  selectedStatuts: number[] = [];
-  selectedStatutsSignal = signal<number | number[] | null>(null);
+
+  selectedAspects = computed(() => {
+    return this.typesmembres() || [];
+  });
+
+  selectedStatuts = computed(() => {
+    return this.status() || [];
+  });
+
+  // Signals pour la pagination
+  currentPageSignal = signal(0);
+  pageSizeSignal = signal(50);
+
+  // Signals pour les filtres de texte avec debounce
+  nomFilter = signal('');
+  prenomFilter = signal('');
+  emailFilter = signal('');
+  villeFilter = signal('');
+  paysFilter = signal('');
+
+  // Computed pour le filtre complet
+  filter = computed(() => {
+    const filter: MembreFiltre = {};
+    
+    const nom = this.nomFilter().trim();
+    const prenom = this.prenomFilter().trim();
+    const email = this.emailFilter().trim();
+    const ville = this.villeFilter().trim();
+    const pays = this.paysFilter().trim();
+    
+    if (nom) filter.nom = nom;
+    if (prenom) filter.prenom = prenom;
+    if (email) filter.email = email;
+    if (ville) filter.ville = ville;
+    if (pays) filter.pays = pays;
+    
+    const centres = this.selectedCentres();
+    const aspects = this.selectedAspects();
+    const statuts = this.selectedStatuts();
+    
+    if (centres.length > 0) filter.l_centres = centres.map(c => c.libelle || '').filter(c => c);
+    if (aspects.length > 0) filter.l_aspects = aspects.map(a => a.id || 0).filter(a => a);
+    if (statuts.length > 0) filter.l_statuts = statuts.map(s => s.id || 0).filter(s => s);
+    
+    return filter;
+  });
+
+  // Request parameters pour rxResource
+  requestParams = computed(() => ({
+    page: this.currentPageSignal() + 1,
+    size: this.pageSizeSignal(),
+    filter: this.filter()
+  }));
+
+  // rxResource pour les données
+  elevesResource = rxResource({
+    request: () => this.requestParams(),
+    loader: ({ request }) => this.fetch(request.page, request.size, request.filter)
+  });
+
+  // Computed properties pour l'affichage
+  dataSource = computed(() => {
+    const data = this.elevesResource.value()?.data || [];
+    const matTableDataSource = new MatTableDataSource<MembreDTO>(data);
+    return matTableDataSource;
+  });
+
+  totalElements = computed(() => this.elevesResource.value()?.total || 0);
+  loading = computed(() => this.elevesResource.isLoading());
+  currentPage = computed(() => this.currentPageSignal());
+  pageSize = computed(() => this.pageSizeSignal());
 
   // Propriété pour le collapse des filtres
   filtersExpanded = false;
 
   constructor() {
+    // Effect pour reset la page lors du changement de filtres
     effect(() => {
-      const selectedCentres = this.selectedCentresSignal();
-      console.log('ElevesDataTableComponent - effect selectedCentresSignal - selectedCentres:', selectedCentres);
-      this.selectedCentres = Array.isArray(selectedCentres) ? selectedCentres : (selectedCentres ? [selectedCentres] : []);
-      this.currentPage = 0; 
-      this.fetchEleves();
-    });
-    effect(() => {
-      const selectedAspects = this.selectedAspectsSignal();
-      this.selectedAspects = Array.isArray(selectedAspects) ? selectedAspects : (selectedAspects ? [selectedAspects] : []);
-      this.currentPage = 0; 
-      this.fetchEleves();
-    });
-    effect(() => {
-      const selectedStatuts = this.selectedStatutsSignal();
-      this.selectedStatuts = Array.isArray(selectedStatuts) ? selectedStatuts : (selectedStatuts ? [selectedStatuts] : []);
-      this.currentPage = 0; 
-      this.fetchEleves();
-    });
+      // Écouter tous les changements de filtres
+      this.filter();
+      // Reset à la première page
+      this.currentPageSignal.set(0);
+    }, { allowSignalWrites: true });
   }
 
   ngOnInit(): void {
-    this.fetchEleves();
     this.setupFilters();
     
     // Écouter les changements de paramètres d'URL pour détecter l'ID
@@ -154,77 +181,70 @@ export class ElevesDataTableComponent implements OnInit, OnDestroy {
     // Configuration du debounce pour le filtre nom
     this.nomFilterControl.valueChanges
       .pipe(
-        debounceTime(300), // Attendre 300ms après la dernière frappe
-        distinctUntilChanged(), // Ne déclencher que si la valeur a changé
+        debounceTime(300),
+        distinctUntilChanged(),
         takeUntil(this.destroy$)
       )
       .subscribe(value => {
-        // Ne déclencher la recherche qu'à partir de 3 caractères ou si le champ est vide
         if (!value || value.trim().length === 0 || value.trim().length >= 3) {
-          this.currentPage = 0; // Reset à la première page lors d'un nouveau filtre
-          this.fetchEleves();
+          this.nomFilter.set(value || '');
         }
       });
 
     // Configuration du debounce pour le filtre prénom
     this.prenomFilterControl.valueChanges
       .pipe(
-        debounceTime(300), // Attendre 300ms après la dernière frappe
-        distinctUntilChanged(), // Ne déclencher que si la valeur a changé
+        debounceTime(300),
+        distinctUntilChanged(),
         takeUntil(this.destroy$)
       )
       .subscribe(value => {
-        // Ne déclencher la recherche qu'à partir de 3 caractères ou si le champ est vide
         if (!value || value.trim().length === 0 || value.trim().length >= 3) {
-          this.currentPage = 0; // Reset à la première page lors d'un nouveau filtre
-          this.fetchEleves();
+          this.prenomFilter.set(value || '');
         }
       });
 
     // Configuration du debounce pour le filtre email
     this.emailFilterControl.valueChanges
       .pipe(
-        debounceTime(300), // Attendre 300ms après la dernière frappe
-        distinctUntilChanged(), // Ne déclencher que si la valeur a changé
+        debounceTime(300),
+        distinctUntilChanged(),
         takeUntil(this.destroy$)
       )
       .subscribe(value => {
-        // Ne déclencher la recherche qu'à partir de 3 caractères ou si le champ est vide
         if (!value || value.trim().length === 0 || value.trim().length >= 3) {
-          this.currentPage = 0; // Reset à la première page lors d'un nouveau filtre
-          this.fetchEleves();
+          this.emailFilter.set(value || '');
         }
       });
 
     // Configuration du debounce pour le filtre ville
     this.villeFilterControl.valueChanges
       .pipe(
-        debounceTime(300), // Attendre 300ms après la dernière frappe
-        distinctUntilChanged(), // Ne déclencher que si la valeur a changé
+        debounceTime(300),
+        distinctUntilChanged(),
         takeUntil(this.destroy$)
       )
       .subscribe(value => {
-        // Ne déclencher la recherche qu'à partir de 3 caractères ou si le champ est vide
         if (!value || value.trim().length === 0 || value.trim().length >= 3) {
-          this.currentPage = 0; // Reset à la première page lors d'un nouveau filtre
-          this.fetchEleves();
+          this.villeFilter.set(value || '');
         }
       });
 
     // Configuration du debounce pour le filtre pays
     this.paysFilterControl.valueChanges
       .pipe(
-        debounceTime(300), // Attendre 300ms après la dernière frappe
-        distinctUntilChanged(), // Ne déclencher que si la valeur a changé
+        debounceTime(300),
+        distinctUntilChanged(),
         takeUntil(this.destroy$)
       )
       .subscribe(value => {
-        // Ne déclencher la recherche qu'à partir de 3 caractères ou si le champ est vide
         if (!value || value.trim().length === 0 || value.trim().length >= 3) {
-          this.currentPage = 0; // Reset à la première page lors d'un nouveau filtre
-          this.fetchEleves();
+          this.paysFilter.set(value || '');
         }
       });
+
+    // Les signaux se mettent à jour automatiquement avec ngModel
+    // et déclenchent la mise à jour du rxResource via l'effect existant
   }
   addNewEleve() {
     this.registre.clearEleve();
@@ -234,55 +254,7 @@ export class ElevesDataTableComponent implements OnInit, OnDestroy {
       .setWidth('500px')
       .open();
   }
-  fetchEleves(): void {
-    this.loading = true;
-    
-    // Construction du filtre
-    const filter: MembreFiltre = {};
-    const nomValue = this.nomFilterControl.value?.trim();
-    const prenomValue = this.prenomFilterControl.value?.trim();
-    const emailValue = this.emailFilterControl.value?.trim();
-    const villeValue = this.villeFilterControl.value?.trim();
-    const paysValue = this.paysFilterControl.value?.trim();
-    
-    if (nomValue) {
-      filter.nom = nomValue;
-    }
-    if (prenomValue) {
-      filter.prenom = prenomValue;
-    }
-    if (emailValue) {
-      filter.email = emailValue;
-    }
-    if (villeValue) {
-      filter.ville = villeValue;
-    }
-    if (paysValue) {
-      filter.pays = paysValue;
-    }
-    if (this.selectedCentres && this.selectedCentres.length > 0) {
-      filter.l_centres = this.selectedCentres;
-    }
-    if (this.selectedAspects && this.selectedAspects.length > 0) {
-      filter.l_aspects = this.selectedAspects;
-    }
-    if (this.selectedStatuts && this.selectedStatuts.length > 0) {
-      filter.l_statuts = this.selectedStatuts;
-    }
 
-    // Page +1 car l'API semble utiliser une indexation basée sur 1
-    this.fetch(this.currentPage + 1, this.pageSize, filter)
-    .subscribe({
-      next: (result: DataPagerOfMembreDTO) => {
-        this.dataSource.data = result.data || [];
-        this.totalElements = result.total || 0;
-        this.loading = false;
-      },
-      error: () => {
-        this.loading = false;
-      }
-    });
-  }
 
 
   /**
@@ -290,9 +262,8 @@ export class ElevesDataTableComponent implements OnInit, OnDestroy {
    * @param event - Événement de pagination Material
    */
   onPageChange(event: PageEvent): void {
-    this.currentPage = event.pageIndex;
-    this.pageSize = event.pageSize;
-    this.fetchEleves();
+    this.currentPageSignal.set(event.pageIndex);
+    this.pageSizeSignal.set(event.pageSize);
   }
 
 

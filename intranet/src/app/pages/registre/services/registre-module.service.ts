@@ -1,7 +1,7 @@
 import { inject, Injectable, signal, computed, effect } from "@angular/core";
-import { toSignal } from "@angular/core/rxjs-interop";
+import { rxResource, toSignal } from "@angular/core/rxjs-interop";
 import { firstValueFrom, map, take } from "rxjs";
-import { FamilyDTO, MembreDTO, RegistreService, TimelineMembreDTO } from "src/app/core/helios-api-client";
+import { FamilyDTO, MembreDTO, PlanningService, RegistreService, TimelineMembreDTO } from "src/app/core/helios-api-client";
 
 export interface AsyncDataSource<T> {
     data: T[];
@@ -28,6 +28,7 @@ export class RegistreModuleService {
 
 
     private readonly registre = inject(RegistreService);
+    private readonly planning = inject(PlanningService);
 
     aspects = toSignal(
         this.registre.apiRegistreAspectsGet().pipe(
@@ -67,6 +68,28 @@ export class RegistreModuleService {
         ),
         { initialValue: { data: [], loading: true } }
     );
+
+
+    $centres = rxResource({
+        request: () => 0,
+        loader: ({ request }) => this.registre.apiRegistreCentresGet()
+    });
+    $aspects = rxResource({
+        request: () => 0,
+        loader: ({ request }) => this.registre.apiRegistreAspectsGet()
+    });
+    $statuts = rxResource({
+        request: () => 0,
+        loader: ({ request }) => this.registre.apiRegistreStatutsGet()
+    });
+    $civilites = rxResource({
+        request: () => 0,
+        loader: ({ request }) => this.registre.apiRegistreCivilitesGet()
+    });
+    $timelineTypes = rxResource({
+        request: () => 0,
+        loader: ({ request }) => this.registre.apiRegistreTimelineTypesGet()
+    });
 
     // Signaux privés
     private selectedEleve = signal<MembreDTO | null>(null);

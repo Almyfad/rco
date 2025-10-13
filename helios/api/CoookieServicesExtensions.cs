@@ -18,7 +18,7 @@ public static class CoookieServicesExtensions
 #endif
        
        options.Cookie.Name = "helios";
-       options.ExpireTimeSpan = TimeSpan.FromMinutes(30);
+       options.ExpireTimeSpan = TimeSpan.FromMinutes(Jwt.expireMinutes);
        options.SlidingExpiration = true;
        options.Events = new CookieAuthenticationEvents
        {

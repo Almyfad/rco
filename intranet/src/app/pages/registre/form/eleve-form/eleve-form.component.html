@@ -253,7 +253,7 @@
     <button mat-raised-button color="primary" type="submit" (click)="onSubmit()"
       [disabled]="saving() || eleveForm.invalid">
       @if (saving()) {
-      <mat-spinner diameter="16"></mat-spinner>
+      <mat-spinner diameter="16" class="d-inline-block"></mat-spinner>
       }
       {{ isEditMode() ? 'Modifier' : 'Créer' }}
     </button>

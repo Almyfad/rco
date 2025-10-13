@@ -1,5 +1,3 @@
-
-
 <div class="bg-white rounded m-b-30">
 	<!-- En-tête cliquable -->
 	<div class="d-flex align-items-center justify-content-center p-x-24 p-y-16 gap-8 cursor-pointer"
@@ -52,29 +50,25 @@
 				<mat-icon matPrefix>public</mat-icon>
 			</mat-form-field>
 
-			<app-async-select class="col" label="Filtrer par centre" placeholder="Sélectionnez un ou plusieurs centres"
-				clearOptionText="Tous les centres" [multiple]="true" [options]="centresOptions()"
-				[loading]="centresLoading()" [(values)]="selectedCentresSignal">
-			</app-async-select>
+			<app-centre-select class="col" [multiple]="true" [(ngModel)]="centres">
+			</app-centre-select>
 
-			<app-async-select class="col" label="Filtrer par type membre" placeholder="Sélectionnez un ou plusieurs aspects"
-				clearOptionText="Tous les types" [multiple]="true" [options]="aspectsOptions()"
-				[loading]="aspectsLoading()" [(values)]="selectedAspectsSignal">
-			</app-async-select>
+			<app-type-membre-select class="col" [multiple]="true" [(ngModel)]="typesmembres">
+			</app-type-membre-select>
 
-			<app-async-select class="col" label="Filtrer par statut" placeholder="Sélectionnez un ou plusieurs statuts"
-				clearOptionText="Tous les statuts" [multiple]="true" [options]="statutsOptions()"
-				[loading]="statutsLoading()" [(values)]="selectedStatutsSignal">
-			</app-async-select>
+			<app-status-select class="col" [multiple]="true" [(ngModel)]="status">
+			</app-status-select>
 		</div>
 	</div>
 </div>
 <div class="d-flex justify-content-end gap-16 m-b-32">
-	<button mat-flat-button class="bg-secondary" (click)="addNewEleve()"><div class="d-flex align-items-center gap-8"><i-tabler name="user-plus"></i-tabler> Ajouter un élève</div></button>
+	<button mat-flat-button class="bg-secondary" (click)="addNewEleve()">
+		<div class="d-flex align-items-center gap-8"><i-tabler name="user-plus"></i-tabler> Ajouter un élève</div>
+	</button>
 </div>
 <div class="bg-white rounded m-b-30 overflow-hidden">
 	<div class="mat-elevation-z8 w-100">
-		<table mat-table [dataSource]="dataSource" class="full-width-table">
+		<table mat-table [dataSource]="dataSource()" class="full-width-table">
 			<!-- Statut Column -->
 			<ng-container matColumnDef="statut">
 				<th mat-header-cell *matHeaderCellDef></th>
@@ -127,10 +121,10 @@
 			<tr mat-row *matRowDef="let row; columns: displayedColumns;" (click)="openEleveDetail(row)"
 				class="clickable-row"></tr>
 		</table>
-		<mat-progress-bar *ngIf="loading" mode="indeterminate"></mat-progress-bar>
+		<mat-progress-bar *ngIf="loading()" mode="indeterminate"></mat-progress-bar>
 
 		<!-- Pagination -->
-		<mat-paginator [length]="totalElements" [pageSize]="pageSize" [pageIndex]="currentPage"
+		<mat-paginator [length]="totalElements()" [pageSize]="pageSize()" [pageIndex]="currentPage()"
 			[pageSizeOptions]="pageSizeOptions" [showFirstLastButtons]="true" (page)="onPageChange($event)"
 			aria-label="Sélectionner une page d'élèves">
 		</mat-paginator>

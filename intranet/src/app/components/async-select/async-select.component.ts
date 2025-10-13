@@ -1,21 +1,18 @@
-import { Component, computed, effect, EventEmitter, forwardRef, inject, Input, input, model, Output, signal } from '@angular/core';
+import { Component, computed, forwardRef, inject, Injector, Input, ResourceRef, runInInjectionContext } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { MatSelectChange, MatSelectModule } from '@angular/material/select';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatIconModule } from '@angular/material/icon';
-import { FormBuilder, FormControl, NG_VALUE_ACCESSOR, ReactiveFormsModule } from '@angular/forms';
+import { ControlValueAccessor, FormBuilder, FormControl, NG_VALUE_ACCESSOR, ReactiveFormsModule } from '@angular/forms';
 import { TablerIconsModule } from "angular-tabler-icons";
-
-export interface SelectOption<T> {
+import { rxResource, RxResourceOptions, } from "@angular/core/rxjs-interop";
+import { of } from 'rxjs';
+interface SelectOption<T> {
     value: T;
     label: string;
     icon?: string;
     iconColor?: string;
-}
-export interface SelectedOption<T> {
-    checked?: boolean;
-    options: T;
 }
 @Component({
     selector: 'app-async-select',
@@ -39,61 +36,74 @@ export interface SelectedOption<T> {
     templateUrl: './async-select.component.html',
     styleUrl: './async-select.component.scss'
 })
-export class AsyncSelectComponent<T> {
+export class AsyncSelectComponent<T> implements ControlValueAccessor {
     @Input() label: string = 'Sélectionner';
     @Input() placeholder: string = 'Choisissez une option';
+    @Input() clearOption: boolean = false;
     @Input() clearOptionText: string = 'Aucun filtre';
+    @Input() allOptions: boolean = false;
+    @Input() allOptionsText: string = 'Tous les éléments';
     @Input() multiple: boolean = false;
     @Input() compareWith?: (a: T | null, b: T | null) => boolean;
-    @Output() selectionChange = new EventEmitter<SelectedOption<T>>();
-    values = model<T | T[] | null>(this.multiple ? [] : null);
-    lastValues = signal<T | T[] | null>(this.multiple ? [] : null);
-    selectedValue = model<SelectedOption<T> | null>(null);
+    @Input() getLabel?: (a: T | null) => string;
+    
     readonly fb = inject(FormBuilder);
+    readonly injector = inject(Injector);
 
-    loading = input(false);
-    options = input.required<SelectOption<T>[] | null>();
+    // ControlValueAccessor callbacks
+    private onChange = (value: T | T[] | null) => {};
+    private onTouched = () => {};
 
+    private _dataSource!: ResourceRef<T[]>;
+    private rxsource!: ResourceRef<SelectOption<T>[]>;
+
+    @Input({ required: true })
+    get dataSource(): ResourceRef<T[]> {
+        return this._dataSource;
+    }
+
+    set dataSource(value: ResourceRef<T[]>) {
+        this._dataSource = value;
+        runInInjectionContext(this.injector, () => {
+            this.rxsource = rxResource({
+                request: () => value.value(),
+                loader: ({ request }) => {
+                    const mappedData = request?.map((item) => this.toSelectOption(item)) || [];
+                    return of(mappedData);
+                }
+            });
+        });
+    }
+
+    loading = computed(() => { return this.rxsource?.isLoading() || false; });
+    options = computed(() => {
+        if (this.rxsource?.error()) return [];
+        return this.rxsource?.value() || [];
+    })
     selectControl = this.fb.control<T | T[] | null>(this.multiple ? [] : null);
-    private isDisabled = false;
 
     constructor() {
-        effect(() => {
-            const currentValues = this.values();
-            this.selectControl.setValue(currentValues, { emitEvent: false });
-            this.lastValues.set(currentValues);
-        });
-
-        // Propager les changements du FormControl interne vers le form control parent
+        // Déléguer les changements du FormControl interne vers le parent
         this.selectControl.valueChanges.subscribe(value => {
-            this.values.set(value);
-
-            if (!this.multiple) return;
-            if (!Array.isArray(value)) return;
-
-            const selectedOptions: T[] = value as T[];
-            const lastValues = this.lastValues();
-            const added = selectedOptions.filter(v => !(lastValues as (T[] | null))?.some(lv => this.compareWithFn(v, lv)));
-            if (added.length > 0) {
-                this.selectionChange.emit({ options: added[0], checked: true });
-            }
-            const removed = (lastValues as (T[] | null))?.filter(lv => !selectedOptions.some(v => this.compareWithFn(v, lv)));
-            if (removed && removed.length > 0) {
-                this.selectionChange.emit({ options: removed[0], checked: false });
-            }
-            this.lastValues.set(this.values());
+            this.onChange(value);
         });
     }
 
+    // Implémentation de ControlValueAccessor
 
-    registerOnChange(fn: any): void {
+    writeValue(value: T | T[] | null): void {
+        this.selectControl.setValue(value, { emitEvent: false });
     }
 
-    registerOnTouched(fn: any): void {
+    registerOnChange(fn: (value: T | T[] | null) => void): void {
+        this.onChange = fn;
+    }
+
+    registerOnTouched(fn: () => void): void {
+        this.onTouched = fn;
     }
 
     setDisabledState(isDisabled: boolean): void {
-        this.isDisabled = isDisabled;
         if (isDisabled) {
             this.selectControl.disable({ emitEvent: false });
         } else {
@@ -102,14 +112,42 @@ export class AsyncSelectComponent<T> {
     }
 
 
+    selectAll() {
+        if (!this.multiple) return;
+        const allValues = this.options().map(o => o.value);
+        this.selectControl.setValue(allValues);
+    }
+
     // Réinitialise la sélection
     clear(): void {
-        const val = this.multiple ? [] : null;      
-        this.values.set(val);
+        const val = this.multiple ? [] : null;
+        this.selectControl.setValue(val);
     }
 
     // à appeler depuis le template (ex: (blur))
     markTouched(): void {
+        this.onTouched();
+    }
+
+
+    fnLabel(value: T): string {
+        if (this.getLabel) return this.getLabel(value);
+        const v = value as any;
+        return v.label ?? v.libelle ?? v.name ?? v.nom ?? v.description;
+    }
+    fnIcon(value: T): string | undefined {
+        return (value as any).icon;
+    }
+    fnIconColor(value: T): string | undefined {
+        return (value as any).iconColor;
+    }
+    toSelectOption(value: T): SelectOption<T> {
+        return {
+            label: this.fnLabel(value),
+            icon: this.fnIcon(value),
+            iconColor: this.fnIconColor(value),
+            value: value,
+        };
     }
 
     compareWithFn = (o1: T | null, o2: T | null): boolean => {

@@ -24,6 +24,7 @@ namespace Helios.Controllers.User
         {
             var claimsIdentity = await new Auth(helios, request.Email).getUserClaims(request.Password);
             await HttpContext.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme, new ClaimsPrincipal(claimsIdentity));
+            
         }
 
         [HttpPost("logout")]

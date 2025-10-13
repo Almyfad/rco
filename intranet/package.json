@@ -25,6 +25,7 @@
     "@ngx-translate/http-loader": "^7.0.0",
     "@openapitools/openapi-generator-cli": "^2.21.4",
     "@syncfusion/ej2-angular-buttons": "^31.1.21",
+    "@syncfusion/ej2-angular-calendars": "^31.1.23",
     "@syncfusion/ej2-angular-dropdowns": "^31.1.20",
     "@syncfusion/ej2-angular-navigations": "^31.1.20",
     "@syncfusion/ej2-angular-schedule": "^31.1.17",

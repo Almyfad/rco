@@ -40,9 +40,7 @@
                 <mat-datepicker-toggle matIconSuffix [for]="picker"></mat-datepicker-toggle>
                 <mat-datepicker #picker></mat-datepicker>
             </mat-form-field>
-            <app-async-select label="Type" formControlName="type" placeholder="Sélectionnez un évènement"
-                [options]="typeoptions()">
-            </app-async-select>
+            <app-type-timeline-select formControlName="type"></app-type-timeline-select>
             <mat-form-field appearance="outline">
                 <mat-label>Commentaires</mat-label>
                 <input matInput formControlName="commentaire">
@@ -68,9 +66,7 @@
                 <mat-datepicker-toggle matIconSuffix [for]="picker"></mat-datepicker-toggle>
                 <mat-datepicker #picker></mat-datepicker>
             </mat-form-field>
-            <app-async-select label="Type" formControlName="type" placeholder="Sélectionnez un évènement"
-                [options]="typeoptions()">
-            </app-async-select>
+            <app-type-timeline-select formControlName="type"></app-type-timeline-select>
             <mat-form-field appearance="outline">
                 <mat-label>Commentaires</mat-label>
                 <input matInput formControlName="commentaire">

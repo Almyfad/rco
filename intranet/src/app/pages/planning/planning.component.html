@@ -5,13 +5,13 @@
     <mat-card-content>
         <div class="d-flex gap-8 p-8 bg-secondary text-on-primary align-items-center rounded-top">
 
-            <button mat-raised-button (click)="scheduleObj.refresh()">
+            <button mat-raised-button (click)="openNewEventDialog()">
                 <div class="d-flex align-items-center gap-8">
                     <i-tabler name="calendar-plus"></i-tabler> Nouveau
                 </div>
             </button>
             <mat-divider [vertical]="true"></mat-divider>
-            
+
             <button mat-raised-button (click)="changeview('Day')">
                 <div class="d-flex align-items-center gap-8">
                     <i-tabler name="calendar-due"></i-tabler> Jour
@@ -40,10 +40,6 @@
                 <mat-checkbox [(ngModel)]="vprogramme"></mat-checkbox>
                 <div>Programmes</div>
             </div>
-            <div class="vchrono">
-                <mat-checkbox [checked]="true"></mat-checkbox>
-                <div>Par programmes</div>
-            </div>
         </div>
         <div class="centremenu p-8">
 
@@ -51,7 +47,8 @@
             <app-ressources-picker [(ressources)]="resourcesPicked" [programme]="vprogramme()"></app-ressources-picker>
         </div>
         <ejs-schedule #scheduleObj locale="fr" [eventSettings]="eventSettings" [startHour]="startHour"
-            [endHour]="endHour" [group]="groupBy()" [enableAdaptiveUI]="enableAdaptiveUI">
+            [endHour]="endHour" [group]="groupBy()" [enableAdaptiveUI]="enableAdaptiveUI" [showQuickInfo]="true"
+            (popupOpen)="onPopupOpen($event)" (cellClick)="onCellclick($event)" (select)="onRangeSelect($event)">
             <e-views>
                 <e-view option="TimelineYear" [allowVirtualScrolling]="virtualscroll" orientation="Vertical"></e-view>
                 <e-view option="TimelineMonth"></e-view>

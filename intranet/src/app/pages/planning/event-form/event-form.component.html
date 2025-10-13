@@ -1,0 +1,58 @@
+<form [formGroup]="newEventForm" class="e-schedule-form" class="m-8" (ngSubmit)="submit()">
+    <div class="row m-0">
+        <div class="col p-8">
+            <mat-form-field appearance="outline" class="w-100">
+                <mat-label>Titre</mat-label>
+                <input matInput formControlName="titre" placeholder="Titre de l'événement" autocomplete="off">
+                <mat-icon matPrefix>public</mat-icon>
+            </mat-form-field>
+        </div>
+    </div>
+    <div class="row m-0">
+        <div class="col p-8">
+            <app-centre-select [multiple]="false" class="w-100" formControlName="centre"></app-centre-select>
+        </div>
+        <div class="col p-8">
+            <app-programme-select [centre]="selectedCentre()?.id" class="w-100" formControlName="programme"></app-programme-select>
+        </div>
+    </div>
+    <div class="row m-0">
+        <div class="col p-8">
+            <app-type-activities-select formControlName="typeActivity"></app-type-activities-select>
+        </div>
+    </div>
+    <div class="row m-0">
+        <div class="col p-8">
+            <ejs-datetimepicker cssClass="e-outline" formControlName="start"></ejs-datetimepicker>
+        </div>
+        <div class="col p-8">
+            <ejs-datetimepicker cssClass="e-outline" formControlName="end"></ejs-datetimepicker>
+        </div>
+    </div>
+    <div class="row m-0">
+        <div class="col p-8">
+            <mat-checkbox formControlName="allday">Toute la journée</mat-checkbox>
+        </div>
+
+    </div>
+    <div class="row m-0">
+        <div class="col p-8">
+            <mat-form-field appearance="outline" class="w-100">
+                <mat-label>Description</mat-label>
+                <textarea matInput formControlName="description" placeholder="Description de l'événement"
+                    autocomplete="off" rows="4"></textarea>
+                <mat-icon matPrefix>description</mat-icon>
+            </mat-form-field>
+        </div>
+    </div>
+    <div class="row m-0">
+        <div class="col p-8 text-end">
+            <button mat-flat-button color="primary" [disabled]="newEventForm.invalid">
+                <div class="d-flex gap-8 align-items-center">
+                    <mat-icon>save</mat-icon>
+                    <span>Enregistrer</span>
+                </div>
+                </button>
+        </div>
+    </div>
+</form>

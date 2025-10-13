@@ -18,6 +18,7 @@ model/centreInfos.ts
 model/centreModule.ts
 model/centreProgrammeDTO.ts
 model/civiliteDTO.ts
+model/createActivityDTO.ts
 model/dataPagerOfMembreDTO.ts
 model/familyDTO.ts
 model/familyUpdateDTO.ts

@@ -4,6 +4,7 @@ export * from './centreInfos';
 export * from './centreModule';
 export * from './centreProgrammeDTO';
 export * from './civiliteDTO';
+export * from './createActivityDTO';
 export * from './dataPagerOfMembreDTO';
 export * from './familyDTO';
 export * from './familyUpdateDTO';

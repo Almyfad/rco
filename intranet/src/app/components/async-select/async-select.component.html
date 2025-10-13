@@ -1,12 +1,19 @@
 <mat-form-field appearance="outline" class="w-100">
   <mat-label>{{ label }}</mat-label>
-  <mat-select class="async-select" panelClass="async-select-panel" [formControl]="selectControl"
-    [placeholder]="placeholder" [multiple]="multiple" [compareWith]="compareWithFn" (selectionChange)="markTouched()" (closed)="markTouched()">
-    @if (!multiple) {
-    <mat-option value="">
+  <mat-select 
+  class="async-select" panelClass="async-select-panel" [formControl]="selectControl"
+    [placeholder]="placeholder" [multiple]="multiple" [compareWith]="compareWithFn" 
+    (selectionChange)="markTouched()" (closed)="markTouched()" (blur)="markTouched()">
+    @if (clearOption) {
+    <mat-option (click)="clear()">
       <em>{{ clearOptionText }}</em>
     </mat-option>
     }
+      @if (allOptions) {
+        <mat-option (click)="selectAll()">
+          <em>{{ allOptionsText }}</em>
+        </mat-option>
+        }
     @if (loading()) {
     <mat-option disabled>
       <div class="d-flex align-items-center">
