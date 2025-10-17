@@ -2,6 +2,7 @@ using Helios.Context;
 using Microsoft.Extensions.Options;
 using Scalar.AspNetCore;
 using System.Text.Json.Serialization;
+using Helios;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -25,7 +26,9 @@ builder.Services.AddControllers().AddJsonOptions(o =>
 {
     o.JsonSerializerOptions.ReferenceHandler = ReferenceHandler.IgnoreCycles;
     o.JsonSerializerOptions.Converters.Add(new JsonStringEnumConverter());
-    o.JsonSerializerOptions.MaxDepth = 256; 
+    o.JsonSerializerOptions.MaxDepth = 256;
+    // Convertir automatiquement toutes les dates en UTC avec le suffixe 'Z'
+    o.JsonSerializerOptions.Converters.Add(new UtcDateTimeConverter());
 });
 builder.Services.AddHeliosContext();
 builder.Services.AddHttpContextAccessor();

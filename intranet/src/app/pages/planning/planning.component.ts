@@ -72,7 +72,6 @@ export class PlanningComponent {
     if (!$event.data) return;
     this.planningModuleService.selectevent.set($event);
     this.scheduleObj.openEditor({}, 'Add');
-    console.log('Range selected:', $event);
 
   }
   
@@ -85,7 +84,10 @@ export class PlanningComponent {
       .setTitle(args.type === 'Editor' ? (args.data as any).libelle || 'Nouvel événement' : 'Détails de l`événement')
       .setWidth('620px')
       .setComponent(EventFormComponent)
-      .open();
+      .open()
+      .onClosed(() => {
+        this.scheduleObj.refresh();
+      });
   }
   openNewEventDialog() {
     this.scheduleObj.openEditor({'newEvent': {}}, 'Add');

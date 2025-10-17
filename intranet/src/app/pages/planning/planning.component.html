@@ -48,7 +48,7 @@
         </div>
         <ejs-schedule #scheduleObj locale="fr" [eventSettings]="eventSettings" [startHour]="startHour"
             [endHour]="endHour" [group]="groupBy()" [enableAdaptiveUI]="enableAdaptiveUI" [showQuickInfo]="true"
-            (popupOpen)="onPopupOpen($event)" (cellClick)="onCellclick($event)" (select)="onRangeSelect($event)">
+           (popupOpen)="onPopupOpen($event)" (cellClick)="onCellclick($event)" (select)="onRangeSelect($event)">
             <e-views>
                 <e-view option="TimelineYear" [allowVirtualScrolling]="virtualscroll" orientation="Vertical"></e-view>
                 <e-view option="TimelineMonth"></e-view>

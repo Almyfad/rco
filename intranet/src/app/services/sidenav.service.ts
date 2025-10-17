@@ -56,6 +56,16 @@ export class SidenavService {
         this.isOpenSubject.next(false);
         return this;
     }
+    //onclosed with callback 
+    onClosed(callback: () => void) {
+        this.isOpenSubject.subscribe(isOpen => {
+            if (!isOpen && callback) {
+                callback();
+            }
+        });
+        return this;
+
+    }
 
     /**
      * Toggle l'état de la sidenav
@@ -115,7 +125,7 @@ export class SidenavService {
                 if (this.optionsSubscription) {
                     this.optionsSubscription.unsubscribe();
                 }
-                
+
                 this.optionsSubscription = (componentRef.instance as any).optionsChange.subscribe((options: AppSettings) => {
                     this.handleOptionsChange(options);
                 });
