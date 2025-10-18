@@ -16,6 +16,7 @@ export interface ActivityDTO {
     libelle: string;
     debut: string;
     fin: string;
+    isAllday: boolean;
     typeActivite: TypeActiviteDTO;
     programme: ProgrammeDTO | null;
     programmeId: number | null;

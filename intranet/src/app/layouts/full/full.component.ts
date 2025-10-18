@@ -3,7 +3,7 @@ import { Component, inject, OnInit, ViewChild, ViewEncapsulation, ViewContainerR
 import { Subscription } from 'rxjs';
 import { MatSidenav, MatSidenavContent } from '@angular/material/sidenav';
 import { CoreService } from 'src/app/services/core.service';
-import { SidenavService } from 'src/app/services/sidenav.service';
+import { IconAction, SidenavService } from 'src/app/services/sidenav.service';
 import { AppSettings } from 'src/app/config';
 import { filter } from 'rxjs/operators';
 import { NavigationEnd, Router } from '@angular/router';
@@ -299,6 +299,9 @@ export class FullComponent implements OnInit, AfterViewInit, OnDestroy {
   } 
   get width(): string {
     return this.sidenavService.width();
+  }
+  get iconActions(): Array<IconAction> {
+    return this.sidenavService.iconActions();
   }
 
   // Méthode pour changer le composant dans la sidenav

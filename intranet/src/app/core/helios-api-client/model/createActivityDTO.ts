@@ -14,6 +14,7 @@ export interface CreateActivityDTO {
     description: string | null;
     dateDebut: string;
     dateFin: string;
+    isAllDay: boolean;
     typeActiviteeId: number;
     centreId: number;
     programmeId: number;

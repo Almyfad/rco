@@ -5,6 +5,7 @@ namespace Helios.Dto
         string? Description,
         DateTime DateDebut,
         DateTime DateFin,
+        bool IsAllDay,
         int TypeActiviteeId,
         int CentreId,
         int ProgrammeId

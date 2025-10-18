@@ -23,7 +23,7 @@
     </mat-option>
     } @else {
     @for (option of options(); track option.value) {
-    <mat-option [value]="option.value">
+    <mat-option [value]="fnValue(option.value)">
       <div class="d-flex align-items-center justify-content-between">
         <span>{{ option.label }}</span>
         @if (option.icon) {

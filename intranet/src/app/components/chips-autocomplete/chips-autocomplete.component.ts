@@ -52,7 +52,6 @@ export class ChipsAutocompleteComponent<T> {
 
   add(event: MatChipInputEvent): void {
     const value = (event.value || '').trim();
-    console.log(value);
     if (value) {
       // this.items.update(x => [...x, value]);
     }

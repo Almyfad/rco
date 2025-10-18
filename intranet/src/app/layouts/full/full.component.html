@@ -180,9 +180,23 @@
       class="p-x-16 p-y-20 d-flex align-items-center justify-content-between"
     >
       <h3 class="f-s-21 f-w-600 text-primary">{{ title }}</h3>
-      <button  mat-button (click)="toggleCustomizerSidenav()">
-        <i-tabler name="x" class="icon-20 d-flex text-secondary"></i-tabler>
-      </button>
+      <div class="d-flex gap-8">
+        @for(action of iconActions; track action.icon) {
+        <button
+          mat-button
+          (click)="action.action()"
+        >
+        @if (action.materialIcon==false) {
+          <mat-icon class="icon-20 d-flex text-secondary">{{ action.icon }}</mat-icon>
+        } @else {
+          <i-tabler name="{{ action.icon }}" class="icon-20 d-flex text-secondary"></i-tabler>
+        }
+        </button>
+        }
+        <button  mat-button (click)="toggleCustomizerSidenav()">
+          <i-tabler name="x" class="icon-20 d-flex text-secondary"></i-tabler>
+        </button>
+      </div>
     </div>
     <mat-divider></mat-divider>
 

@@ -7,6 +7,7 @@
         public required DateTime DateFin { get; set; }
         public string? Description { get; set; }
         public Boolean Public { get; set; } = false;
+        public Boolean IsAllday { get; set; } = false;
         public required virtual TypeActivitee TypeActivitee { get; set; }
         public  virtual Centre? Centre { get; set; }
         public  virtual Programme? Programme { get; set; }

@@ -3,17 +3,17 @@
         <div class="col p-8">
             <mat-form-field appearance="outline" class="w-100">
                 <mat-label>Titre</mat-label>
-                <input matInput formControlName="titre" placeholder="Titre de l'événement" autocomplete="off">
+                <input matInput formControlName="libelle" placeholder="Titre de l'événement" autocomplete="off">
                 <mat-icon matPrefix>public</mat-icon>
             </mat-form-field>
         </div>
     </div>
     <div class="row m-0">
         <div class="col p-8">
-            <app-centre-select [multiple]="false" class="w-100" formControlName="centre"></app-centre-select>
+            <app-centre-select [multiple]="false" [setValueId]="true" class="w-100" formControlName="centre"></app-centre-select>
         </div>
         <div class="col p-8">
-            <app-programme-select [centre]="selectedCentre()?.id" class="w-100" formControlName="programme"></app-programme-select>
+            <app-programme-select [setValueId]="true" [centre]="modelCentreId()" class="w-100" formControlName="programme"></app-programme-select>
         </div>
     </div>
     <div class="row m-0">

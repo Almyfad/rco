@@ -3,6 +3,13 @@ import { BehaviorSubject, Observable, Subscription } from 'rxjs';
 import { AppSettings } from '../config';
 import { CoreService } from './core.service';
 
+export interface IconAction {
+    icon: string;
+    materialIcon?: boolean;
+    action: () => void;
+    tooltip?: string;
+}
+
 @Injectable({
     providedIn: 'root'
 })
@@ -14,13 +21,14 @@ export class SidenavService {
     private optionsChangeSubject = new BehaviorSubject<AppSettings | null>(null);
     private optionsSubscription?: Subscription;
     title = signal<string>('Settings');
-    width = signal<string>('300px');
+    width = signal<string>('350px');
+    iconActions = signal<IconAction[]>([]);
     // Observables publics
     public isOpen$: Observable<boolean> = this.isOpenSubject.asObservable();
     public currentComponent$: Observable<Type<any> | null> = this.currentComponentSubject.asObservable();
     public optionsChange$: Observable<AppSettings | null> = this.optionsChangeSubject.asObservable();
 
-    constructor(private coreService: CoreService) { }
+
 
     /**
      * Définit le ViewContainerRef pour le rendu dynamique des composants
@@ -56,16 +64,7 @@ export class SidenavService {
         this.isOpenSubject.next(false);
         return this;
     }
-    //onclosed with callback 
-    onClosed(callback: () => void) {
-        this.isOpenSubject.subscribe(isOpen => {
-            if (!isOpen && callback) {
-                callback();
-            }
-        });
-        return this;
 
-    }
 
     /**
      * Toggle l'état de la sidenav
@@ -87,6 +86,10 @@ export class SidenavService {
 
     setWidth(width: string): SidenavService {
         this.width.set(width);
+        return this;
+    }
+    setIconActions(actions: Array<IconAction>): SidenavService {
+        this.iconActions.set(actions);
         return this;
     }
 

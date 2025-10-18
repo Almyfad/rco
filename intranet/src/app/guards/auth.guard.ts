@@ -10,7 +10,6 @@ export const authGuard: CanActivateFn = () => {
   //TODO : Check module access
   var isConnected = authService.isLoggedIn();
   if (!isConnected) {
-    console.log("Not connected, redirecting to login");
     router.navigate(['/authentication/login']);
   }
   return isConnected;

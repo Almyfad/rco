@@ -1,4 +1,4 @@
-import { Component, computed, forwardRef, inject, input } from '@angular/core';
+import { Component, computed, forwardRef, inject, Input, input } from '@angular/core';
 import { RegistreModuleService } from 'src/app/pages/registre/services/registre-module.service';
 import { AsyncSelectComponent } from "./async-select.component";
 import { CentreDTO } from 'src/app/core/helios-api-client/model/models';
@@ -16,12 +16,14 @@ import { ControlValueAccessor, FormControl, NG_VALUE_ACCESSOR, ReactiveFormsModu
   ],
   template: `<app-async-select [dataSource]="centres" [formControl]="control" placeholder="Centre" 
             [multiple]="multiple()" 
+            [setValueId]="true"
             [clearOption]="clearOption()" clearOptionText="Aucun centre" 
             [allOptions]="allOptions()" allOptionsText="Tous les centres"
             label="Filtrer par centre" [placeholder]="placeholder()">
             </app-async-select>`,
 })
 export class CentreSelectComponent implements ControlValueAccessor {
+  @Input() setValueId: boolean = false;
   private registre = inject(RegistreModuleService);
   multiple = input<boolean>(false);
   clearOption = input<boolean>(false);

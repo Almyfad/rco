@@ -1,4 +1,4 @@
-import { Component, computed, forwardRef, inject, model } from '@angular/core';
+import { Component, computed, forwardRef, inject, Input, model } from '@angular/core';
 import { AsyncSelectComponent } from "./async-select.component";
 import { ProgrammeDTO } from 'src/app/core/helios-api-client/model/models';
 import { ControlValueAccessor, FormControl, NG_VALUE_ACCESSOR, ReactiveFormsModule } from '@angular/forms';
@@ -15,16 +15,13 @@ import { PlanningService } from 'src/app/core/helios-api-client/api/api';
       multi: true
     }
   ],
-  template: '<app-async-select [formControl]="control" label="Programme" placeholder="Sélectionnez un programme" [dataSource]="$programmes" ></app-async-select>',
+  template: '<app-async-select [setValueId]="setValueId" [formControl]="control" label="Programme" placeholder="Sélectionnez un programme" [dataSource]="$programmes" ></app-async-select>',
 })
 export class ProgrammeSelectComponent implements ControlValueAccessor {
   private planning = inject(PlanningService);
-
+  @Input() setValueId: boolean = false;
   control = new FormControl<ProgrammeDTO | ProgrammeDTO[] | null>(null);
   centre = model<number | null | undefined>(null);
-  test = computed(() => {
-    console.log(this.centre()); return this.centre();
-  });
   $programmes = rxResource({
     request: () => this.centre(),
     loader: ({ request }) => this.planning.apiPlanningCentresIdProgrammesGet(request ?? 0)

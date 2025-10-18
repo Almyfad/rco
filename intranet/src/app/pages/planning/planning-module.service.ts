@@ -1,5 +1,6 @@
 import { computed, Injectable, signal } from '@angular/core';
 import { CellClickEventArgs, EventClickArgs, PopupOpenEventArgs, SelectEventArgs } from '@syncfusion/ej2-angular-schedule';
+import { ActivityDTO } from 'src/app/core/helios-api-client';
 
 @Injectable({
   providedIn: 'root'
@@ -7,12 +8,13 @@ import { CellClickEventArgs, EventClickArgs, PopupOpenEventArgs, SelectEventArgs
 export class PlanningModuleService {
   cellsclick = signal<CellClickEventArgs | null>(null);
   eventclick = signal<EventClickArgs | null>(null);
-  selectevent = signal<SelectEventArgs | null>(null);
+  rangeselectevent = signal<SelectEventArgs | null>(null);
   popupopen = signal<PopupOpenEventArgs | null>(null);
-
-  startTime = computed(()=> {
+  selectedEvent = signal<ActivityDTO | null>(null);
+  refreshPlanning: () => void = () => {};
+  startTime = computed(() => {
     const celltime = this.cellsclick()?.startTime;
-    const selectevent = this.selectevent();
+    const selectevent = this.rangeselectevent();
     if (selectevent?.data) {
       const data = selectevent.data as any;
       const selecttime = data.debut || data.startTime || data.StartTime;
@@ -21,10 +23,10 @@ export class PlanningModuleService {
     return celltime;
   });
 
-  endTime = computed(()=> {
+  endTime = computed(() => {
     const celltime = this.cellsclick()?.endTime;
     // Pour SelectEventArgs, chercher dans différentes propriétés possibles
-    const selectevent = this.selectevent();
+    const selectevent = this.rangeselectevent();
     if (selectevent?.data) {
       const data = selectevent.data as any;
       const selecttime = data.fin || data.endTime || data.EndTime;
@@ -32,9 +34,9 @@ export class PlanningModuleService {
     }
     return celltime;
   });
-isAllDay = computed(()=> {
+  isAllDay = computed(() => {
     const cellallDay = this.cellsclick()?.isAllDay || false;
-    const selectevent = this.selectevent();
+    const selectevent = this.rangeselectevent();
     if (selectevent?.data) {
       const data = selectevent.data as any;
       const selecttime = data.IsAllDay;
@@ -43,6 +45,13 @@ isAllDay = computed(()=> {
     return cellallDay;
   });
 
+  reset() {
+    this.cellsclick.set(null);
+    this.eventclick.set(null);
+    this.rangeselectevent.set(null);
+    this.popupopen.set(null);
+    this.selectedEvent.set(null);
+    this.refreshPlanning = () => {};
+  }
   constructor() { }
 }
-  

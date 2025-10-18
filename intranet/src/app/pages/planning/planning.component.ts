@@ -1,7 +1,7 @@
-import { Component, computed, effect, inject, model, Signal, signal, ViewChild } from '@angular/core';
+import { Component, computed, effect, inject, model, Signal, signal, ViewChild, AfterViewInit, Injector, runInInjectionContext } from '@angular/core';
 import { DayService, WeekService, WorkWeekService, MonthService, AgendaService, MonthAgendaService, TimelineViewsService, TimelineMonthService, ScheduleModule, EventSettingsModel, TimelineYearService, GroupModel, ScheduleComponent, View, DragAndDropService, ResizeService, PopupOpenEventArgs, CellClickEventArgs, SelectEventArgs } from '@syncfusion/ej2-angular-schedule';
 import { MatCardModule } from "@angular/material/card";
-import { L10n, loadCldr } from '@syncfusion/ej2-base';
+import { L10n, loadCldr, remove } from '@syncfusion/ej2-base';
 
 import { CheckBoxModule } from '@syncfusion/ej2-angular-buttons';
 import frNumberData from '@syncfusion/ej2-cldr-data/main/fr/numbers.json';
@@ -24,6 +24,8 @@ import { MatInputModule } from '@angular/material/input';
 import { SidenavService } from 'src/app/services/sidenav.service';
 import { EventFormComponent } from './event-form/event-form.component';
 import { PlanningModuleService } from './planning-module.service';
+import { ActivityDTO } from 'src/app/core/helios-api-client';
+import { toSignal } from '@angular/core/rxjs-interop';
 // Chargez les données CLDR
 loadCldr(frNumberData, frtimeZoneData, frGregorian, frNumberingSystem);
 L10n.load({
@@ -52,54 +54,57 @@ L10n.load({
   selector: 'app-planning',
   imports: [ScheduleModule, MatCardModule, DatePipe, AppBarModule,
     ToolbarModule, ContextMenuModule, CheckBoxModule, RessourcesPickerComponent,
-   ReactiveFormsModule, MatInputModule, MatIconModule,
+    ReactiveFormsModule, MatInputModule, MatIconModule,
     MatButtonModule, MatDivider, TablerIconsModule, MatCheckbox, FormsModule, MatFormFieldModule],
   standalone: true,
   templateUrl: './planning.component.html',
   styleUrl: './planning.component.scss',
   providers: [DragAndDropService, ResizeService, DayService, WeekService, WorkWeekService, MonthService, AgendaService, MonthAgendaService, TimelineViewsService, TimelineMonthService, TimelineYearService]
 })
-export class PlanningComponent {
+export class PlanningComponent implements AfterViewInit {
   private sideNavService = inject(SidenavService);
   private planningModuleService = inject(PlanningModuleService);
   onCellclick($event: CellClickEventArgs): void {
     this.planningModuleService.cellsclick.set($event);
-    this.scheduleObj.openEditor({}, 'Add');
   }
-  
+
   onRangeSelect($event: SelectEventArgs): void {
     if ($event.requestType !== "cellSelect") return;
     if (!$event.data) return;
-    this.planningModuleService.selectevent.set($event);
-    this.scheduleObj.openEditor({}, 'Add');
-
+    this.planningModuleService.rangeselectevent.set($event);
+    this.openSideNav('Nouvel événement');
   }
-  
+
   public onPopupOpen(args: PopupOpenEventArgs): void {
     this.planningModuleService.popupopen.set(args);
     args.cancel = true;
-    
-    // Chaîner les appels pour éviter plusieurs cycles de détection de changement
-    this.sideNavService
-      .setTitle(args.type === 'Editor' ? (args.data as any).libelle || 'Nouvel événement' : 'Détails de l`événement')
-      .setWidth('620px')
-      .setComponent(EventFormComponent)
-      .open()
-      .onClosed(() => {
-        this.scheduleObj.refresh();
-      });
-  }
-  openNewEventDialog() {
-    this.scheduleObj.openEditor({'newEvent': {}}, 'Add');
+    this.planningModuleService.selectedEvent.set(args.data as ActivityDTO);
+    this.openSideNav(args.type === 'Editor' ? (args.data as any).libelle || 'Nouvel événement' : 'Détails de l`événement');
+
+
   }
 
+  openNewEventDialog() {
+    // Ouvrir directement le sidepanel au lieu d'utiliser l'éditeur Syncfusion
+    this.openSideNav('Nouvel événement');
+  }
+  openSideNav(titre: string) {
+    this.sideNavService
+      .setTitle(titre)
+      .setWidth('620px')
+      .setComponent(EventFormComponent)
+      .open();
+  }
   centreR = "Centre_rsrc";
   programmeR = "Programme_rsrc";
   @ViewChild('scheduleObj') scheduleObj: ScheduleComponent;
-
+  private injector = inject(Injector);
 
   constructor() {
+    this.planningModuleService.refreshPlanning = () => { this.scheduleObj.refreshEvents(); };
     effect(() => {
+      if (!this.scheduleObj) return; // Protection contre l'accès à un ViewChild null
+
       const currentView = this.currentView();
       const vchrono = this.vchrono();
       if (vchrono) {
@@ -112,6 +117,10 @@ export class PlanningComponent {
         this.scheduleObj.currentView = this.currentView();
       }
     });
+  }
+
+  ngAfterViewInit() {
+    this.currentView.set(this.currentView());
   }
 
   readonly env = inject(RuntimeEnvService);
@@ -167,7 +176,5 @@ export class PlanningComponent {
   changeview(view: View) {
     this.currentView.set(view);
   }
-
-
-
 }
+

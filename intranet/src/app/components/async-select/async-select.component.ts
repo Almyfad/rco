@@ -8,6 +8,7 @@ import { ControlValueAccessor, FormBuilder, FormControl, NG_VALUE_ACCESSOR, Reac
 import { TablerIconsModule } from "angular-tabler-icons";
 import { rxResource, RxResourceOptions, } from "@angular/core/rxjs-interop";
 import { of } from 'rxjs';
+import { I } from '@angular/cdk/keycodes';
 interface SelectOption<T> {
     value: T;
     label: string;
@@ -46,13 +47,15 @@ export class AsyncSelectComponent<T> implements ControlValueAccessor {
     @Input() multiple: boolean = false;
     @Input() compareWith?: (a: T | null, b: T | null) => boolean;
     @Input() getLabel?: (a: T | null) => string;
-    
+    @Input() getValue?: <K>(a: T | null) => K;
+    @Input() setValueId: boolean = false;
+
     readonly fb = inject(FormBuilder);
     readonly injector = inject(Injector);
 
     // ControlValueAccessor callbacks
-    private onChange = (value: T | T[] | null) => {};
-    private onTouched = () => {};
+    private onChange = (value: T | T[] | null) => { };
+    private onTouched = () => { };
 
     private _dataSource!: ResourceRef<T[]>;
     private rxsource!: ResourceRef<SelectOption<T>[]>;
@@ -134,6 +137,11 @@ export class AsyncSelectComponent<T> implements ControlValueAccessor {
         if (this.getLabel) return this.getLabel(value);
         const v = value as any;
         return v.label ?? v.libelle ?? v.name ?? v.nom ?? v.description;
+    }
+    fnValue<K>(value: T): K | T | number {
+        if (this.getValue) return this.getValue<K>(value);
+        if(this.setValueId) return (value as any).id as number;
+        return value
     }
     fnIcon(value: T): string | undefined {
         return (value as any).icon;

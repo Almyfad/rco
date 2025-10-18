@@ -51,6 +51,42 @@ namespace Helios.Controllers.Planning
             return CreatedAtAction(nameof(GetActivities), new { id = newActivity.Id }, (ActivityDTO)newActivity);
         }
 
+        [HttpPut("activitie/:id")]
+        public async Task<ActionResult<ActivityDTO>> UpdateActivity(int id, [FromBody] CreateActivityDTO activity)
+        {
+            var existingActivity = await helios.Activitees
+                .Include(a => a.Centre)
+                .Include(a => a.TypeActivitee)
+                .Include(a => a.Programme)
+                .FirstOrDefaultAsync(a => a.Id == id);
+            if (existingActivity == null) return NotFound("Activity not found");
+            var centre = await helios.Centre.FindAsync(activity.CentreId);
+            if (centre == null) return BadRequest("Centre not found");
+            var type = await helios.TypeActivitees.FindAsync(activity.TypeActiviteeId);
+            if (type == null) return BadRequest("Type not found");
+            var programme = await helios.Programmes.FindAsync(activity.ProgrammeId);
+            if (programme == null) return BadRequest("Programme not found");
+            existingActivity.Libelle = activity.Libelle;
+            existingActivity.Description = activity.Description;
+            existingActivity.DateDebut = activity.DateDebut;
+            existingActivity.DateFin = activity.DateFin;
+            existingActivity.Centre = centre;
+            existingActivity.TypeActivitee = type;
+            existingActivity.Programme = programme;
+            await helios.SaveChangesAsync();
+            return Ok((ActivityDTO)existingActivity);
+        }
+        [HttpDelete("activitie/:id")]
+        public async Task<IActionResult> DeleteActivity(int id)
+        {
+            var existingActivity = await helios.Activitees.FindAsync(id);
+            if (existingActivity == null) return NotFound("Activity not found");
+            helios.Activitees.Remove(existingActivity);
+            await helios.SaveChangesAsync();
+            return NoContent();
+        }
+
+
         [HttpGet("activities")]
         public async Task<IEnumerable<ActivityDTO>> GetActivities()
         {
