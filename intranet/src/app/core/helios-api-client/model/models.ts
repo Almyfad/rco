@@ -27,4 +27,5 @@ export * from './timelineMembreTypes';
 export * from './typeActiviteDTO';
 export * from './typeMembreDTO';
 export * from './typesActivitees';
+export * from './updateActivityHoursDTO';
 export * from './userInfo';

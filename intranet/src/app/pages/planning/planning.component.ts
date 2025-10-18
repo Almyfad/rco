@@ -1,5 +1,5 @@
 import { Component, computed, effect, inject, model, Signal, signal, ViewChild, AfterViewInit, Injector, runInInjectionContext } from '@angular/core';
-import { DayService, WeekService, WorkWeekService, MonthService, AgendaService, MonthAgendaService, TimelineViewsService, TimelineMonthService, ScheduleModule, EventSettingsModel, TimelineYearService, GroupModel, ScheduleComponent, View, DragAndDropService, ResizeService, PopupOpenEventArgs, CellClickEventArgs, SelectEventArgs } from '@syncfusion/ej2-angular-schedule';
+import { DayService, WeekService, WorkWeekService, MonthService, AgendaService, MonthAgendaService, TimelineViewsService, TimelineMonthService, ScheduleModule, EventSettingsModel, TimelineYearService, GroupModel, ScheduleComponent, View, DragAndDropService, ResizeService, PopupOpenEventArgs, CellClickEventArgs, SelectEventArgs, DragEventArgs, ResizeEventArgs } from '@syncfusion/ej2-angular-schedule';
 import { MatCardModule } from "@angular/material/card";
 import { L10n, loadCldr, remove } from '@syncfusion/ej2-base';
 
@@ -24,8 +24,9 @@ import { MatInputModule } from '@angular/material/input';
 import { SidenavService } from 'src/app/services/sidenav.service';
 import { EventFormComponent } from './event-form/event-form.component';
 import { PlanningModuleService } from './planning-module.service';
-import { ActivityDTO } from 'src/app/core/helios-api-client';
+import { ActivityDTO, PlanningService, UpdateActivityHoursDTO } from 'src/app/core/helios-api-client';
 import { toSignal } from '@angular/core/rxjs-interop';
+import { SnackBarService } from 'src/app/layouts/full/shared/snack-bar/snack-bar.service';
 // Chargez les données CLDR
 loadCldr(frNumberData, frtimeZoneData, frGregorian, frNumberingSystem);
 L10n.load({
@@ -64,6 +65,8 @@ L10n.load({
 export class PlanningComponent implements AfterViewInit {
   private sideNavService = inject(SidenavService);
   private planningModuleService = inject(PlanningModuleService);
+  private planningService = inject(PlanningService);
+  private snackBar = inject(SnackBarService);
   onCellclick($event: CellClickEventArgs): void {
     this.planningModuleService.cellsclick.set($event);
   }
@@ -78,14 +81,51 @@ export class PlanningComponent implements AfterViewInit {
   public onPopupOpen(args: PopupOpenEventArgs): void {
     this.planningModuleService.popupopen.set(args);
     args.cancel = true;
-    this.planningModuleService.selectedEvent.set(args.data as ActivityDTO);
+    this.planningModuleService.selectedEvent.set(args.type === 'QuickInfo' ? (args.data as ActivityDTO) : null);
     this.openSideNav(args.type === 'Editor' ? (args.data as any).libelle || 'Nouvel événement' : 'Détails de l`événement');
+  }
 
+  // Gestion du drag & drop
+  public onDragStop(args: DragEventArgs): void {
+    console.log('onDragStop called:', args);
+    if (!args.data || Array.isArray(args.data)) return;
 
+    const update = {
+      dateDebut: new Date(args.data['debut']).toISOString(),
+      dateFin: new Date(args.data['fin']).toISOString()
+    } as UpdateActivityHoursDTO;
+
+    this.updateEvent(args.data['id'], update, 'Événement déplacé avec succès', 'Erreur lors du déplacement de l\'événement');
+  }
+
+  // Gestion du resize
+  public onResizeStop(args: ResizeEventArgs): void {
+    console.log('onResizeStop called:', args);
+    if (!args.data || Array.isArray(args.data)) return;
+
+    const update = {
+      dateDebut: new Date(args.data['debut']).toISOString(),
+      dateFin: new Date(args.data['fin']).toISOString()
+    } as UpdateActivityHoursDTO;
+
+    this.updateEvent(args.data['id'], update, 'Durée de l\'événement modifiée avec succès', 'Erreur lors de la modification de la durée');
+  }
+
+  // Méthode utilitaire pour mettre à jour un événement
+  private updateEvent(id: number, event: UpdateActivityHoursDTO, successMessage: string, errorMessage: string): void {
+    this.planningService.apiPlanningActivitieIdHoursPut(event, id).subscribe({
+      next: () => {
+        this.snackBar.success(successMessage);
+        this.scheduleObj.refreshEvents();
+      },
+      error: (error) => {
+        console.error('Erreur lors de la mise à jour:', error);
+        this.snackBar.error(errorMessage);
+      }
+    });
   }
 
   openNewEventDialog() {
-    // Ouvrir directement le sidepanel au lieu d'utiliser l'éditeur Syncfusion
     this.openSideNav('Nouvel événement');
   }
   openSideNav(titre: string) {

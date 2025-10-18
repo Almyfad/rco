@@ -51,6 +51,16 @@ namespace Helios.Controllers.Planning
             return CreatedAtAction(nameof(GetActivities), new { id = newActivity.Id }, (ActivityDTO)newActivity);
         }
 
+        [HttpPut("activitie/:id/hours")]
+        public async Task<ActionResult<ActivityDTO>> UpdateActivityHours(int id, [FromBody] UpdateActivityHoursDTO hours)
+        {
+            var existingActivity = await helios.Activitees.FindAsync(id);
+            if (existingActivity == null) return NotFound("Activity not found");
+            existingActivity.DateDebut = hours.DateDebut;
+            existingActivity.DateFin = hours.DateFin;
+            await helios.SaveChangesAsync();
+            return NoContent();
+        }
         [HttpPut("activitie/:id")]
         public async Task<ActionResult<ActivityDTO>> UpdateActivity(int id, [FromBody] CreateActivityDTO activity)
         {

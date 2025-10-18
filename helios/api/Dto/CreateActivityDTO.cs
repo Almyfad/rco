@@ -10,4 +10,9 @@ namespace Helios.Dto
         int CentreId,
         int ProgrammeId
     );
+
+    public record UpdateActivityHoursDTO(
+        DateTime DateDebut,
+        DateTime DateFin
+    );
 }

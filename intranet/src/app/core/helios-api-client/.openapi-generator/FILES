@@ -42,6 +42,7 @@ model/timelineMembreTypes.ts
 model/typeActiviteDTO.ts
 model/typeMembreDTO.ts
 model/typesActivitees.ts
+model/updateActivityHoursDTO.ts
 model/userInfo.ts
 param.ts
 provide-api.ts
