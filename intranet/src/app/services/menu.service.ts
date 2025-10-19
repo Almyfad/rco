@@ -14,17 +14,17 @@ export class MenuService {
   private readonly _currentCentre = signal<CentreInfos | undefined>(undefined);
 
   readonly centresModules: Signal<CentreModule[]> = computed(() => {
-    return this.authService.currentUser()?.centreModules || [];
+    return this.authService.userinfo()?.centreModules || [];
   });
   readonly adminModules: Signal<Module[]> = computed(() => {
-    return this.authService.currentUser()?.adminModules || [];
+    return this.authService.userinfo()?.adminModules || [];
   });
 
   readonly sysAdminModules: Signal<Module[]> = computed(() => {
-    return this.authService.currentUser()?.sysAdminModules || [];
+    return this.authService.userinfo()?.sysAdminModules || [];
   });
   readonly centre: Signal<CentreInfos | undefined> = computed(() => {
-    return this._currentCentre() ?? this.authService.currentUser()?.centreModules?.[0]?.centre ?? undefined;
+    return this._currentCentre() ?? this.authService.userinfo()?.centreModules?.[0]?.centre ?? undefined;
   });
 
   readonly navItems: Signal<NavItem[]> = computed(() => {

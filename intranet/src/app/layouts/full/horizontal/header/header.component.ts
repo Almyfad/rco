@@ -63,7 +63,7 @@ export class AppHorizontalHeaderComponent {
   isCollapse: boolean = false; // Initially hidden
   private readonly auth = inject(AuthService);
 
-  uname = computed(() => this.auth.currentUser()?.prenom ?? this.auth.currentUser().email?.split('@')[0] ?? 'Unknown');
+  uname = computed(() => this.auth.userinfo()?.prenom ?? this.auth.userinfo()?.email?.split('@')[0] ?? 'Unknown');
 
   toggleCollpase() {
     this.isCollapse = !this.isCollapse; // Toggle visibility

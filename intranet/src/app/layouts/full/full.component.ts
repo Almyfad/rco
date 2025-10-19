@@ -90,7 +90,7 @@ export class FullComponent implements OnInit, AfterViewInit, OnDestroy {
   private htmlElement!: HTMLHtmlElement;
   private readonly menuService = inject(MenuService);
   private readonly auth = inject(AuthService);
-  uname = computed(() => this.auth.currentUser()?.prenom ?? this.auth.currentUser().email?.split('@')[0] ?? 'Unknown');
+  uname = computed(() => this.auth.userinfo()?.prenom ?? this.auth.userinfo()?.email?.split('@')[0] ?? 'Unknown');
 
   get isOver(): boolean {
     return this.isMobileScreen;

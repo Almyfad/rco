@@ -2,7 +2,8 @@ import { computed, effect, inject, Injectable, signal } from '@angular/core';
 import { UserInfo, UserService } from '../core/helios-api-client';
 import { Router } from '@angular/router';
 import { firstValueFrom, Observable, switchMap, tap } from 'rxjs';
-import { toSignal } from '@angular/core/rxjs-interop';
+import { rxResource, toSignal } from '@angular/core/rxjs-interop';
+import { initialEnd } from '@syncfusion/ej2-angular-schedule';
 
 
 enum State {
@@ -16,81 +17,66 @@ enum State {
 })
 export class AuthService {
 
-  private readonly STORAGE_KEY = 'auth_isConnected';
-
-  constructor() {
-    effect(() => {
-      const state = this.state();
-      console.log("🔒 Auth state is ", State[state]);
-      console.log("checking server connection state...");
-      firstValueFrom(this.userService.apiUserInfosGet()).then(userInfo => {
-        this._currentUser.set(userInfo);
-        this.saveConnectionState(userInfo.isConnected || false);
-        this.state.set(userInfo.isConnected ? State.LoggedIn : State.LoggedOut);
-        
-        if (state === State.LoggedOut) {
-          this.router.navigate(['/authentication/login']);
-        }
-      });
-
-    });
-  }
-
   private readonly userService = inject(UserService)
+  private userinfo$ = rxResource({
+    loader: () => this.userService.apiUserInfosGet()
+  });
+  isLoading = computed(() => this.userinfo$.isLoading() || this._isloginLoading() || this._islogoutLoading());
+
+  userInfosloading = computed(() => this.userinfo$.isLoading());
+  userinfo = computed(() => this.userinfo$.value());
+  _islogoutLoading = signal(false);
+  _isloginLoading = signal(false);
+  _isLoggedOut = signal(true);
+  private readonly state = computed(() => {
+    const info = this.userinfo();
+    const isLoading = this.userInfosloading();
+    const isLogoutLoading = this._islogoutLoading();
+    const isLoggedOut = this._isLoggedOut();
+    const isLoginLoading = this._isloginLoading();
+    if (isLoginLoading) return State.LoggingIn;
+    if (isLoggedOut) return State.LoggedOut;
+    console.log("User is logged in:", info, isLoading, isLogoutLoading, isLoggedOut);
+    if (isLogoutLoading) return State.LoggingOut;
+    if (isLoading) return State.LoggingIn;
+    if (!info || !info.isConnected) return State.LoggedOut;
+
+    return State.LoggedIn;
+  });
+
+
   private readonly router = inject(Router);
-  private readonly state = signal<State>(this.getStoredConnectionState() ? State.LoggedIn : State.LoggedOut);
-  private readonly _currentUser = signal<UserInfo>({ isConnected: this.getStoredConnectionState() } as UserInfo);
-  readonly currentUser = computed(() => this._currentUser());
-  readonly isLoggedIn = computed(() => this._currentUser().isConnected || false);
+
+  readonly isLoggedIn = computed(() => this.state() === State.LoggedIn);
   readonly isLoggingIn = computed(() => this.state() === State.LoggingIn);
   readonly isLoggingOut = computed(() => this.state() === State.LoggingOut);
   readonly isLoggedOut = computed(() => this.state() === State.LoggedOut);
   readonly isProcessing = computed(() => this.state() === State.LoggingIn || this.state() === State.LoggingOut);
 
   login(email: string, password: string): Observable<any> {
-    this.state.set(State.LoggingIn);
+    this._isloginLoading.set(true);
+    this._isLoggedOut.set(false);
     return this.userService.apiUserLoginPost({ email: email, password }).pipe(
       tap(() => {
-        this.state.set(State.LoggedIn);
+        this._isloginLoading.set(false);
+        this.userinfo$.reload();
       })
     );
   }
 
 
   logout(): Observable<any> {
-    this.state.set(State.LoggingOut);
+    this._islogoutLoading.set(true);
     return this.userService.apiUserLogoutPost().pipe(
       tap(() => {
-        this.state.set(State.LoggedOut);
-        // Effacer l'état de connexion du localStorage lors de la déconnexion
-        this.saveConnectionState(false);
+        this.userinfo$.reload();
+        this._islogoutLoading.set(false);
+        this._isLoggedOut.set(true);
       })
     );
   }
 
-  /**
-   * Sauvegarde l'état de connexion dans le localStorage
-   */
-  private saveConnectionState(isConnected: boolean): void {
-    try {
-      localStorage.setItem(this.STORAGE_KEY, JSON.stringify(isConnected));
-    } catch (error) {
-      console.warn('Impossible de sauvegarder l\'état de connexion dans le localStorage:', error);
-    }
-  }
 
-  /**
-   * Récupère l'état de connexion depuis le localStorage
-   */
-  private getStoredConnectionState(): boolean {
-    try {
-      const stored = localStorage.getItem(this.STORAGE_KEY);
-      return stored ? JSON.parse(stored) : false;
-    } catch (error) {
-      console.warn('Impossible de récupérer l\'état de connexion depuis le localStorage:', error);
-      return false;
-    }
-  }
 
 
 

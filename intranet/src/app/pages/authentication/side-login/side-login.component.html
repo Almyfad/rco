@@ -24,6 +24,18 @@
               >
                 <div class="row justify-content-center w-100">
                   <div class="col-lg-11">
+                    @if(isLoading) {
+                    <div
+                      class="d-flex align-items-center justify-content-center"
+                      style="height: 400px"
+                    >
+                      <div style="display: flex; flex-direction: column; align-items: center; gap: 16px;">
+                        <mat-spinner></mat-spinner>
+                        <span class="mat-body-1">Chargement...</span>
+                      </div>
+                    </div>
+                    }
+                    @else {
                     <h4 class="f-w-700 f-s-30 m-0 m-t-20 lh-base">
                       Bienvenue sur Helios
                     </h4>
@@ -97,9 +109,9 @@
                         mat-flat-button
                         color="primary"
                         class="w-100"
-                        [disabled]="(form.invalid && form.touched) || isloading()"
+                        [disabled]="(form.invalid && form.touched) || isLoading"
                       >
-                      @if(isloading()) {
+                      @if(isLoading) {
                         <mat-progress-spinner
                           diameter="24"
                           mode="indeterminate"
@@ -112,6 +124,7 @@
                       </button>
                       <!-- input -->
                     </form>
+                    }
                   </div>
                 </div>
               </div>

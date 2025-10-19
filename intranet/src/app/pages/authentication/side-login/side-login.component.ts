@@ -7,7 +7,7 @@ import {
   FormsModule,
   ReactiveFormsModule,
 } from '@angular/forms';
-import { Router, RouterModule } from '@angular/router';
+import { ActivatedRoute, Router, RouterModule } from '@angular/router';
 import { MaterialModule } from '../../../material.module';
 import { BrandingComponent } from '../../../layouts/full/vertical/sidebar/branding.component';
 import { AuthService } from 'src/app/services/auth.service';
@@ -19,23 +19,24 @@ import { AuthService } from 'src/app/services/auth.service';
   templateUrl: './side-login.component.html',
 })
 export class AppSideLoginComponent {
+  private readonly settings = inject(CoreService);
+  private readonly router = inject(Router);
+  private readonly route = inject(ActivatedRoute);
+  private readonly authService = inject(AuthService);
+  private readonly returnUrl = this.route.snapshot.queryParams['returnUrl'] || '/';
   options = this.settings.getOptions();
-  isloading = signal(false);
-  constructor(private settings: CoreService, private router: Router) {
+  get isLoading() {
+    return this.authService.isLoading();
+  }
+  constructor() {
     effect(() => {
-      const isLoading = this.authService.isLoggingIn();
       const isLoggedIn = this.authService.isLoggedIn();
-      this.isloading.set(isLoading);
       if (isLoggedIn) {
-        this.router.navigate(['/']);
+        this.router.navigate([this.returnUrl]);
         return;
-
       }
     });
   }
-
-  private readonly authService = inject(AuthService);
-
 
 
   form = new FormGroup({
